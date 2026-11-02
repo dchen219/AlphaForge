@@ -1,0 +1,20 @@
+{
+ "_fixture_note": "SYNTHETIC FIXTURE \u2014 NOT REAL DATA",
+ "seriess": [
+  {
+   "id": "DGS2",
+   "realtime_start": "2025-01-01",
+   "realtime_end": "2025-01-01",
+   "title": "[SYNTHETIC FIXTURE] Market Yield on U.S. Treasury Securities at 2-Year Constant Maturity",
+   "observation_start": "2023-01-01",
+   "observation_end": "2024-12-01",
+   "frequency": "Monthly",
+   "frequency_short": "M",
+   "units": "Percent",
+   "seasonal_adjustment": "Seasonally Adjusted",
+   "last_updated": "2025-01-01 07:44:02-06",
+   "popularity": 0,
+   "notes": "Synthetic values in FRED API format for offline tests. NOT REAL DATA."
+  }
+ ]
+}

@@ -1,0 +1,5325 @@
+{
+  "run_id": "2a0fed38-8866-4c52-b12e-90c30301dce0",
+  "status": "completed",
+  "question": "Analyze MSFT's revenue growth, operating margins, free cash flow, and capital expenditure intensity over the most recent 8 reported quarters.",
+  "company_name": "MICROSOFT CORP",
+  "ticker": "MSFT",
+  "cik": "0000789019",
+  "analysis_timestamp": "2026-11-02T01:14:41.398063Z",
+  "as_of": null,
+  "availability_policy": "date_stamped_sources_available_from_next_day_00:00_America/New_York",
+  "data_origin": "live",
+  "reporting_periods": [
+    {
+      "label": "FY2025 Q2",
+      "fiscal_year": 2025,
+      "fiscal_quarter": 2,
+      "start": "2024-10-01",
+      "end": "2024-12-31",
+      "duration_days": 92,
+      "period_type": "quarter"
+    },
+    {
+      "label": "FY2025 Q3",
+      "fiscal_year": 2025,
+      "fiscal_quarter": 3,
+      "start": "2025-01-01",
+      "end": "2025-03-31",
+      "duration_days": 90,
+      "period_type": "quarter"
+    },
+    {
+      "label": "FY2025 Q4",
+      "fiscal_year": 2025,
+      "fiscal_quarter": 4,
+      "start": "2025-04-01",
+      "end": "2025-06-30",
+      "duration_days": 91,
+      "period_type": "quarter"
+    },
+    {
+      "label": "FY2026 Q1",
+      "fiscal_year": 2026,
+      "fiscal_quarter": 1,
+      "start": "2025-07-01",
+      "end": "2025-09-30",
+      "duration_days": 92,
+      "period_type": "quarter"
+    },
+    {
+      "label": "FY2026 Q2",
+      "fiscal_year": 2026,
+      "fiscal_quarter": 2,
+      "start": "2025-10-01",
+      "end": "2025-12-31",
+      "duration_days": 92,
+      "period_type": "quarter"
+    },
+    {
+      "label": "FY2026 Q3",
+      "fiscal_year": 2026,
+      "fiscal_quarter": 3,
+      "start": "2026-01-01",
+      "end": "2026-03-31",
+      "duration_days": 90,
+      "period_type": "quarter"
+    },
+    {
+      "label": "FY2026 Q4",
+      "fiscal_year": 2026,
+      "fiscal_quarter": 4,
+      "start": "2026-04-01",
+      "end": "2026-06-30",
+      "duration_days": 91,
+      "period_type": "quarter"
+    },
+    {
+      "label": "FY2027 Q1",
+      "fiscal_year": 2027,
+      "fiscal_quarter": 1,
+      "start": "2026-07-01",
+      "end": "2026-09-30",
+      "duration_days": 92,
+      "period_type": "quarter"
+    }
+  ],
+  "requested_metrics": [
+    "revenue_yoy",
+    "revenue_qoq",
+    "annual_revenue_yoy",
+    "gross_margin",
+    "operating_margin",
+    "net_margin",
+    "gross_profit_derived",
+    "free_cash_flow",
+    "fcf_margin",
+    "capex_to_revenue",
+    "capex_yoy",
+    "ocf_to_capex"
+  ],
+  "metric_values": [
+    {
+      "value_id": "V-ba59c8b9cdf2",
+      "metric": "revenue",
+      "label": "Revenue",
+      "value": 69632000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q2",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 2,
+        "start": "2024-10-01",
+        "end": "2024-12-31",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "sources": [
+        {
+          "fact_hash": "b4fa28dfbc456a641052ffeec256410a3c9da9b7767380a0cdc2ec4cb3394dcc",
+          "taxonomy": "us-gaap",
+          "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "unit": "USD",
+          "period_start": "2024-10-01",
+          "period_end": "2024-12-31",
+          "value": 69632000000.0,
+          "accession": "0001193125-26-027207",
+          "form": "10-Q",
+          "filed": "2026-01-28",
+          "available_at": "2026-01-29T05:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q2"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-d22922fd38b4",
+      "metric": "revenue",
+      "label": "Revenue",
+      "value": 70066000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q3",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 3,
+        "start": "2025-01-01",
+        "end": "2025-03-31",
+        "duration_days": 90,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "sources": [
+        {
+          "fact_hash": "e49436b39c2cb5e469bee25bc0d18247db9a6e329e0ff5b86e24954fc1c48786",
+          "taxonomy": "us-gaap",
+          "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "unit": "USD",
+          "period_start": "2025-01-01",
+          "period_end": "2025-03-31",
+          "value": 70066000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-2bc864155e57",
+      "metric": "revenue",
+      "label": "Revenue",
+      "value": 76441000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q4",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 4,
+        "start": "2025-04-01",
+        "end": "2025-06-30",
+        "duration_days": 91,
+        "period_type": "quarter"
+      },
+      "method": "derived_ytd_difference",
+      "formula": "RevenueFromContractWithCustomerExcludingAssessedTax[2024-07-01..2025-06-30] - RevenueFromContractWithCustomerExcludingAssessedTax[2024-07-01..2025-03-31]",
+      "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "sources": [
+        {
+          "fact_hash": "478507bc100c4f3583e2c95e5c7f00073fe5a35bc586f403a169c1fb2261d910",
+          "taxonomy": "us-gaap",
+          "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "unit": "USD",
+          "period_start": "2024-07-01",
+          "period_end": "2025-06-30",
+          "value": 281724000000.0,
+          "accession": "0001193125-26-323660",
+          "form": "10-K",
+          "filed": "2026-07-29",
+          "available_at": "2026-07-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "FY"
+        },
+        {
+          "fact_hash": "8908f3698966fd41a261e4378284fc13d8c2eae288ff300a7936f06b53368373",
+          "taxonomy": "us-gaap",
+          "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "unit": "USD",
+          "period_start": "2024-07-01",
+          "period_end": "2025-03-31",
+          "value": 205283000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": [
+        "Standalone quarter derived from cumulative periods (365d minus 274d, same start 2024-07-01)."
+      ]
+    },
+    {
+      "value_id": "V-a15e8b2c3ed4",
+      "metric": "revenue",
+      "label": "Revenue",
+      "value": 77673000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q1",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 1,
+        "start": "2025-07-01",
+        "end": "2025-09-30",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "sources": [
+        {
+          "fact_hash": "e664756f23e2794b231fc4e6f457bc7bc3ca1fd598f1a0c09771608b01780718",
+          "taxonomy": "us-gaap",
+          "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2025-09-30",
+          "value": 77673000000.0,
+          "accession": "0001193125-26-436133",
+          "form": "10-Q",
+          "filed": "2026-10-28",
+          "available_at": "2026-10-29T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/0001193125-26-436133-index.htm",
+          "filer_fiscal_year": 2027,
+          "filer_fiscal_period": "Q1"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-c1bf04893f91",
+      "metric": "revenue",
+      "label": "Revenue",
+      "value": 81273000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q2",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 2,
+        "start": "2025-10-01",
+        "end": "2025-12-31",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "sources": [
+        {
+          "fact_hash": "aacec130f9ffbec198f69959eec24c41d1f7475ba586124bb01b3cdd6f54137c",
+          "taxonomy": "us-gaap",
+          "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "unit": "USD",
+          "period_start": "2025-10-01",
+          "period_end": "2025-12-31",
+          "value": 81273000000.0,
+          "accession": "0001193125-26-027207",
+          "form": "10-Q",
+          "filed": "2026-01-28",
+          "available_at": "2026-01-29T05:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q2"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-1b4c8e78c9f9",
+      "metric": "revenue",
+      "label": "Revenue",
+      "value": 82886000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q3",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 3,
+        "start": "2026-01-01",
+        "end": "2026-03-31",
+        "duration_days": 90,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "sources": [
+        {
+          "fact_hash": "c14f375c1d39b0210e1233cca84249cae93038ed17c53ce110660dfe4ca6af5c",
+          "taxonomy": "us-gaap",
+          "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "unit": "USD",
+          "period_start": "2026-01-01",
+          "period_end": "2026-03-31",
+          "value": 82886000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-ddde20d962ee",
+      "metric": "revenue",
+      "label": "Revenue",
+      "value": 90007000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q4",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 4,
+        "start": "2026-04-01",
+        "end": "2026-06-30",
+        "duration_days": 91,
+        "period_type": "quarter"
+      },
+      "method": "derived_ytd_difference",
+      "formula": "RevenueFromContractWithCustomerExcludingAssessedTax[2025-07-01..2026-06-30] - RevenueFromContractWithCustomerExcludingAssessedTax[2025-07-01..2026-03-31]",
+      "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "sources": [
+        {
+          "fact_hash": "b0732ee508da24f51ef3c836e300527d27119c5e02b2c0f65d185d1377f9c545",
+          "taxonomy": "us-gaap",
+          "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2026-06-30",
+          "value": 331839000000.0,
+          "accession": "0001193125-26-323660",
+          "form": "10-K",
+          "filed": "2026-07-29",
+          "available_at": "2026-07-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "FY"
+        },
+        {
+          "fact_hash": "fd747bb0df86555b96a2481fa16f964f0c79da6563bea365ba10a3de69e8a5e2",
+          "taxonomy": "us-gaap",
+          "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2026-03-31",
+          "value": 241832000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": [
+        "Standalone quarter derived from cumulative periods (365d minus 274d, same start 2025-07-01)."
+      ]
+    },
+    {
+      "value_id": "V-e00041bf3c82",
+      "metric": "revenue",
+      "label": "Revenue",
+      "value": 92279000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2027 Q1",
+        "fiscal_year": 2027,
+        "fiscal_quarter": 1,
+        "start": "2026-07-01",
+        "end": "2026-09-30",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "sources": [
+        {
+          "fact_hash": "3dc65a1733433e34e86da7f38efc737e43cea9e9e5614730dbea7262973c9ab8",
+          "taxonomy": "us-gaap",
+          "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "unit": "USD",
+          "period_start": "2026-07-01",
+          "period_end": "2026-09-30",
+          "value": 92279000000.0,
+          "accession": "0001193125-26-436133",
+          "form": "10-Q",
+          "filed": "2026-10-28",
+          "available_at": "2026-10-29T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/0001193125-26-436133-index.htm",
+          "filer_fiscal_year": 2027,
+          "filer_fiscal_period": "Q1"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-1bcd71db27cc",
+      "metric": "gross_profit",
+      "label": "Gross profit",
+      "value": 47833000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q2",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 2,
+        "start": "2024-10-01",
+        "end": "2024-12-31",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "GrossProfit",
+      "sources": [
+        {
+          "fact_hash": "eda202b37e9867a7c63f7902479f20c3075dbf64eb701cb7907c2a5da7d35684",
+          "taxonomy": "us-gaap",
+          "concept": "GrossProfit",
+          "unit": "USD",
+          "period_start": "2024-10-01",
+          "period_end": "2024-12-31",
+          "value": 47833000000.0,
+          "accession": "0001193125-26-027207",
+          "form": "10-Q",
+          "filed": "2026-01-28",
+          "available_at": "2026-01-29T05:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q2"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-9fcdcc9f72f0",
+      "metric": "gross_profit",
+      "label": "Gross profit",
+      "value": 48147000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q3",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 3,
+        "start": "2025-01-01",
+        "end": "2025-03-31",
+        "duration_days": 90,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "GrossProfit",
+      "sources": [
+        {
+          "fact_hash": "91c311223540d15d410e2fd0eafcf9b9ed0aab671d99f14cb41c1de3106ca5e7",
+          "taxonomy": "us-gaap",
+          "concept": "GrossProfit",
+          "unit": "USD",
+          "period_start": "2025-01-01",
+          "period_end": "2025-03-31",
+          "value": 48147000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-528369140333",
+      "metric": "gross_profit",
+      "label": "Gross profit",
+      "value": 52427000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q4",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 4,
+        "start": "2025-04-01",
+        "end": "2025-06-30",
+        "duration_days": 91,
+        "period_type": "quarter"
+      },
+      "method": "derived_ytd_difference",
+      "formula": "GrossProfit[2024-07-01..2025-06-30] - GrossProfit[2024-07-01..2025-03-31]",
+      "concept": "GrossProfit",
+      "sources": [
+        {
+          "fact_hash": "2a6451a3256082619260ffce86d4372a37a2be1a8ba1cebd574232b05dcac49d",
+          "taxonomy": "us-gaap",
+          "concept": "GrossProfit",
+          "unit": "USD",
+          "period_start": "2024-07-01",
+          "period_end": "2025-06-30",
+          "value": 193893000000.0,
+          "accession": "0001193125-26-323660",
+          "form": "10-K",
+          "filed": "2026-07-29",
+          "available_at": "2026-07-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "FY"
+        },
+        {
+          "fact_hash": "f0319459e0333c1fb07907cb5529f9e21dfe349b127a27a5a3e8caf35a315b3f",
+          "taxonomy": "us-gaap",
+          "concept": "GrossProfit",
+          "unit": "USD",
+          "period_start": "2024-07-01",
+          "period_end": "2025-03-31",
+          "value": 141466000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": [
+        "Standalone quarter derived from cumulative periods (365d minus 274d, same start 2024-07-01)."
+      ]
+    },
+    {
+      "value_id": "V-0ee0e2edffad",
+      "metric": "gross_profit",
+      "label": "Gross profit",
+      "value": 53630000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q1",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 1,
+        "start": "2025-07-01",
+        "end": "2025-09-30",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "GrossProfit",
+      "sources": [
+        {
+          "fact_hash": "050e01efaa144bd0da1b554cc172e58d6270d4b8b768e8212abe070634259557",
+          "taxonomy": "us-gaap",
+          "concept": "GrossProfit",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2025-09-30",
+          "value": 53630000000.0,
+          "accession": "0001193125-26-436133",
+          "form": "10-Q",
+          "filed": "2026-10-28",
+          "available_at": "2026-10-29T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/0001193125-26-436133-index.htm",
+          "filer_fiscal_year": 2027,
+          "filer_fiscal_period": "Q1"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-1f36a916d0a0",
+      "metric": "gross_profit",
+      "label": "Gross profit",
+      "value": 55295000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q2",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 2,
+        "start": "2025-10-01",
+        "end": "2025-12-31",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "GrossProfit",
+      "sources": [
+        {
+          "fact_hash": "428e226b7ba61c02d3031ec0d0eceac8d8f9d78a45618149ab96407723e44877",
+          "taxonomy": "us-gaap",
+          "concept": "GrossProfit",
+          "unit": "USD",
+          "period_start": "2025-10-01",
+          "period_end": "2025-12-31",
+          "value": 55295000000.0,
+          "accession": "0001193125-26-027207",
+          "form": "10-Q",
+          "filed": "2026-01-28",
+          "available_at": "2026-01-29T05:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q2"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-6454a50edb04",
+      "metric": "gross_profit",
+      "label": "Gross profit",
+      "value": 56058000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q3",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 3,
+        "start": "2026-01-01",
+        "end": "2026-03-31",
+        "duration_days": 90,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "GrossProfit",
+      "sources": [
+        {
+          "fact_hash": "4523cb25671038e1a7ebba77c74e031f0d768f4b92d83f9c875f6b0d455a2148",
+          "taxonomy": "us-gaap",
+          "concept": "GrossProfit",
+          "unit": "USD",
+          "period_start": "2026-01-01",
+          "period_end": "2026-03-31",
+          "value": 56058000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-da540df42ef2",
+      "metric": "gross_profit",
+      "label": "Gross profit",
+      "value": 60482000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q4",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 4,
+        "start": "2026-04-01",
+        "end": "2026-06-30",
+        "duration_days": 91,
+        "period_type": "quarter"
+      },
+      "method": "derived_ytd_difference",
+      "formula": "GrossProfit[2025-07-01..2026-06-30] - GrossProfit[2025-07-01..2026-03-31]",
+      "concept": "GrossProfit",
+      "sources": [
+        {
+          "fact_hash": "75ccdd1570a849ad8599a815ad20da0790cf890a6b0da2895c5b33572dc4cbe1",
+          "taxonomy": "us-gaap",
+          "concept": "GrossProfit",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2026-06-30",
+          "value": 225465000000.0,
+          "accession": "0001193125-26-323660",
+          "form": "10-K",
+          "filed": "2026-07-29",
+          "available_at": "2026-07-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "FY"
+        },
+        {
+          "fact_hash": "ea5e6125d59e2372d6f0d617d5f1f7be5ec74af9d370e004c4a9d9ffa9e5975d",
+          "taxonomy": "us-gaap",
+          "concept": "GrossProfit",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2026-03-31",
+          "value": 164983000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": [
+        "Standalone quarter derived from cumulative periods (365d minus 274d, same start 2025-07-01)."
+      ]
+    },
+    {
+      "value_id": "V-2d482a49592a",
+      "metric": "gross_profit",
+      "label": "Gross profit",
+      "value": 62559000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2027 Q1",
+        "fiscal_year": 2027,
+        "fiscal_quarter": 1,
+        "start": "2026-07-01",
+        "end": "2026-09-30",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "GrossProfit",
+      "sources": [
+        {
+          "fact_hash": "96e2945a9102622418108825b1afc66bd89fcec1c51551963b30426dc174b52b",
+          "taxonomy": "us-gaap",
+          "concept": "GrossProfit",
+          "unit": "USD",
+          "period_start": "2026-07-01",
+          "period_end": "2026-09-30",
+          "value": 62559000000.0,
+          "accession": "0001193125-26-436133",
+          "form": "10-Q",
+          "filed": "2026-10-28",
+          "available_at": "2026-10-29T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/0001193125-26-436133-index.htm",
+          "filer_fiscal_year": 2027,
+          "filer_fiscal_period": "Q1"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-a1b5d46bddd5",
+      "metric": "operating_income",
+      "label": "Operating income",
+      "value": 31653000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q2",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 2,
+        "start": "2024-10-01",
+        "end": "2024-12-31",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "OperatingIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "caf1180eeddb1e635a7e01af9432185beb4549a924da99973d6cdc05f8516aef",
+          "taxonomy": "us-gaap",
+          "concept": "OperatingIncomeLoss",
+          "unit": "USD",
+          "period_start": "2024-10-01",
+          "period_end": "2024-12-31",
+          "value": 31653000000.0,
+          "accession": "0001193125-26-027207",
+          "form": "10-Q",
+          "filed": "2026-01-28",
+          "available_at": "2026-01-29T05:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q2"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-5422800e1187",
+      "metric": "operating_income",
+      "label": "Operating income",
+      "value": 32000000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q3",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 3,
+        "start": "2025-01-01",
+        "end": "2025-03-31",
+        "duration_days": 90,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "OperatingIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "6c29d6ac1cb3f3668c7f0dba69c5c1be42f1d4351a7a871735b16071bf4eaf1a",
+          "taxonomy": "us-gaap",
+          "concept": "OperatingIncomeLoss",
+          "unit": "USD",
+          "period_start": "2025-01-01",
+          "period_end": "2025-03-31",
+          "value": 32000000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-c9d0f6950feb",
+      "metric": "operating_income",
+      "label": "Operating income",
+      "value": 34323000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q4",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 4,
+        "start": "2025-04-01",
+        "end": "2025-06-30",
+        "duration_days": 91,
+        "period_type": "quarter"
+      },
+      "method": "derived_ytd_difference",
+      "formula": "OperatingIncomeLoss[2024-07-01..2025-06-30] - OperatingIncomeLoss[2024-07-01..2025-03-31]",
+      "concept": "OperatingIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "06e5c4bd8beda350f910a27c41200568ebf416e1daa17d1368a25c59dd3a462e",
+          "taxonomy": "us-gaap",
+          "concept": "OperatingIncomeLoss",
+          "unit": "USD",
+          "period_start": "2024-07-01",
+          "period_end": "2025-06-30",
+          "value": 128528000000.0,
+          "accession": "0001193125-26-323660",
+          "form": "10-K",
+          "filed": "2026-07-29",
+          "available_at": "2026-07-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "FY"
+        },
+        {
+          "fact_hash": "aa1fd4f0eae5d967c3d4a51449ef87b8700de40e2ec6039946635b79ea78ff17",
+          "taxonomy": "us-gaap",
+          "concept": "OperatingIncomeLoss",
+          "unit": "USD",
+          "period_start": "2024-07-01",
+          "period_end": "2025-03-31",
+          "value": 94205000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": [
+        "Standalone quarter derived from cumulative periods (365d minus 274d, same start 2024-07-01)."
+      ]
+    },
+    {
+      "value_id": "V-4df37025cbd2",
+      "metric": "operating_income",
+      "label": "Operating income",
+      "value": 37961000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q1",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 1,
+        "start": "2025-07-01",
+        "end": "2025-09-30",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "OperatingIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "9a85c1b3df83166b5a9d34e437b526a260d94408ebe7a4ba87c10b2b7f83af52",
+          "taxonomy": "us-gaap",
+          "concept": "OperatingIncomeLoss",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2025-09-30",
+          "value": 37961000000.0,
+          "accession": "0001193125-26-436133",
+          "form": "10-Q",
+          "filed": "2026-10-28",
+          "available_at": "2026-10-29T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/0001193125-26-436133-index.htm",
+          "filer_fiscal_year": 2027,
+          "filer_fiscal_period": "Q1"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-07ea2dcc5ea9",
+      "metric": "operating_income",
+      "label": "Operating income",
+      "value": 38275000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q2",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 2,
+        "start": "2025-10-01",
+        "end": "2025-12-31",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "OperatingIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "01ae92ff539bdedf0180317b8e627458a737df472d72e15fc658ac506bf36373",
+          "taxonomy": "us-gaap",
+          "concept": "OperatingIncomeLoss",
+          "unit": "USD",
+          "period_start": "2025-10-01",
+          "period_end": "2025-12-31",
+          "value": 38275000000.0,
+          "accession": "0001193125-26-027207",
+          "form": "10-Q",
+          "filed": "2026-01-28",
+          "available_at": "2026-01-29T05:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q2"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-661e41fd86f7",
+      "metric": "operating_income",
+      "label": "Operating income",
+      "value": 38398000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q3",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 3,
+        "start": "2026-01-01",
+        "end": "2026-03-31",
+        "duration_days": 90,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "OperatingIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "d38defd9300b311d1ef87c66c699afb9f73f00365a769866f5f951935f834837",
+          "taxonomy": "us-gaap",
+          "concept": "OperatingIncomeLoss",
+          "unit": "USD",
+          "period_start": "2026-01-01",
+          "period_end": "2026-03-31",
+          "value": 38398000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-efa9fe924bda",
+      "metric": "operating_income",
+      "label": "Operating income",
+      "value": 40603000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q4",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 4,
+        "start": "2026-04-01",
+        "end": "2026-06-30",
+        "duration_days": 91,
+        "period_type": "quarter"
+      },
+      "method": "derived_ytd_difference",
+      "formula": "OperatingIncomeLoss[2025-07-01..2026-06-30] - OperatingIncomeLoss[2025-07-01..2026-03-31]",
+      "concept": "OperatingIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "7f3457318978dc944ef2c15164362dc7d2b8753f9eae6556f976cbf049b5a382",
+          "taxonomy": "us-gaap",
+          "concept": "OperatingIncomeLoss",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2026-06-30",
+          "value": 155237000000.0,
+          "accession": "0001193125-26-323660",
+          "form": "10-K",
+          "filed": "2026-07-29",
+          "available_at": "2026-07-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "FY"
+        },
+        {
+          "fact_hash": "61d77110532762596bad119a14f02c10ec7294aeeb2af4f235c0605fa411dacb",
+          "taxonomy": "us-gaap",
+          "concept": "OperatingIncomeLoss",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2026-03-31",
+          "value": 114634000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": [
+        "Standalone quarter derived from cumulative periods (365d minus 274d, same start 2025-07-01)."
+      ]
+    },
+    {
+      "value_id": "V-0e13688ade0f",
+      "metric": "operating_income",
+      "label": "Operating income",
+      "value": 45915000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2027 Q1",
+        "fiscal_year": 2027,
+        "fiscal_quarter": 1,
+        "start": "2026-07-01",
+        "end": "2026-09-30",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "OperatingIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "675ef8a48d2c5a9e527e0d68cb9adc8c1fd931d5c6b037c7c4e8a7b32665280c",
+          "taxonomy": "us-gaap",
+          "concept": "OperatingIncomeLoss",
+          "unit": "USD",
+          "period_start": "2026-07-01",
+          "period_end": "2026-09-30",
+          "value": 45915000000.0,
+          "accession": "0001193125-26-436133",
+          "form": "10-Q",
+          "filed": "2026-10-28",
+          "available_at": "2026-10-29T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/0001193125-26-436133-index.htm",
+          "filer_fiscal_year": 2027,
+          "filer_fiscal_period": "Q1"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-18aa653371a1",
+      "metric": "net_income",
+      "label": "Net income",
+      "value": 24108000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q2",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 2,
+        "start": "2024-10-01",
+        "end": "2024-12-31",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "NetIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "57811664d3268b8fbd3c6f715b87e95536c3e69c879956d8197cadd93f68b88b",
+          "taxonomy": "us-gaap",
+          "concept": "NetIncomeLoss",
+          "unit": "USD",
+          "period_start": "2024-10-01",
+          "period_end": "2024-12-31",
+          "value": 24108000000.0,
+          "accession": "0001193125-26-027207",
+          "form": "10-Q",
+          "filed": "2026-01-28",
+          "available_at": "2026-01-29T05:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q2"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-0c820e1fea19",
+      "metric": "net_income",
+      "label": "Net income",
+      "value": 25824000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q3",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 3,
+        "start": "2025-01-01",
+        "end": "2025-03-31",
+        "duration_days": 90,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "NetIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "4f245c9243ed0abd6dbca5efa3ac910e19c922738bb16746da977361ed08660d",
+          "taxonomy": "us-gaap",
+          "concept": "NetIncomeLoss",
+          "unit": "USD",
+          "period_start": "2025-01-01",
+          "period_end": "2025-03-31",
+          "value": 25824000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-258123f11b29",
+      "metric": "net_income",
+      "label": "Net income",
+      "value": 27233000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q4",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 4,
+        "start": "2025-04-01",
+        "end": "2025-06-30",
+        "duration_days": 91,
+        "period_type": "quarter"
+      },
+      "method": "derived_ytd_difference",
+      "formula": "NetIncomeLoss[2024-07-01..2025-06-30] - NetIncomeLoss[2024-07-01..2025-03-31]",
+      "concept": "NetIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "3cf9c1a3d29bc8215d7bcc90790653c03d94965f45b1a4dddc183630d58876e5",
+          "taxonomy": "us-gaap",
+          "concept": "NetIncomeLoss",
+          "unit": "USD",
+          "period_start": "2024-07-01",
+          "period_end": "2025-06-30",
+          "value": 101832000000.0,
+          "accession": "0001193125-26-323660",
+          "form": "10-K",
+          "filed": "2026-07-29",
+          "available_at": "2026-07-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "FY"
+        },
+        {
+          "fact_hash": "8d8215c87931d7e25f139eb74f236285a78fafe30bfc1ae39ae08e431e394ae7",
+          "taxonomy": "us-gaap",
+          "concept": "NetIncomeLoss",
+          "unit": "USD",
+          "period_start": "2024-07-01",
+          "period_end": "2025-03-31",
+          "value": 74599000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": [
+        "Standalone quarter derived from cumulative periods (365d minus 274d, same start 2024-07-01)."
+      ]
+    },
+    {
+      "value_id": "V-55d89117abf8",
+      "metric": "net_income",
+      "label": "Net income",
+      "value": 27747000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q1",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 1,
+        "start": "2025-07-01",
+        "end": "2025-09-30",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "NetIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "22f81a7c9fe1027f865f0db96cb60fbf35e870b62af65519d3a23f22d73ecf38",
+          "taxonomy": "us-gaap",
+          "concept": "NetIncomeLoss",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2025-09-30",
+          "value": 27747000000.0,
+          "accession": "0001193125-26-436133",
+          "form": "10-Q",
+          "filed": "2026-10-28",
+          "available_at": "2026-10-29T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/0001193125-26-436133-index.htm",
+          "filer_fiscal_year": 2027,
+          "filer_fiscal_period": "Q1"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-c5216f0e4c40",
+      "metric": "net_income",
+      "label": "Net income",
+      "value": 38458000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q2",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 2,
+        "start": "2025-10-01",
+        "end": "2025-12-31",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "NetIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "df256647b5ded7febeba5080bf6870c473142ffdd9a0a946d8de442d75e7ba84",
+          "taxonomy": "us-gaap",
+          "concept": "NetIncomeLoss",
+          "unit": "USD",
+          "period_start": "2025-10-01",
+          "period_end": "2025-12-31",
+          "value": 38458000000.0,
+          "accession": "0001193125-26-027207",
+          "form": "10-Q",
+          "filed": "2026-01-28",
+          "available_at": "2026-01-29T05:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q2"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-810005372739",
+      "metric": "net_income",
+      "label": "Net income",
+      "value": 31778000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q3",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 3,
+        "start": "2026-01-01",
+        "end": "2026-03-31",
+        "duration_days": 90,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "NetIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "4ce95f415a4ec7ef2dfde8127942843759c273c2639a73acf5ba56b5a814c2cd",
+          "taxonomy": "us-gaap",
+          "concept": "NetIncomeLoss",
+          "unit": "USD",
+          "period_start": "2026-01-01",
+          "period_end": "2026-03-31",
+          "value": 31778000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-6cebd6bca7d3",
+      "metric": "net_income",
+      "label": "Net income",
+      "value": 35766000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q4",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 4,
+        "start": "2026-04-01",
+        "end": "2026-06-30",
+        "duration_days": 91,
+        "period_type": "quarter"
+      },
+      "method": "derived_ytd_difference",
+      "formula": "NetIncomeLoss[2025-07-01..2026-06-30] - NetIncomeLoss[2025-07-01..2026-03-31]",
+      "concept": "NetIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "de12762d936c2753a578e5faa0edd89ce02e7264b30db2b4a88b8f653c7e3263",
+          "taxonomy": "us-gaap",
+          "concept": "NetIncomeLoss",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2026-06-30",
+          "value": 133749000000.0,
+          "accession": "0001193125-26-323660",
+          "form": "10-K",
+          "filed": "2026-07-29",
+          "available_at": "2026-07-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "FY"
+        },
+        {
+          "fact_hash": "80f3cfd6d0c64c2b91a1329d5c4a600aad70613aa06aaefc3d2376954c262eb2",
+          "taxonomy": "us-gaap",
+          "concept": "NetIncomeLoss",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2026-03-31",
+          "value": 97983000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": [
+        "Standalone quarter derived from cumulative periods (365d minus 274d, same start 2025-07-01)."
+      ]
+    },
+    {
+      "value_id": "V-d162554e005a",
+      "metric": "net_income",
+      "label": "Net income",
+      "value": 36629000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2027 Q1",
+        "fiscal_year": 2027,
+        "fiscal_quarter": 1,
+        "start": "2026-07-01",
+        "end": "2026-09-30",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "NetIncomeLoss",
+      "sources": [
+        {
+          "fact_hash": "86409dd2664f9a6705e35cc4572ca21e12f6cd9f684eeb309f3ab09549b727ea",
+          "taxonomy": "us-gaap",
+          "concept": "NetIncomeLoss",
+          "unit": "USD",
+          "period_start": "2026-07-01",
+          "period_end": "2026-09-30",
+          "value": 36629000000.0,
+          "accession": "0001193125-26-436133",
+          "form": "10-Q",
+          "filed": "2026-10-28",
+          "available_at": "2026-10-29T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/0001193125-26-436133-index.htm",
+          "filer_fiscal_year": 2027,
+          "filer_fiscal_period": "Q1"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-d6ea4e29e7c1",
+      "metric": "operating_cash_flow",
+      "label": "Cash flow from operations",
+      "value": 22291000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q2",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 2,
+        "start": "2024-10-01",
+        "end": "2024-12-31",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "NetCashProvidedByUsedInOperatingActivities",
+      "sources": [
+        {
+          "fact_hash": "16f8bee1d64b2eedbf3dfa10fcdf76fa321433bff2f62f3f64b7cdbf7bed21c7",
+          "taxonomy": "us-gaap",
+          "concept": "NetCashProvidedByUsedInOperatingActivities",
+          "unit": "USD",
+          "period_start": "2024-10-01",
+          "period_end": "2024-12-31",
+          "value": 22291000000.0,
+          "accession": "0001193125-26-027207",
+          "form": "10-Q",
+          "filed": "2026-01-28",
+          "available_at": "2026-01-29T05:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q2"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-d7267684e756",
+      "metric": "operating_cash_flow",
+      "label": "Cash flow from operations",
+      "value": 37044000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q3",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 3,
+        "start": "2025-01-01",
+        "end": "2025-03-31",
+        "duration_days": 90,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "NetCashProvidedByUsedInOperatingActivities",
+      "sources": [
+        {
+          "fact_hash": "88b1ba726c2fee20192d0f47e82818fd6354283066f0461022442efc88bce6a6",
+          "taxonomy": "us-gaap",
+          "concept": "NetCashProvidedByUsedInOperatingActivities",
+          "unit": "USD",
+          "period_start": "2025-01-01",
+          "period_end": "2025-03-31",
+          "value": 37044000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-4a99eb678ae1",
+      "metric": "operating_cash_flow",
+      "label": "Cash flow from operations",
+      "value": 42647000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q4",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 4,
+        "start": "2025-04-01",
+        "end": "2025-06-30",
+        "duration_days": 91,
+        "period_type": "quarter"
+      },
+      "method": "derived_ytd_difference",
+      "formula": "NetCashProvidedByUsedInOperatingActivities[2024-07-01..2025-06-30] - NetCashProvidedByUsedInOperatingActivities[2024-07-01..2025-03-31]",
+      "concept": "NetCashProvidedByUsedInOperatingActivities",
+      "sources": [
+        {
+          "fact_hash": "a6844b6dbe3a89d6a5b66ed0464013c086b5290ed5f1d657c1d8ab20a34302c9",
+          "taxonomy": "us-gaap",
+          "concept": "NetCashProvidedByUsedInOperatingActivities",
+          "unit": "USD",
+          "period_start": "2024-07-01",
+          "period_end": "2025-06-30",
+          "value": 136162000000.0,
+          "accession": "0001193125-26-323660",
+          "form": "10-K",
+          "filed": "2026-07-29",
+          "available_at": "2026-07-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "FY"
+        },
+        {
+          "fact_hash": "31c5a04a4edcee32e8ddb0b20c586b1d929e894471592281460cd4bfac645650",
+          "taxonomy": "us-gaap",
+          "concept": "NetCashProvidedByUsedInOperatingActivities",
+          "unit": "USD",
+          "period_start": "2024-07-01",
+          "period_end": "2025-03-31",
+          "value": 93515000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": [
+        "Standalone quarter derived from cumulative periods (365d minus 274d, same start 2024-07-01)."
+      ]
+    },
+    {
+      "value_id": "V-cf4c887bee55",
+      "metric": "operating_cash_flow",
+      "label": "Cash flow from operations",
+      "value": 45057000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q1",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 1,
+        "start": "2025-07-01",
+        "end": "2025-09-30",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "NetCashProvidedByUsedInOperatingActivities",
+      "sources": [
+        {
+          "fact_hash": "13a2603707988fd9415b6651882815b4b0d8c093b7bdd436fb00630444059c08",
+          "taxonomy": "us-gaap",
+          "concept": "NetCashProvidedByUsedInOperatingActivities",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2025-09-30",
+          "value": 45057000000.0,
+          "accession": "0001193125-26-436133",
+          "form": "10-Q",
+          "filed": "2026-10-28",
+          "available_at": "2026-10-29T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/0001193125-26-436133-index.htm",
+          "filer_fiscal_year": 2027,
+          "filer_fiscal_period": "Q1"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-b8fcaa1b1357",
+      "metric": "operating_cash_flow",
+      "label": "Cash flow from operations",
+      "value": 35758000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q2",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 2,
+        "start": "2025-10-01",
+        "end": "2025-12-31",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "NetCashProvidedByUsedInOperatingActivities",
+      "sources": [
+        {
+          "fact_hash": "92a671193ed35c3c4382ce6476708691cb2cb34ef7315dc9cb408511d0bea66a",
+          "taxonomy": "us-gaap",
+          "concept": "NetCashProvidedByUsedInOperatingActivities",
+          "unit": "USD",
+          "period_start": "2025-10-01",
+          "period_end": "2025-12-31",
+          "value": 35758000000.0,
+          "accession": "0001193125-26-027207",
+          "form": "10-Q",
+          "filed": "2026-01-28",
+          "available_at": "2026-01-29T05:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q2"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-238238271857",
+      "metric": "operating_cash_flow",
+      "label": "Cash flow from operations",
+      "value": 46679000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q3",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 3,
+        "start": "2026-01-01",
+        "end": "2026-03-31",
+        "duration_days": 90,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "NetCashProvidedByUsedInOperatingActivities",
+      "sources": [
+        {
+          "fact_hash": "0cafb2d57efcc21f85bd6a3789ef825c948129fd1a728d65db1fe9404eca8743",
+          "taxonomy": "us-gaap",
+          "concept": "NetCashProvidedByUsedInOperatingActivities",
+          "unit": "USD",
+          "period_start": "2026-01-01",
+          "period_end": "2026-03-31",
+          "value": 46679000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-97f9ebe8cb32",
+      "metric": "operating_cash_flow",
+      "label": "Cash flow from operations",
+      "value": 55441000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q4",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 4,
+        "start": "2026-04-01",
+        "end": "2026-06-30",
+        "duration_days": 91,
+        "period_type": "quarter"
+      },
+      "method": "derived_ytd_difference",
+      "formula": "NetCashProvidedByUsedInOperatingActivities[2025-07-01..2026-06-30] - NetCashProvidedByUsedInOperatingActivities[2025-07-01..2026-03-31]",
+      "concept": "NetCashProvidedByUsedInOperatingActivities",
+      "sources": [
+        {
+          "fact_hash": "8e39d4e68afacd9e86e9406c1c09efd539a4cded695aef52f9e5a05e38182f0e",
+          "taxonomy": "us-gaap",
+          "concept": "NetCashProvidedByUsedInOperatingActivities",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2026-06-30",
+          "value": 182935000000.0,
+          "accession": "0001193125-26-323660",
+          "form": "10-K",
+          "filed": "2026-07-29",
+          "available_at": "2026-07-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "FY"
+        },
+        {
+          "fact_hash": "20e0dd5e92c668f11a84cba517cbad2dff835e8dacb7a758d65bd810575bebe8",
+          "taxonomy": "us-gaap",
+          "concept": "NetCashProvidedByUsedInOperatingActivities",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2026-03-31",
+          "value": 127494000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": [
+        "Standalone quarter derived from cumulative periods (365d minus 274d, same start 2025-07-01)."
+      ]
+    },
+    {
+      "value_id": "V-de44ce14585a",
+      "metric": "operating_cash_flow",
+      "label": "Cash flow from operations",
+      "value": 58000000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2027 Q1",
+        "fiscal_year": 2027,
+        "fiscal_quarter": 1,
+        "start": "2026-07-01",
+        "end": "2026-09-30",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "NetCashProvidedByUsedInOperatingActivities",
+      "sources": [
+        {
+          "fact_hash": "1e088c1e33cbabc6db9d1e44db6a55b74c333652a27781eb2017ba6c9ccc8d65",
+          "taxonomy": "us-gaap",
+          "concept": "NetCashProvidedByUsedInOperatingActivities",
+          "unit": "USD",
+          "period_start": "2026-07-01",
+          "period_end": "2026-09-30",
+          "value": 58000000000.0,
+          "accession": "0001193125-26-436133",
+          "form": "10-Q",
+          "filed": "2026-10-28",
+          "available_at": "2026-10-29T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/0001193125-26-436133-index.htm",
+          "filer_fiscal_year": 2027,
+          "filer_fiscal_period": "Q1"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-ecbdd0165645",
+      "metric": "capex",
+      "label": "Capital expenditures",
+      "value": 15804000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q2",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 2,
+        "start": "2024-10-01",
+        "end": "2024-12-31",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+      "sources": [
+        {
+          "fact_hash": "84bab6e2f5d231687bcee0dba0685054cc89bc9dad558b401c3f8938b3a9169e",
+          "taxonomy": "us-gaap",
+          "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+          "unit": "USD",
+          "period_start": "2024-10-01",
+          "period_end": "2024-12-31",
+          "value": 15804000000.0,
+          "accession": "0001193125-26-027207",
+          "form": "10-Q",
+          "filed": "2026-01-28",
+          "available_at": "2026-01-29T05:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q2"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-e18c148ac63a",
+      "metric": "capex",
+      "label": "Capital expenditures",
+      "value": 16745000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q3",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 3,
+        "start": "2025-01-01",
+        "end": "2025-03-31",
+        "duration_days": 90,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+      "sources": [
+        {
+          "fact_hash": "208e5709c1aedd0d5fa792ba120ab1d164a8d2920a6ddc4c20b0ee70d2fd7538",
+          "taxonomy": "us-gaap",
+          "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+          "unit": "USD",
+          "period_start": "2025-01-01",
+          "period_end": "2025-03-31",
+          "value": 16745000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-3188494686be",
+      "metric": "capex",
+      "label": "Capital expenditures",
+      "value": 17079000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2025 Q4",
+        "fiscal_year": 2025,
+        "fiscal_quarter": 4,
+        "start": "2025-04-01",
+        "end": "2025-06-30",
+        "duration_days": 91,
+        "period_type": "quarter"
+      },
+      "method": "derived_ytd_difference",
+      "formula": "PaymentsToAcquirePropertyPlantAndEquipment[2024-07-01..2025-06-30] - PaymentsToAcquirePropertyPlantAndEquipment[2024-07-01..2025-03-31]",
+      "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+      "sources": [
+        {
+          "fact_hash": "6159dd35617244d08b5807fa03fb5fd390d65b5e05a405dad1f639f7a3b902a6",
+          "taxonomy": "us-gaap",
+          "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+          "unit": "USD",
+          "period_start": "2024-07-01",
+          "period_end": "2025-06-30",
+          "value": 64551000000.0,
+          "accession": "0001193125-26-323660",
+          "form": "10-K",
+          "filed": "2026-07-29",
+          "available_at": "2026-07-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "FY"
+        },
+        {
+          "fact_hash": "84e383433e38546f27c5c4196e88da540b134c05c924714fee86aa4bc7d29262",
+          "taxonomy": "us-gaap",
+          "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+          "unit": "USD",
+          "period_start": "2024-07-01",
+          "period_end": "2025-03-31",
+          "value": 47472000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": [
+        "Standalone quarter derived from cumulative periods (365d minus 274d, same start 2024-07-01)."
+      ]
+    },
+    {
+      "value_id": "V-1e70b8b4af35",
+      "metric": "capex",
+      "label": "Capital expenditures",
+      "value": 19394000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q1",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 1,
+        "start": "2025-07-01",
+        "end": "2025-09-30",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+      "sources": [
+        {
+          "fact_hash": "ec5f83a21e080383a1f4abeb02ea678ed9714c5e7b5282443b9a654f9d00ab65",
+          "taxonomy": "us-gaap",
+          "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2025-09-30",
+          "value": 19394000000.0,
+          "accession": "0001193125-26-436133",
+          "form": "10-Q",
+          "filed": "2026-10-28",
+          "available_at": "2026-10-29T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/0001193125-26-436133-index.htm",
+          "filer_fiscal_year": 2027,
+          "filer_fiscal_period": "Q1"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-2e798b1fa1ec",
+      "metric": "capex",
+      "label": "Capital expenditures",
+      "value": 29876000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q2",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 2,
+        "start": "2025-10-01",
+        "end": "2025-12-31",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+      "sources": [
+        {
+          "fact_hash": "a524f56efae90d5725b32575a38846c6978d0c61ebf39137486f1cee5bd9a369",
+          "taxonomy": "us-gaap",
+          "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+          "unit": "USD",
+          "period_start": "2025-10-01",
+          "period_end": "2025-12-31",
+          "value": 29876000000.0,
+          "accession": "0001193125-26-027207",
+          "form": "10-Q",
+          "filed": "2026-01-28",
+          "available_at": "2026-01-29T05:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q2"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-c23bf08b58c1",
+      "metric": "capex",
+      "label": "Capital expenditures",
+      "value": 30876000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q3",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 3,
+        "start": "2026-01-01",
+        "end": "2026-03-31",
+        "duration_days": 90,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+      "sources": [
+        {
+          "fact_hash": "873c6c8c23cf182eee95e9e7c5d40f56e67c11870961d87b3e134e57d9f1796a",
+          "taxonomy": "us-gaap",
+          "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+          "unit": "USD",
+          "period_start": "2026-01-01",
+          "period_end": "2026-03-31",
+          "value": 30876000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    },
+    {
+      "value_id": "V-c5252a2e2983",
+      "metric": "capex",
+      "label": "Capital expenditures",
+      "value": 35802000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2026 Q4",
+        "fiscal_year": 2026,
+        "fiscal_quarter": 4,
+        "start": "2026-04-01",
+        "end": "2026-06-30",
+        "duration_days": 91,
+        "period_type": "quarter"
+      },
+      "method": "derived_ytd_difference",
+      "formula": "PaymentsToAcquirePropertyPlantAndEquipment[2025-07-01..2026-06-30] - PaymentsToAcquirePropertyPlantAndEquipment[2025-07-01..2026-03-31]",
+      "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+      "sources": [
+        {
+          "fact_hash": "78a6bf95fa8c49cd1264e7a81a97b290020769a7f8148eab5549c24d37569788",
+          "taxonomy": "us-gaap",
+          "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2026-06-30",
+          "value": 115948000000.0,
+          "accession": "0001193125-26-323660",
+          "form": "10-K",
+          "filed": "2026-07-29",
+          "available_at": "2026-07-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "FY"
+        },
+        {
+          "fact_hash": "b52a8b0b9d8c994c1cf96da17aec7c7a7bfde506adb9af7218b3cc270e34ce80",
+          "taxonomy": "us-gaap",
+          "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+          "unit": "USD",
+          "period_start": "2025-07-01",
+          "period_end": "2026-03-31",
+          "value": 80146000000.0,
+          "accession": "0001193125-26-191507",
+          "form": "10-Q",
+          "filed": "2026-04-29",
+          "available_at": "2026-04-30T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+          "filer_fiscal_year": 2026,
+          "filer_fiscal_period": "Q3"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": [
+        "Standalone quarter derived from cumulative periods (365d minus 274d, same start 2025-07-01)."
+      ]
+    },
+    {
+      "value_id": "V-8d7839650716",
+      "metric": "capex",
+      "label": "Capital expenditures",
+      "value": 39367000000.0,
+      "unit": "USD",
+      "period": {
+        "label": "FY2027 Q1",
+        "fiscal_year": 2027,
+        "fiscal_quarter": 1,
+        "start": "2026-07-01",
+        "end": "2026-09-30",
+        "duration_days": 92,
+        "period_type": "quarter"
+      },
+      "method": "reported",
+      "formula": null,
+      "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+      "sources": [
+        {
+          "fact_hash": "762cf8306a8edc1a1346352785f300b25ab080dd8612fcf93645ba6a4a46f7ac",
+          "taxonomy": "us-gaap",
+          "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+          "unit": "USD",
+          "period_start": "2026-07-01",
+          "period_end": "2026-09-30",
+          "value": 39367000000.0,
+          "accession": "0001193125-26-436133",
+          "form": "10-Q",
+          "filed": "2026-10-28",
+          "available_at": "2026-10-29T04:00:00Z",
+          "filing_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/0001193125-26-436133-index.htm",
+          "filer_fiscal_year": 2027,
+          "filer_fiscal_period": "Q1"
+        }
+      ],
+      "restated": false,
+      "alternative_values": [],
+      "warnings": []
+    }
+  ],
+  "derived_calculations": [
+    {
+      "calc_id": "C-6f629cdc2b05",
+      "name": "revenue_yoy",
+      "label": "Revenue growth YoY",
+      "period_label": "FY2025 Q2",
+      "period_start": "2024-10-01",
+      "period_end": "2024-12-31",
+      "value": 0.12273460174137375,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_year) / |revenue_prior_year|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 69632000000.0,
+          "unit": "USD",
+          "ref_id": "V-ba59c8b9cdf2",
+          "period_label": "FY2025 Q2"
+        },
+        {
+          "name": "revenue_prior_year",
+          "value": 62020000000.0,
+          "unit": "USD",
+          "ref_id": "V-584a4cb9868a",
+          "period_label": "FY2024 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-efda7fd7814d",
+      "name": "revenue_qoq",
+      "label": "Revenue growth QoQ",
+      "period_label": "FY2025 Q2",
+      "period_start": "2024-10-01",
+      "period_end": "2024-12-31",
+      "value": 0.06170618281619273,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_quarter) / |revenue_prior_quarter|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 69632000000.0,
+          "unit": "USD",
+          "ref_id": "V-ba59c8b9cdf2",
+          "period_label": "FY2025 Q2"
+        },
+        {
+          "name": "revenue_prior_quarter",
+          "value": 65585000000.0,
+          "unit": "USD",
+          "ref_id": "V-1c4c18cba000",
+          "period_label": "FY2025 Q1"
+        }
+      ],
+      "warnings": [
+        "Sequential growth is affected by seasonality."
+      ],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-0d2c5a702e59",
+      "name": "gross_margin",
+      "label": "Gross margin",
+      "period_label": "FY2025 Q2",
+      "period_start": "2024-10-01",
+      "period_end": "2024-12-31",
+      "value": 0.6869399126838235,
+      "unit": "ratio",
+      "formula": "gross_profit / revenue",
+      "inputs": [
+        {
+          "name": "gross_profit",
+          "value": 47833000000.0,
+          "unit": "USD",
+          "ref_id": "V-1bcd71db27cc",
+          "period_label": "FY2025 Q2"
+        },
+        {
+          "name": "revenue",
+          "value": 69632000000.0,
+          "unit": "USD",
+          "ref_id": "V-ba59c8b9cdf2",
+          "period_label": "FY2025 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-0e496d99a0e8",
+      "name": "operating_margin",
+      "label": "Operating margin",
+      "period_label": "FY2025 Q2",
+      "period_start": "2024-10-01",
+      "period_end": "2024-12-31",
+      "value": 0.4545754825367647,
+      "unit": "ratio",
+      "formula": "operating_income / revenue",
+      "inputs": [
+        {
+          "name": "operating_income",
+          "value": 31653000000.0,
+          "unit": "USD",
+          "ref_id": "V-a1b5d46bddd5",
+          "period_label": "FY2025 Q2"
+        },
+        {
+          "name": "revenue",
+          "value": 69632000000.0,
+          "unit": "USD",
+          "ref_id": "V-ba59c8b9cdf2",
+          "period_label": "FY2025 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-2b9a0cf24005",
+      "name": "net_margin",
+      "label": "Net profit margin",
+      "period_label": "FY2025 Q2",
+      "period_start": "2024-10-01",
+      "period_end": "2024-12-31",
+      "value": 0.34622012867647056,
+      "unit": "ratio",
+      "formula": "net_income / revenue",
+      "inputs": [
+        {
+          "name": "net_income",
+          "value": 24108000000.0,
+          "unit": "USD",
+          "ref_id": "V-18aa653371a1",
+          "period_label": "FY2025 Q2"
+        },
+        {
+          "name": "revenue",
+          "value": 69632000000.0,
+          "unit": "USD",
+          "ref_id": "V-ba59c8b9cdf2",
+          "period_label": "FY2025 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-2aa3f5138ffd",
+      "name": "free_cash_flow",
+      "label": "Free cash flow",
+      "period_label": "FY2025 Q2",
+      "period_start": "2024-10-01",
+      "period_end": "2024-12-31",
+      "value": 6487000000.0,
+      "unit": "USD",
+      "formula": "operating_cash_flow - capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 22291000000.0,
+          "unit": "USD",
+          "ref_id": "V-d6ea4e29e7c1",
+          "period_label": "FY2025 Q2"
+        },
+        {
+          "name": "capex",
+          "value": 15804000000.0,
+          "unit": "USD",
+          "ref_id": "V-ecbdd0165645",
+          "period_label": "FY2025 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-6f9d51bf8213",
+      "name": "fcf_margin",
+      "label": "FCF margin",
+      "period_label": "FY2025 Q2",
+      "period_start": "2024-10-01",
+      "period_end": "2024-12-31",
+      "value": 0.09316119025735294,
+      "unit": "ratio",
+      "formula": "free_cash_flow / revenue",
+      "inputs": [
+        {
+          "name": "free_cash_flow",
+          "value": 6487000000.0,
+          "unit": "USD",
+          "ref_id": "C-2aa3f5138ffd",
+          "period_label": "FY2025 Q2"
+        },
+        {
+          "name": "revenue",
+          "value": 69632000000.0,
+          "unit": "USD",
+          "ref_id": "V-ba59c8b9cdf2",
+          "period_label": "FY2025 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-11360f0162aa",
+      "name": "capex_to_revenue",
+      "label": "CAPEX / revenue",
+      "period_label": "FY2025 Q2",
+      "period_start": "2024-10-01",
+      "period_end": "2024-12-31",
+      "value": 0.22696461397058823,
+      "unit": "ratio",
+      "formula": "capex / revenue",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 15804000000.0,
+          "unit": "USD",
+          "ref_id": "V-ecbdd0165645",
+          "period_label": "FY2025 Q2"
+        },
+        {
+          "name": "revenue",
+          "value": 69632000000.0,
+          "unit": "USD",
+          "ref_id": "V-ba59c8b9cdf2",
+          "period_label": "FY2025 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-ca96db214f82",
+      "name": "capex_yoy",
+      "label": "CAPEX growth YoY",
+      "period_label": "FY2025 Q2",
+      "period_start": "2024-10-01",
+      "period_end": "2024-12-31",
+      "value": 0.6234206471494607,
+      "unit": "ratio",
+      "formula": "(capex - capex_prior_year) / |capex_prior_year|",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 15804000000.0,
+          "unit": "USD",
+          "ref_id": "V-ecbdd0165645",
+          "period_label": "FY2025 Q2"
+        },
+        {
+          "name": "capex_prior_year",
+          "value": 9735000000.0,
+          "unit": "USD",
+          "ref_id": "V-95247ad769d8",
+          "period_label": "FY2024 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-ecc19a26eca0",
+      "name": "ocf_to_capex",
+      "label": "Operating cash flow / CAPEX",
+      "period_label": "FY2025 Q2",
+      "period_start": "2024-10-01",
+      "period_end": "2024-12-31",
+      "value": 1.4104657048848392,
+      "unit": "multiple",
+      "formula": "operating_cash_flow / capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 22291000000.0,
+          "unit": "USD",
+          "ref_id": "V-d6ea4e29e7c1",
+          "period_label": "FY2025 Q2"
+        },
+        {
+          "name": "capex",
+          "value": 15804000000.0,
+          "unit": "USD",
+          "ref_id": "V-ecbdd0165645",
+          "period_label": "FY2025 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-0b9386e82598",
+      "name": "revenue_yoy",
+      "label": "Revenue growth YoY",
+      "period_label": "FY2025 Q3",
+      "period_start": "2025-01-01",
+      "period_end": "2025-03-31",
+      "value": 0.13269100197225905,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_year) / |revenue_prior_year|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 70066000000.0,
+          "unit": "USD",
+          "ref_id": "V-d22922fd38b4",
+          "period_label": "FY2025 Q3"
+        },
+        {
+          "name": "revenue_prior_year",
+          "value": 61858000000.0,
+          "unit": "USD",
+          "ref_id": "V-830bb5a83473",
+          "period_label": "FY2024 Q3"
+        }
+      ],
+      "warnings": [
+        "Period lengths differ (90d vs 91d)."
+      ],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-8e9e643ff665",
+      "name": "revenue_qoq",
+      "label": "Revenue growth QoQ",
+      "period_label": "FY2025 Q3",
+      "period_start": "2025-01-01",
+      "period_end": "2025-03-31",
+      "value": 0.0062327665441176475,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_quarter) / |revenue_prior_quarter|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 70066000000.0,
+          "unit": "USD",
+          "ref_id": "V-d22922fd38b4",
+          "period_label": "FY2025 Q3"
+        },
+        {
+          "name": "revenue_prior_quarter",
+          "value": 69632000000.0,
+          "unit": "USD",
+          "ref_id": "V-ba59c8b9cdf2",
+          "period_label": "FY2025 Q2"
+        }
+      ],
+      "warnings": [
+        "Period lengths differ (90d vs 92d).",
+        "Sequential growth is affected by seasonality."
+      ],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-2992ee36dd0f",
+      "name": "gross_margin",
+      "label": "Gross margin",
+      "period_label": "FY2025 Q3",
+      "period_start": "2025-01-01",
+      "period_end": "2025-03-31",
+      "value": 0.6871663859789342,
+      "unit": "ratio",
+      "formula": "gross_profit / revenue",
+      "inputs": [
+        {
+          "name": "gross_profit",
+          "value": 48147000000.0,
+          "unit": "USD",
+          "ref_id": "V-9fcdcc9f72f0",
+          "period_label": "FY2025 Q3"
+        },
+        {
+          "name": "revenue",
+          "value": 70066000000.0,
+          "unit": "USD",
+          "ref_id": "V-d22922fd38b4",
+          "period_label": "FY2025 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-4b8519644404",
+      "name": "operating_margin",
+      "label": "Operating margin",
+      "period_label": "FY2025 Q3",
+      "period_start": "2025-01-01",
+      "period_end": "2025-03-31",
+      "value": 0.456712242742557,
+      "unit": "ratio",
+      "formula": "operating_income / revenue",
+      "inputs": [
+        {
+          "name": "operating_income",
+          "value": 32000000000.0,
+          "unit": "USD",
+          "ref_id": "V-5422800e1187",
+          "period_label": "FY2025 Q3"
+        },
+        {
+          "name": "revenue",
+          "value": 70066000000.0,
+          "unit": "USD",
+          "ref_id": "V-d22922fd38b4",
+          "period_label": "FY2025 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-77e93c3c5561",
+      "name": "net_margin",
+      "label": "Net profit margin",
+      "period_label": "FY2025 Q3",
+      "period_start": "2025-01-01",
+      "period_end": "2025-03-31",
+      "value": 0.3685667798932435,
+      "unit": "ratio",
+      "formula": "net_income / revenue",
+      "inputs": [
+        {
+          "name": "net_income",
+          "value": 25824000000.0,
+          "unit": "USD",
+          "ref_id": "V-0c820e1fea19",
+          "period_label": "FY2025 Q3"
+        },
+        {
+          "name": "revenue",
+          "value": 70066000000.0,
+          "unit": "USD",
+          "ref_id": "V-d22922fd38b4",
+          "period_label": "FY2025 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-2278dd00d414",
+      "name": "free_cash_flow",
+      "label": "Free cash flow",
+      "period_label": "FY2025 Q3",
+      "period_start": "2025-01-01",
+      "period_end": "2025-03-31",
+      "value": 20299000000.0,
+      "unit": "USD",
+      "formula": "operating_cash_flow - capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 37044000000.0,
+          "unit": "USD",
+          "ref_id": "V-d7267684e756",
+          "period_label": "FY2025 Q3"
+        },
+        {
+          "name": "capex",
+          "value": 16745000000.0,
+          "unit": "USD",
+          "ref_id": "V-e18c148ac63a",
+          "period_label": "FY2025 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-963d3cf26085",
+      "name": "fcf_margin",
+      "label": "FCF margin",
+      "period_label": "FY2025 Q3",
+      "period_start": "2025-01-01",
+      "period_end": "2025-03-31",
+      "value": 0.2897125567322239,
+      "unit": "ratio",
+      "formula": "free_cash_flow / revenue",
+      "inputs": [
+        {
+          "name": "free_cash_flow",
+          "value": 20299000000.0,
+          "unit": "USD",
+          "ref_id": "C-2278dd00d414",
+          "period_label": "FY2025 Q3"
+        },
+        {
+          "name": "revenue",
+          "value": 70066000000.0,
+          "unit": "USD",
+          "ref_id": "V-d22922fd38b4",
+          "period_label": "FY2025 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-e7fb9370fcfb",
+      "name": "capex_to_revenue",
+      "label": "CAPEX / revenue",
+      "period_label": "FY2025 Q3",
+      "period_start": "2025-01-01",
+      "period_end": "2025-03-31",
+      "value": 0.23898895327262867,
+      "unit": "ratio",
+      "formula": "capex / revenue",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 16745000000.0,
+          "unit": "USD",
+          "ref_id": "V-e18c148ac63a",
+          "period_label": "FY2025 Q3"
+        },
+        {
+          "name": "revenue",
+          "value": 70066000000.0,
+          "unit": "USD",
+          "ref_id": "V-d22922fd38b4",
+          "period_label": "FY2025 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-58ada68619b7",
+      "name": "capex_yoy",
+      "label": "CAPEX growth YoY",
+      "period_label": "FY2025 Q3",
+      "period_start": "2025-01-01",
+      "period_end": "2025-03-31",
+      "value": 0.5289444850255661,
+      "unit": "ratio",
+      "formula": "(capex - capex_prior_year) / |capex_prior_year|",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 16745000000.0,
+          "unit": "USD",
+          "ref_id": "V-e18c148ac63a",
+          "period_label": "FY2025 Q3"
+        },
+        {
+          "name": "capex_prior_year",
+          "value": 10952000000.0,
+          "unit": "USD",
+          "ref_id": "V-2e2f4f928928",
+          "period_label": "FY2024 Q3"
+        }
+      ],
+      "warnings": [
+        "Period lengths differ (90d vs 91d)."
+      ],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-88afc0f33fa7",
+      "name": "ocf_to_capex",
+      "label": "Operating cash flow / CAPEX",
+      "period_label": "FY2025 Q3",
+      "period_start": "2025-01-01",
+      "period_end": "2025-03-31",
+      "value": 2.212242460435951,
+      "unit": "multiple",
+      "formula": "operating_cash_flow / capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 37044000000.0,
+          "unit": "USD",
+          "ref_id": "V-d7267684e756",
+          "period_label": "FY2025 Q3"
+        },
+        {
+          "name": "capex",
+          "value": 16745000000.0,
+          "unit": "USD",
+          "ref_id": "V-e18c148ac63a",
+          "period_label": "FY2025 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-a2dd5236c680",
+      "name": "revenue_yoy",
+      "label": "Revenue growth YoY",
+      "period_label": "FY2025 Q4",
+      "period_start": "2025-04-01",
+      "period_end": "2025-06-30",
+      "value": 0.18097548163826532,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_year) / |revenue_prior_year|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 76441000000.0,
+          "unit": "USD",
+          "ref_id": "V-2bc864155e57",
+          "period_label": "FY2025 Q4"
+        },
+        {
+          "name": "revenue_prior_year",
+          "value": 64727000000.0,
+          "unit": "USD",
+          "ref_id": "V-771b23de23fe",
+          "period_label": "FY2024 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-bd843be5ed05",
+      "name": "revenue_qoq",
+      "label": "Revenue growth QoQ",
+      "period_label": "FY2025 Q4",
+      "period_start": "2025-04-01",
+      "period_end": "2025-06-30",
+      "value": 0.09098564210886878,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_quarter) / |revenue_prior_quarter|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 76441000000.0,
+          "unit": "USD",
+          "ref_id": "V-2bc864155e57",
+          "period_label": "FY2025 Q4"
+        },
+        {
+          "name": "revenue_prior_quarter",
+          "value": 70066000000.0,
+          "unit": "USD",
+          "ref_id": "V-d22922fd38b4",
+          "period_label": "FY2025 Q3"
+        }
+      ],
+      "warnings": [
+        "Period lengths differ (91d vs 90d).",
+        "Sequential growth is affected by seasonality."
+      ],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-f2d8e6a94f85",
+      "name": "gross_margin",
+      "label": "Gross margin",
+      "period_label": "FY2025 Q4",
+      "period_start": "2025-04-01",
+      "period_end": "2025-06-30",
+      "value": 0.6858492170432098,
+      "unit": "ratio",
+      "formula": "gross_profit / revenue",
+      "inputs": [
+        {
+          "name": "gross_profit",
+          "value": 52427000000.0,
+          "unit": "USD",
+          "ref_id": "V-528369140333",
+          "period_label": "FY2025 Q4"
+        },
+        {
+          "name": "revenue",
+          "value": 76441000000.0,
+          "unit": "USD",
+          "ref_id": "V-2bc864155e57",
+          "period_label": "FY2025 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-7e5691590d21",
+      "name": "operating_margin",
+      "label": "Operating margin",
+      "period_label": "FY2025 Q4",
+      "period_start": "2025-04-01",
+      "period_end": "2025-06-30",
+      "value": 0.44901296424693554,
+      "unit": "ratio",
+      "formula": "operating_income / revenue",
+      "inputs": [
+        {
+          "name": "operating_income",
+          "value": 34323000000.0,
+          "unit": "USD",
+          "ref_id": "V-c9d0f6950feb",
+          "period_label": "FY2025 Q4"
+        },
+        {
+          "name": "revenue",
+          "value": 76441000000.0,
+          "unit": "USD",
+          "ref_id": "V-2bc864155e57",
+          "period_label": "FY2025 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-4cd011964dc2",
+      "name": "net_margin",
+      "label": "Net profit margin",
+      "period_label": "FY2025 Q4",
+      "period_start": "2025-04-01",
+      "period_end": "2025-06-30",
+      "value": 0.3562616920239139,
+      "unit": "ratio",
+      "formula": "net_income / revenue",
+      "inputs": [
+        {
+          "name": "net_income",
+          "value": 27233000000.0,
+          "unit": "USD",
+          "ref_id": "V-258123f11b29",
+          "period_label": "FY2025 Q4"
+        },
+        {
+          "name": "revenue",
+          "value": 76441000000.0,
+          "unit": "USD",
+          "ref_id": "V-2bc864155e57",
+          "period_label": "FY2025 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-f1a9aa44b6e1",
+      "name": "free_cash_flow",
+      "label": "Free cash flow",
+      "period_label": "FY2025 Q4",
+      "period_start": "2025-04-01",
+      "period_end": "2025-06-30",
+      "value": 25568000000.0,
+      "unit": "USD",
+      "formula": "operating_cash_flow - capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 42647000000.0,
+          "unit": "USD",
+          "ref_id": "V-4a99eb678ae1",
+          "period_label": "FY2025 Q4"
+        },
+        {
+          "name": "capex",
+          "value": 17079000000.0,
+          "unit": "USD",
+          "ref_id": "V-3188494686be",
+          "period_label": "FY2025 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-33b864a4b435",
+      "name": "fcf_margin",
+      "label": "FCF margin",
+      "period_label": "FY2025 Q4",
+      "period_start": "2025-04-01",
+      "period_end": "2025-06-30",
+      "value": 0.3344801873340223,
+      "unit": "ratio",
+      "formula": "free_cash_flow / revenue",
+      "inputs": [
+        {
+          "name": "free_cash_flow",
+          "value": 25568000000.0,
+          "unit": "USD",
+          "ref_id": "C-f1a9aa44b6e1",
+          "period_label": "FY2025 Q4"
+        },
+        {
+          "name": "revenue",
+          "value": 76441000000.0,
+          "unit": "USD",
+          "ref_id": "V-2bc864155e57",
+          "period_label": "FY2025 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-7f3fc14a9326",
+      "name": "capex_to_revenue",
+      "label": "CAPEX / revenue",
+      "period_label": "FY2025 Q4",
+      "period_start": "2025-04-01",
+      "period_end": "2025-06-30",
+      "value": 0.22342721837757223,
+      "unit": "ratio",
+      "formula": "capex / revenue",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 17079000000.0,
+          "unit": "USD",
+          "ref_id": "V-3188494686be",
+          "period_label": "FY2025 Q4"
+        },
+        {
+          "name": "revenue",
+          "value": 76441000000.0,
+          "unit": "USD",
+          "ref_id": "V-2bc864155e57",
+          "period_label": "FY2025 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-6b280f1de220",
+      "name": "capex_yoy",
+      "label": "CAPEX growth YoY",
+      "period_label": "FY2025 Q4",
+      "period_start": "2025-04-01",
+      "period_end": "2025-06-30",
+      "value": 0.23109637425214447,
+      "unit": "ratio",
+      "formula": "(capex - capex_prior_year) / |capex_prior_year|",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 17079000000.0,
+          "unit": "USD",
+          "ref_id": "V-3188494686be",
+          "period_label": "FY2025 Q4"
+        },
+        {
+          "name": "capex_prior_year",
+          "value": 13873000000.0,
+          "unit": "USD",
+          "ref_id": "V-51d4d029cb65",
+          "period_label": "FY2024 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-7d5609148db5",
+      "name": "ocf_to_capex",
+      "label": "Operating cash flow / CAPEX",
+      "period_label": "FY2025 Q4",
+      "period_start": "2025-04-01",
+      "period_end": "2025-06-30",
+      "value": 2.4970431524093915,
+      "unit": "multiple",
+      "formula": "operating_cash_flow / capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 42647000000.0,
+          "unit": "USD",
+          "ref_id": "V-4a99eb678ae1",
+          "period_label": "FY2025 Q4"
+        },
+        {
+          "name": "capex",
+          "value": 17079000000.0,
+          "unit": "USD",
+          "ref_id": "V-3188494686be",
+          "period_label": "FY2025 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-19cf417898d1",
+      "name": "revenue_yoy",
+      "label": "Revenue growth YoY",
+      "period_label": "FY2026 Q1",
+      "period_start": "2025-07-01",
+      "period_end": "2025-09-30",
+      "value": 0.18431043683769155,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_year) / |revenue_prior_year|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 77673000000.0,
+          "unit": "USD",
+          "ref_id": "V-a15e8b2c3ed4",
+          "period_label": "FY2026 Q1"
+        },
+        {
+          "name": "revenue_prior_year",
+          "value": 65585000000.0,
+          "unit": "USD",
+          "ref_id": "V-1c4c18cba000",
+          "period_label": "FY2025 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-b82baa7dc8d7",
+      "name": "revenue_qoq",
+      "label": "Revenue growth QoQ",
+      "period_label": "FY2026 Q1",
+      "period_start": "2025-07-01",
+      "period_end": "2025-09-30",
+      "value": 0.016117005272039873,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_quarter) / |revenue_prior_quarter|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 77673000000.0,
+          "unit": "USD",
+          "ref_id": "V-a15e8b2c3ed4",
+          "period_label": "FY2026 Q1"
+        },
+        {
+          "name": "revenue_prior_quarter",
+          "value": 76441000000.0,
+          "unit": "USD",
+          "ref_id": "V-2bc864155e57",
+          "period_label": "FY2025 Q4"
+        }
+      ],
+      "warnings": [
+        "Period lengths differ (92d vs 91d).",
+        "Sequential growth is affected by seasonality."
+      ],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-2eea9d7bfb5d",
+      "name": "gross_margin",
+      "label": "Gross margin",
+      "period_label": "FY2026 Q1",
+      "period_start": "2025-07-01",
+      "period_end": "2025-09-30",
+      "value": 0.6904587179586213,
+      "unit": "ratio",
+      "formula": "gross_profit / revenue",
+      "inputs": [
+        {
+          "name": "gross_profit",
+          "value": 53630000000.0,
+          "unit": "USD",
+          "ref_id": "V-0ee0e2edffad",
+          "period_label": "FY2026 Q1"
+        },
+        {
+          "name": "revenue",
+          "value": 77673000000.0,
+          "unit": "USD",
+          "ref_id": "V-a15e8b2c3ed4",
+          "period_label": "FY2026 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-571116a630c5",
+      "name": "operating_margin",
+      "label": "Operating margin",
+      "period_label": "FY2026 Q1",
+      "period_start": "2025-07-01",
+      "period_end": "2025-09-30",
+      "value": 0.48872838695557014,
+      "unit": "ratio",
+      "formula": "operating_income / revenue",
+      "inputs": [
+        {
+          "name": "operating_income",
+          "value": 37961000000.0,
+          "unit": "USD",
+          "ref_id": "V-4df37025cbd2",
+          "period_label": "FY2026 Q1"
+        },
+        {
+          "name": "revenue",
+          "value": 77673000000.0,
+          "unit": "USD",
+          "ref_id": "V-a15e8b2c3ed4",
+          "period_label": "FY2026 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-eff627be7dc6",
+      "name": "net_margin",
+      "label": "Net profit margin",
+      "period_label": "FY2026 Q1",
+      "period_start": "2025-07-01",
+      "period_end": "2025-09-30",
+      "value": 0.35722838051832684,
+      "unit": "ratio",
+      "formula": "net_income / revenue",
+      "inputs": [
+        {
+          "name": "net_income",
+          "value": 27747000000.0,
+          "unit": "USD",
+          "ref_id": "V-55d89117abf8",
+          "period_label": "FY2026 Q1"
+        },
+        {
+          "name": "revenue",
+          "value": 77673000000.0,
+          "unit": "USD",
+          "ref_id": "V-a15e8b2c3ed4",
+          "period_label": "FY2026 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-ff1aa3ef664e",
+      "name": "free_cash_flow",
+      "label": "Free cash flow",
+      "period_label": "FY2026 Q1",
+      "period_start": "2025-07-01",
+      "period_end": "2025-09-30",
+      "value": 25663000000.0,
+      "unit": "USD",
+      "formula": "operating_cash_flow - capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 45057000000.0,
+          "unit": "USD",
+          "ref_id": "V-cf4c887bee55",
+          "period_label": "FY2026 Q1"
+        },
+        {
+          "name": "capex",
+          "value": 19394000000.0,
+          "unit": "USD",
+          "ref_id": "V-1e70b8b4af35",
+          "period_label": "FY2026 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-b062eb94899e",
+      "name": "fcf_margin",
+      "label": "FCF margin",
+      "period_label": "FY2026 Q1",
+      "period_start": "2025-07-01",
+      "period_end": "2025-09-30",
+      "value": 0.33039795038172853,
+      "unit": "ratio",
+      "formula": "free_cash_flow / revenue",
+      "inputs": [
+        {
+          "name": "free_cash_flow",
+          "value": 25663000000.0,
+          "unit": "USD",
+          "ref_id": "C-ff1aa3ef664e",
+          "period_label": "FY2026 Q1"
+        },
+        {
+          "name": "revenue",
+          "value": 77673000000.0,
+          "unit": "USD",
+          "ref_id": "V-a15e8b2c3ed4",
+          "period_label": "FY2026 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-caa87ac00e3b",
+      "name": "capex_to_revenue",
+      "label": "CAPEX / revenue",
+      "period_label": "FY2026 Q1",
+      "period_start": "2025-07-01",
+      "period_end": "2025-09-30",
+      "value": 0.24968779369922625,
+      "unit": "ratio",
+      "formula": "capex / revenue",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 19394000000.0,
+          "unit": "USD",
+          "ref_id": "V-1e70b8b4af35",
+          "period_label": "FY2026 Q1"
+        },
+        {
+          "name": "revenue",
+          "value": 77673000000.0,
+          "unit": "USD",
+          "ref_id": "V-a15e8b2c3ed4",
+          "period_label": "FY2026 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-f4d04e1c3127",
+      "name": "capex_yoy",
+      "label": "CAPEX growth YoY",
+      "period_label": "FY2026 Q1",
+      "period_start": "2025-07-01",
+      "period_end": "2025-09-30",
+      "value": 0.29960463713730484,
+      "unit": "ratio",
+      "formula": "(capex - capex_prior_year) / |capex_prior_year|",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 19394000000.0,
+          "unit": "USD",
+          "ref_id": "V-1e70b8b4af35",
+          "period_label": "FY2026 Q1"
+        },
+        {
+          "name": "capex_prior_year",
+          "value": 14923000000.0,
+          "unit": "USD",
+          "ref_id": "V-ee1c45edbe4f",
+          "period_label": "FY2025 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-a8fe17c11773",
+      "name": "ocf_to_capex",
+      "label": "Operating cash flow / CAPEX",
+      "period_label": "FY2026 Q1",
+      "period_start": "2025-07-01",
+      "period_end": "2025-09-30",
+      "value": 2.323244302361555,
+      "unit": "multiple",
+      "formula": "operating_cash_flow / capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 45057000000.0,
+          "unit": "USD",
+          "ref_id": "V-cf4c887bee55",
+          "period_label": "FY2026 Q1"
+        },
+        {
+          "name": "capex",
+          "value": 19394000000.0,
+          "unit": "USD",
+          "ref_id": "V-1e70b8b4af35",
+          "period_label": "FY2026 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-e7d3486ae969",
+      "name": "revenue_yoy",
+      "label": "Revenue growth YoY",
+      "period_label": "FY2026 Q2",
+      "period_start": "2025-10-01",
+      "period_end": "2025-12-31",
+      "value": 0.16717888327205882,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_year) / |revenue_prior_year|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 81273000000.0,
+          "unit": "USD",
+          "ref_id": "V-c1bf04893f91",
+          "period_label": "FY2026 Q2"
+        },
+        {
+          "name": "revenue_prior_year",
+          "value": 69632000000.0,
+          "unit": "USD",
+          "ref_id": "V-ba59c8b9cdf2",
+          "period_label": "FY2025 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-f24efc050b97",
+      "name": "revenue_qoq",
+      "label": "Revenue growth QoQ",
+      "period_label": "FY2026 Q2",
+      "period_start": "2025-10-01",
+      "period_end": "2025-12-31",
+      "value": 0.04634815186744429,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_quarter) / |revenue_prior_quarter|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 81273000000.0,
+          "unit": "USD",
+          "ref_id": "V-c1bf04893f91",
+          "period_label": "FY2026 Q2"
+        },
+        {
+          "name": "revenue_prior_quarter",
+          "value": 77673000000.0,
+          "unit": "USD",
+          "ref_id": "V-a15e8b2c3ed4",
+          "period_label": "FY2026 Q1"
+        }
+      ],
+      "warnings": [
+        "Sequential growth is affected by seasonality."
+      ],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-822e7de8f902",
+      "name": "gross_margin",
+      "label": "Gross margin",
+      "period_label": "FY2026 Q2",
+      "period_start": "2025-10-01",
+      "period_end": "2025-12-31",
+      "value": 0.6803612515841669,
+      "unit": "ratio",
+      "formula": "gross_profit / revenue",
+      "inputs": [
+        {
+          "name": "gross_profit",
+          "value": 55295000000.0,
+          "unit": "USD",
+          "ref_id": "V-1f36a916d0a0",
+          "period_label": "FY2026 Q2"
+        },
+        {
+          "name": "revenue",
+          "value": 81273000000.0,
+          "unit": "USD",
+          "ref_id": "V-c1bf04893f91",
+          "period_label": "FY2026 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-1c4d384400ad",
+      "name": "operating_margin",
+      "label": "Operating margin",
+      "period_label": "FY2026 Q2",
+      "period_start": "2025-10-01",
+      "period_end": "2025-12-31",
+      "value": 0.47094360980891564,
+      "unit": "ratio",
+      "formula": "operating_income / revenue",
+      "inputs": [
+        {
+          "name": "operating_income",
+          "value": 38275000000.0,
+          "unit": "USD",
+          "ref_id": "V-07ea2dcc5ea9",
+          "period_label": "FY2026 Q2"
+        },
+        {
+          "name": "revenue",
+          "value": 81273000000.0,
+          "unit": "USD",
+          "ref_id": "V-c1bf04893f91",
+          "period_label": "FY2026 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-b77f21eae502",
+      "name": "net_margin",
+      "label": "Net profit margin",
+      "period_label": "FY2026 Q2",
+      "period_start": "2025-10-01",
+      "period_end": "2025-12-31",
+      "value": 0.473195280105324,
+      "unit": "ratio",
+      "formula": "net_income / revenue",
+      "inputs": [
+        {
+          "name": "net_income",
+          "value": 38458000000.0,
+          "unit": "USD",
+          "ref_id": "V-c5216f0e4c40",
+          "period_label": "FY2026 Q2"
+        },
+        {
+          "name": "revenue",
+          "value": 81273000000.0,
+          "unit": "USD",
+          "ref_id": "V-c1bf04893f91",
+          "period_label": "FY2026 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-1c7b8afb36c4",
+      "name": "free_cash_flow",
+      "label": "Free cash flow",
+      "period_label": "FY2026 Q2",
+      "period_start": "2025-10-01",
+      "period_end": "2025-12-31",
+      "value": 5882000000.0,
+      "unit": "USD",
+      "formula": "operating_cash_flow - capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 35758000000.0,
+          "unit": "USD",
+          "ref_id": "V-b8fcaa1b1357",
+          "period_label": "FY2026 Q2"
+        },
+        {
+          "name": "capex",
+          "value": 29876000000.0,
+          "unit": "USD",
+          "ref_id": "V-2e798b1fa1ec",
+          "period_label": "FY2026 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-83d82e241f88",
+      "name": "fcf_margin",
+      "label": "FCF margin",
+      "period_label": "FY2026 Q2",
+      "period_start": "2025-10-01",
+      "period_end": "2025-12-31",
+      "value": 0.07237335892608862,
+      "unit": "ratio",
+      "formula": "free_cash_flow / revenue",
+      "inputs": [
+        {
+          "name": "free_cash_flow",
+          "value": 5882000000.0,
+          "unit": "USD",
+          "ref_id": "C-1c7b8afb36c4",
+          "period_label": "FY2026 Q2"
+        },
+        {
+          "name": "revenue",
+          "value": 81273000000.0,
+          "unit": "USD",
+          "ref_id": "V-c1bf04893f91",
+          "period_label": "FY2026 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-d776893d1a7a",
+      "name": "capex_to_revenue",
+      "label": "CAPEX / revenue",
+      "period_label": "FY2026 Q2",
+      "period_start": "2025-10-01",
+      "period_end": "2025-12-31",
+      "value": 0.367600556150259,
+      "unit": "ratio",
+      "formula": "capex / revenue",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 29876000000.0,
+          "unit": "USD",
+          "ref_id": "V-2e798b1fa1ec",
+          "period_label": "FY2026 Q2"
+        },
+        {
+          "name": "revenue",
+          "value": 81273000000.0,
+          "unit": "USD",
+          "ref_id": "V-c1bf04893f91",
+          "period_label": "FY2026 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-8e79804504b4",
+      "name": "capex_yoy",
+      "label": "CAPEX growth YoY",
+      "period_label": "FY2026 Q2",
+      "period_start": "2025-10-01",
+      "period_end": "2025-12-31",
+      "value": 0.8904074917742344,
+      "unit": "ratio",
+      "formula": "(capex - capex_prior_year) / |capex_prior_year|",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 29876000000.0,
+          "unit": "USD",
+          "ref_id": "V-2e798b1fa1ec",
+          "period_label": "FY2026 Q2"
+        },
+        {
+          "name": "capex_prior_year",
+          "value": 15804000000.0,
+          "unit": "USD",
+          "ref_id": "V-ecbdd0165645",
+          "period_label": "FY2025 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-7f98ea9fd844",
+      "name": "ocf_to_capex",
+      "label": "Operating cash flow / CAPEX",
+      "period_label": "FY2026 Q2",
+      "period_start": "2025-10-01",
+      "period_end": "2025-12-31",
+      "value": 1.1968804391484804,
+      "unit": "multiple",
+      "formula": "operating_cash_flow / capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 35758000000.0,
+          "unit": "USD",
+          "ref_id": "V-b8fcaa1b1357",
+          "period_label": "FY2026 Q2"
+        },
+        {
+          "name": "capex",
+          "value": 29876000000.0,
+          "unit": "USD",
+          "ref_id": "V-2e798b1fa1ec",
+          "period_label": "FY2026 Q2"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-566504a3b67e",
+      "name": "revenue_yoy",
+      "label": "Revenue growth YoY",
+      "period_label": "FY2026 Q3",
+      "period_start": "2026-01-01",
+      "period_end": "2026-03-31",
+      "value": 0.1829703422487369,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_year) / |revenue_prior_year|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 82886000000.0,
+          "unit": "USD",
+          "ref_id": "V-1b4c8e78c9f9",
+          "period_label": "FY2026 Q3"
+        },
+        {
+          "name": "revenue_prior_year",
+          "value": 70066000000.0,
+          "unit": "USD",
+          "ref_id": "V-d22922fd38b4",
+          "period_label": "FY2025 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-63539ad0d472",
+      "name": "revenue_qoq",
+      "label": "Revenue growth QoQ",
+      "period_label": "FY2026 Q3",
+      "period_start": "2026-01-01",
+      "period_end": "2026-03-31",
+      "value": 0.019846689552495907,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_quarter) / |revenue_prior_quarter|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 82886000000.0,
+          "unit": "USD",
+          "ref_id": "V-1b4c8e78c9f9",
+          "period_label": "FY2026 Q3"
+        },
+        {
+          "name": "revenue_prior_quarter",
+          "value": 81273000000.0,
+          "unit": "USD",
+          "ref_id": "V-c1bf04893f91",
+          "period_label": "FY2026 Q2"
+        }
+      ],
+      "warnings": [
+        "Period lengths differ (90d vs 92d).",
+        "Sequential growth is affected by seasonality."
+      ],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-bb55e9ab5ae8",
+      "name": "gross_margin",
+      "label": "Gross margin",
+      "period_label": "FY2026 Q3",
+      "period_start": "2026-01-01",
+      "period_end": "2026-03-31",
+      "value": 0.6763265207634582,
+      "unit": "ratio",
+      "formula": "gross_profit / revenue",
+      "inputs": [
+        {
+          "name": "gross_profit",
+          "value": 56058000000.0,
+          "unit": "USD",
+          "ref_id": "V-6454a50edb04",
+          "period_label": "FY2026 Q3"
+        },
+        {
+          "name": "revenue",
+          "value": 82886000000.0,
+          "unit": "USD",
+          "ref_id": "V-1b4c8e78c9f9",
+          "period_label": "FY2026 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-37739ee7a0e8",
+      "name": "operating_margin",
+      "label": "Operating margin",
+      "period_label": "FY2026 Q3",
+      "period_start": "2026-01-01",
+      "period_end": "2026-03-31",
+      "value": 0.46326279468185216,
+      "unit": "ratio",
+      "formula": "operating_income / revenue",
+      "inputs": [
+        {
+          "name": "operating_income",
+          "value": 38398000000.0,
+          "unit": "USD",
+          "ref_id": "V-661e41fd86f7",
+          "period_label": "FY2026 Q3"
+        },
+        {
+          "name": "revenue",
+          "value": 82886000000.0,
+          "unit": "USD",
+          "ref_id": "V-1b4c8e78c9f9",
+          "period_label": "FY2026 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-c98008b45475",
+      "name": "net_margin",
+      "label": "Net profit margin",
+      "period_label": "FY2026 Q3",
+      "period_start": "2026-01-01",
+      "period_end": "2026-03-31",
+      "value": 0.3833940593103781,
+      "unit": "ratio",
+      "formula": "net_income / revenue",
+      "inputs": [
+        {
+          "name": "net_income",
+          "value": 31778000000.0,
+          "unit": "USD",
+          "ref_id": "V-810005372739",
+          "period_label": "FY2026 Q3"
+        },
+        {
+          "name": "revenue",
+          "value": 82886000000.0,
+          "unit": "USD",
+          "ref_id": "V-1b4c8e78c9f9",
+          "period_label": "FY2026 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-a3d3793e11c5",
+      "name": "free_cash_flow",
+      "label": "Free cash flow",
+      "period_label": "FY2026 Q3",
+      "period_start": "2026-01-01",
+      "period_end": "2026-03-31",
+      "value": 15803000000.0,
+      "unit": "USD",
+      "formula": "operating_cash_flow - capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 46679000000.0,
+          "unit": "USD",
+          "ref_id": "V-238238271857",
+          "period_label": "FY2026 Q3"
+        },
+        {
+          "name": "capex",
+          "value": 30876000000.0,
+          "unit": "USD",
+          "ref_id": "V-c23bf08b58c1",
+          "period_label": "FY2026 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-70c8919edcf5",
+      "name": "fcf_margin",
+      "label": "FCF margin",
+      "period_label": "FY2026 Q3",
+      "period_start": "2026-01-01",
+      "period_end": "2026-03-31",
+      "value": 0.19065945998117897,
+      "unit": "ratio",
+      "formula": "free_cash_flow / revenue",
+      "inputs": [
+        {
+          "name": "free_cash_flow",
+          "value": 15803000000.0,
+          "unit": "USD",
+          "ref_id": "C-a3d3793e11c5",
+          "period_label": "FY2026 Q3"
+        },
+        {
+          "name": "revenue",
+          "value": 82886000000.0,
+          "unit": "USD",
+          "ref_id": "V-1b4c8e78c9f9",
+          "period_label": "FY2026 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-aafefbc29d73",
+      "name": "capex_to_revenue",
+      "label": "CAPEX / revenue",
+      "period_label": "FY2026 Q3",
+      "period_start": "2026-01-01",
+      "period_end": "2026-03-31",
+      "value": 0.3725116424969235,
+      "unit": "ratio",
+      "formula": "capex / revenue",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 30876000000.0,
+          "unit": "USD",
+          "ref_id": "V-c23bf08b58c1",
+          "period_label": "FY2026 Q3"
+        },
+        {
+          "name": "revenue",
+          "value": 82886000000.0,
+          "unit": "USD",
+          "ref_id": "V-1b4c8e78c9f9",
+          "period_label": "FY2026 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-32a957a97537",
+      "name": "capex_yoy",
+      "label": "CAPEX growth YoY",
+      "period_label": "FY2026 Q3",
+      "period_start": "2026-01-01",
+      "period_end": "2026-03-31",
+      "value": 0.8438936996118245,
+      "unit": "ratio",
+      "formula": "(capex - capex_prior_year) / |capex_prior_year|",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 30876000000.0,
+          "unit": "USD",
+          "ref_id": "V-c23bf08b58c1",
+          "period_label": "FY2026 Q3"
+        },
+        {
+          "name": "capex_prior_year",
+          "value": 16745000000.0,
+          "unit": "USD",
+          "ref_id": "V-e18c148ac63a",
+          "period_label": "FY2025 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-27c52d5bac12",
+      "name": "ocf_to_capex",
+      "label": "Operating cash flow / CAPEX",
+      "period_label": "FY2026 Q3",
+      "period_start": "2026-01-01",
+      "period_end": "2026-03-31",
+      "value": 1.5118214794662521,
+      "unit": "multiple",
+      "formula": "operating_cash_flow / capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 46679000000.0,
+          "unit": "USD",
+          "ref_id": "V-238238271857",
+          "period_label": "FY2026 Q3"
+        },
+        {
+          "name": "capex",
+          "value": 30876000000.0,
+          "unit": "USD",
+          "ref_id": "V-c23bf08b58c1",
+          "period_label": "FY2026 Q3"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-e9c08b4b07ed",
+      "name": "revenue_yoy",
+      "label": "Revenue growth YoY",
+      "period_label": "FY2026 Q4",
+      "period_start": "2026-04-01",
+      "period_end": "2026-06-30",
+      "value": 0.1774702057796209,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_year) / |revenue_prior_year|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 90007000000.0,
+          "unit": "USD",
+          "ref_id": "V-ddde20d962ee",
+          "period_label": "FY2026 Q4"
+        },
+        {
+          "name": "revenue_prior_year",
+          "value": 76441000000.0,
+          "unit": "USD",
+          "ref_id": "V-2bc864155e57",
+          "period_label": "FY2025 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-26f7e7c583cd",
+      "name": "revenue_qoq",
+      "label": "Revenue growth QoQ",
+      "period_label": "FY2026 Q4",
+      "period_start": "2026-04-01",
+      "period_end": "2026-06-30",
+      "value": 0.08591318196076539,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_quarter) / |revenue_prior_quarter|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 90007000000.0,
+          "unit": "USD",
+          "ref_id": "V-ddde20d962ee",
+          "period_label": "FY2026 Q4"
+        },
+        {
+          "name": "revenue_prior_quarter",
+          "value": 82886000000.0,
+          "unit": "USD",
+          "ref_id": "V-1b4c8e78c9f9",
+          "period_label": "FY2026 Q3"
+        }
+      ],
+      "warnings": [
+        "Period lengths differ (91d vs 90d).",
+        "Sequential growth is affected by seasonality."
+      ],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-5c07f6dd741d",
+      "name": "gross_margin",
+      "label": "Gross margin",
+      "period_label": "FY2026 Q4",
+      "period_start": "2026-04-01",
+      "period_end": "2026-06-30",
+      "value": 0.671969957892164,
+      "unit": "ratio",
+      "formula": "gross_profit / revenue",
+      "inputs": [
+        {
+          "name": "gross_profit",
+          "value": 60482000000.0,
+          "unit": "USD",
+          "ref_id": "V-da540df42ef2",
+          "period_label": "FY2026 Q4"
+        },
+        {
+          "name": "revenue",
+          "value": 90007000000.0,
+          "unit": "USD",
+          "ref_id": "V-ddde20d962ee",
+          "period_label": "FY2026 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-5fc2b44a1c6a",
+      "name": "operating_margin",
+      "label": "Operating margin",
+      "period_label": "FY2026 Q4",
+      "period_start": "2026-04-01",
+      "period_end": "2026-06-30",
+      "value": 0.4511093581610319,
+      "unit": "ratio",
+      "formula": "operating_income / revenue",
+      "inputs": [
+        {
+          "name": "operating_income",
+          "value": 40603000000.0,
+          "unit": "USD",
+          "ref_id": "V-efa9fe924bda",
+          "period_label": "FY2026 Q4"
+        },
+        {
+          "name": "revenue",
+          "value": 90007000000.0,
+          "unit": "USD",
+          "ref_id": "V-ddde20d962ee",
+          "period_label": "FY2026 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-986396374788",
+      "name": "net_margin",
+      "label": "Net profit margin",
+      "period_label": "FY2026 Q4",
+      "period_start": "2026-04-01",
+      "period_end": "2026-06-30",
+      "value": 0.3973690935149488,
+      "unit": "ratio",
+      "formula": "net_income / revenue",
+      "inputs": [
+        {
+          "name": "net_income",
+          "value": 35766000000.0,
+          "unit": "USD",
+          "ref_id": "V-6cebd6bca7d3",
+          "period_label": "FY2026 Q4"
+        },
+        {
+          "name": "revenue",
+          "value": 90007000000.0,
+          "unit": "USD",
+          "ref_id": "V-ddde20d962ee",
+          "period_label": "FY2026 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-9a3d3d702cab",
+      "name": "free_cash_flow",
+      "label": "Free cash flow",
+      "period_label": "FY2026 Q4",
+      "period_start": "2026-04-01",
+      "period_end": "2026-06-30",
+      "value": 19639000000.0,
+      "unit": "USD",
+      "formula": "operating_cash_flow - capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 55441000000.0,
+          "unit": "USD",
+          "ref_id": "V-97f9ebe8cb32",
+          "period_label": "FY2026 Q4"
+        },
+        {
+          "name": "capex",
+          "value": 35802000000.0,
+          "unit": "USD",
+          "ref_id": "V-c5252a2e2983",
+          "period_label": "FY2026 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-221f54ee0c06",
+      "name": "fcf_margin",
+      "label": "FCF margin",
+      "period_label": "FY2026 Q4",
+      "period_start": "2026-04-01",
+      "period_end": "2026-06-30",
+      "value": 0.21819414045574234,
+      "unit": "ratio",
+      "formula": "free_cash_flow / revenue",
+      "inputs": [
+        {
+          "name": "free_cash_flow",
+          "value": 19639000000.0,
+          "unit": "USD",
+          "ref_id": "C-9a3d3d702cab",
+          "period_label": "FY2026 Q4"
+        },
+        {
+          "name": "revenue",
+          "value": 90007000000.0,
+          "unit": "USD",
+          "ref_id": "V-ddde20d962ee",
+          "period_label": "FY2026 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-960b029a2d68",
+      "name": "capex_to_revenue",
+      "label": "CAPEX / revenue",
+      "period_label": "FY2026 Q4",
+      "period_start": "2026-04-01",
+      "period_end": "2026-06-30",
+      "value": 0.3977690624062573,
+      "unit": "ratio",
+      "formula": "capex / revenue",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 35802000000.0,
+          "unit": "USD",
+          "ref_id": "V-c5252a2e2983",
+          "period_label": "FY2026 Q4"
+        },
+        {
+          "name": "revenue",
+          "value": 90007000000.0,
+          "unit": "USD",
+          "ref_id": "V-ddde20d962ee",
+          "period_label": "FY2026 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-f93c813f089c",
+      "name": "capex_yoy",
+      "label": "CAPEX growth YoY",
+      "period_label": "FY2026 Q4",
+      "period_start": "2026-04-01",
+      "period_end": "2026-06-30",
+      "value": 1.0962585631477253,
+      "unit": "ratio",
+      "formula": "(capex - capex_prior_year) / |capex_prior_year|",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 35802000000.0,
+          "unit": "USD",
+          "ref_id": "V-c5252a2e2983",
+          "period_label": "FY2026 Q4"
+        },
+        {
+          "name": "capex_prior_year",
+          "value": 17079000000.0,
+          "unit": "USD",
+          "ref_id": "V-3188494686be",
+          "period_label": "FY2025 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-d60da0cad17b",
+      "name": "ocf_to_capex",
+      "label": "Operating cash flow / CAPEX",
+      "period_label": "FY2026 Q4",
+      "period_start": "2026-04-01",
+      "period_end": "2026-06-30",
+      "value": 1.54854477403497,
+      "unit": "multiple",
+      "formula": "operating_cash_flow / capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 55441000000.0,
+          "unit": "USD",
+          "ref_id": "V-97f9ebe8cb32",
+          "period_label": "FY2026 Q4"
+        },
+        {
+          "name": "capex",
+          "value": 35802000000.0,
+          "unit": "USD",
+          "ref_id": "V-c5252a2e2983",
+          "period_label": "FY2026 Q4"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-bda3722fda16",
+      "name": "revenue_yoy",
+      "label": "Revenue growth YoY",
+      "period_label": "FY2027 Q1",
+      "period_start": "2026-07-01",
+      "period_end": "2026-09-30",
+      "value": 0.18804475171552534,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_year) / |revenue_prior_year|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 92279000000.0,
+          "unit": "USD",
+          "ref_id": "V-e00041bf3c82",
+          "period_label": "FY2027 Q1"
+        },
+        {
+          "name": "revenue_prior_year",
+          "value": 77673000000.0,
+          "unit": "USD",
+          "ref_id": "V-a15e8b2c3ed4",
+          "period_label": "FY2026 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-86a5c8db2fb6",
+      "name": "revenue_qoq",
+      "label": "Revenue growth QoQ",
+      "period_label": "FY2027 Q1",
+      "period_start": "2026-07-01",
+      "period_end": "2026-09-30",
+      "value": 0.02524248114035575,
+      "unit": "ratio",
+      "formula": "(revenue - revenue_prior_quarter) / |revenue_prior_quarter|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 92279000000.0,
+          "unit": "USD",
+          "ref_id": "V-e00041bf3c82",
+          "period_label": "FY2027 Q1"
+        },
+        {
+          "name": "revenue_prior_quarter",
+          "value": 90007000000.0,
+          "unit": "USD",
+          "ref_id": "V-ddde20d962ee",
+          "period_label": "FY2026 Q4"
+        }
+      ],
+      "warnings": [
+        "Period lengths differ (92d vs 91d).",
+        "Sequential growth is affected by seasonality."
+      ],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-97e037ebd944",
+      "name": "gross_margin",
+      "label": "Gross margin",
+      "period_label": "FY2027 Q1",
+      "period_start": "2026-07-01",
+      "period_end": "2026-09-30",
+      "value": 0.6779332242438691,
+      "unit": "ratio",
+      "formula": "gross_profit / revenue",
+      "inputs": [
+        {
+          "name": "gross_profit",
+          "value": 62559000000.0,
+          "unit": "USD",
+          "ref_id": "V-2d482a49592a",
+          "period_label": "FY2027 Q1"
+        },
+        {
+          "name": "revenue",
+          "value": 92279000000.0,
+          "unit": "USD",
+          "ref_id": "V-e00041bf3c82",
+          "period_label": "FY2027 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-0fffa87cda80",
+      "name": "operating_margin",
+      "label": "Operating margin",
+      "period_label": "FY2027 Q1",
+      "period_start": "2026-07-01",
+      "period_end": "2026-09-30",
+      "value": 0.4975671604590427,
+      "unit": "ratio",
+      "formula": "operating_income / revenue",
+      "inputs": [
+        {
+          "name": "operating_income",
+          "value": 45915000000.0,
+          "unit": "USD",
+          "ref_id": "V-0e13688ade0f",
+          "period_label": "FY2027 Q1"
+        },
+        {
+          "name": "revenue",
+          "value": 92279000000.0,
+          "unit": "USD",
+          "ref_id": "V-e00041bf3c82",
+          "period_label": "FY2027 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-0753b211630f",
+      "name": "net_margin",
+      "label": "Net profit margin",
+      "period_label": "FY2027 Q1",
+      "period_start": "2026-07-01",
+      "period_end": "2026-09-30",
+      "value": 0.39693754808786397,
+      "unit": "ratio",
+      "formula": "net_income / revenue",
+      "inputs": [
+        {
+          "name": "net_income",
+          "value": 36629000000.0,
+          "unit": "USD",
+          "ref_id": "V-d162554e005a",
+          "period_label": "FY2027 Q1"
+        },
+        {
+          "name": "revenue",
+          "value": 92279000000.0,
+          "unit": "USD",
+          "ref_id": "V-e00041bf3c82",
+          "period_label": "FY2027 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-928a8364b67e",
+      "name": "free_cash_flow",
+      "label": "Free cash flow",
+      "period_label": "FY2027 Q1",
+      "period_start": "2026-07-01",
+      "period_end": "2026-09-30",
+      "value": 18633000000.0,
+      "unit": "USD",
+      "formula": "operating_cash_flow - capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 58000000000.0,
+          "unit": "USD",
+          "ref_id": "V-de44ce14585a",
+          "period_label": "FY2027 Q1"
+        },
+        {
+          "name": "capex",
+          "value": 39367000000.0,
+          "unit": "USD",
+          "ref_id": "V-8d7839650716",
+          "period_label": "FY2027 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-7aa3f7c1a20a",
+      "name": "fcf_margin",
+      "label": "FCF margin",
+      "period_label": "FY2027 Q1",
+      "period_start": "2026-07-01",
+      "period_end": "2026-09-30",
+      "value": 0.20192026354858636,
+      "unit": "ratio",
+      "formula": "free_cash_flow / revenue",
+      "inputs": [
+        {
+          "name": "free_cash_flow",
+          "value": 18633000000.0,
+          "unit": "USD",
+          "ref_id": "C-928a8364b67e",
+          "period_label": "FY2027 Q1"
+        },
+        {
+          "name": "revenue",
+          "value": 92279000000.0,
+          "unit": "USD",
+          "ref_id": "V-e00041bf3c82",
+          "period_label": "FY2027 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-370a3b82a9f4",
+      "name": "capex_to_revenue",
+      "label": "CAPEX / revenue",
+      "period_label": "FY2027 Q1",
+      "period_start": "2026-07-01",
+      "period_end": "2026-09-30",
+      "value": 0.4266084374559759,
+      "unit": "ratio",
+      "formula": "capex / revenue",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 39367000000.0,
+          "unit": "USD",
+          "ref_id": "V-8d7839650716",
+          "period_label": "FY2027 Q1"
+        },
+        {
+          "name": "revenue",
+          "value": 92279000000.0,
+          "unit": "USD",
+          "ref_id": "V-e00041bf3c82",
+          "period_label": "FY2027 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-22bf3f24414f",
+      "name": "capex_yoy",
+      "label": "CAPEX growth YoY",
+      "period_label": "FY2027 Q1",
+      "period_start": "2026-07-01",
+      "period_end": "2026-09-30",
+      "value": 1.029854594204393,
+      "unit": "ratio",
+      "formula": "(capex - capex_prior_year) / |capex_prior_year|",
+      "inputs": [
+        {
+          "name": "capex",
+          "value": 39367000000.0,
+          "unit": "USD",
+          "ref_id": "V-8d7839650716",
+          "period_label": "FY2027 Q1"
+        },
+        {
+          "name": "capex_prior_year",
+          "value": 19394000000.0,
+          "unit": "USD",
+          "ref_id": "V-1e70b8b4af35",
+          "period_label": "FY2026 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-cd1eae59fae9",
+      "name": "ocf_to_capex",
+      "label": "Operating cash flow / CAPEX",
+      "period_label": "FY2027 Q1",
+      "period_start": "2026-07-01",
+      "period_end": "2026-09-30",
+      "value": 1.473315213249676,
+      "unit": "multiple",
+      "formula": "operating_cash_flow / capex",
+      "inputs": [
+        {
+          "name": "operating_cash_flow",
+          "value": 58000000000.0,
+          "unit": "USD",
+          "ref_id": "V-de44ce14585a",
+          "period_label": "FY2027 Q1"
+        },
+        {
+          "name": "capex",
+          "value": 39367000000.0,
+          "unit": "USD",
+          "ref_id": "V-8d7839650716",
+          "period_label": "FY2027 Q1"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-8f54e0b8ee60",
+      "name": "annual_revenue_yoy",
+      "label": "Annual revenue growth",
+      "period_label": "FY2025",
+      "period_start": "2024-07-01",
+      "period_end": "2025-06-30",
+      "value": 0.1493215623240672,
+      "unit": "ratio",
+      "formula": "(annual_revenue - annual_revenue_prior_year) / |prior|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 281724000000.0,
+          "unit": "USD",
+          "ref_id": "V-7033a1a70c58",
+          "period_label": "FY2025"
+        },
+        {
+          "name": "revenue_prior_year",
+          "value": 245122000000.0,
+          "unit": "USD",
+          "ref_id": "V-cf1c6464bc8a",
+          "period_label": "FY2024"
+        }
+      ],
+      "warnings": [
+        "Period lengths differ (365d vs 366d)."
+      ],
+      "status": "ok"
+    },
+    {
+      "calc_id": "C-356c1351f1c9",
+      "name": "annual_revenue_yoy",
+      "label": "Annual revenue growth",
+      "period_label": "FY2026",
+      "period_start": "2025-07-01",
+      "period_end": "2026-06-30",
+      "value": 0.1778868679984666,
+      "unit": "ratio",
+      "formula": "(annual_revenue - annual_revenue_prior_year) / |prior|",
+      "inputs": [
+        {
+          "name": "revenue",
+          "value": 331839000000.0,
+          "unit": "USD",
+          "ref_id": "V-25ce87a5f2d7",
+          "period_label": "FY2026"
+        },
+        {
+          "name": "revenue_prior_year",
+          "value": 281724000000.0,
+          "unit": "USD",
+          "ref_id": "V-7033a1a70c58",
+          "period_label": "FY2025"
+        }
+      ],
+      "warnings": [],
+      "status": "ok"
+    }
+  ],
+  "trends": [
+    {
+      "trend_id": "T-ffd2a1a8c14a",
+      "metric": "revenue_yoy",
+      "label": "Revenue growth YoY",
+      "unit": "ratio",
+      "first_period": "FY2025 Q2",
+      "last_period": "FY2027 Q1",
+      "first_value": 0.12273460174137375,
+      "last_value": 0.18804475171552534,
+      "change": 0.06531014997415159,
+      "change_unit": "ratio_change",
+      "min_value": 0.12273460174137375,
+      "min_period": "FY2025 Q2",
+      "max_value": 0.18804475171552534,
+      "max_period": "FY2027 Q1",
+      "mean_value": 0.16704696315069145,
+      "observations": 8,
+      "direction": "up",
+      "input_ids": [
+        "C-6f629cdc2b05",
+        "C-0b9386e82598",
+        "C-a2dd5236c680",
+        "C-19cf417898d1",
+        "C-e7d3486ae969",
+        "C-566504a3b67e",
+        "C-e9c08b4b07ed",
+        "C-bda3722fda16"
+      ],
+      "warnings": []
+    },
+    {
+      "trend_id": "T-0b165be11dd3",
+      "metric": "gross_margin",
+      "label": "Gross margin",
+      "unit": "ratio",
+      "first_period": "FY2025 Q2",
+      "last_period": "FY2027 Q1",
+      "first_value": 0.6869399126838235,
+      "last_value": 0.6779332242438691,
+      "change": -0.009006688439954336,
+      "change_unit": "ratio_change",
+      "min_value": 0.671969957892164,
+      "min_period": "FY2026 Q4",
+      "max_value": 0.6904587179586213,
+      "max_period": "FY2026 Q1",
+      "mean_value": 0.6821256485185309,
+      "observations": 8,
+      "direction": "down",
+      "input_ids": [
+        "C-0d2c5a702e59",
+        "C-2992ee36dd0f",
+        "C-f2d8e6a94f85",
+        "C-2eea9d7bfb5d",
+        "C-822e7de8f902",
+        "C-bb55e9ab5ae8",
+        "C-5c07f6dd741d",
+        "C-97e037ebd944"
+      ],
+      "warnings": []
+    },
+    {
+      "trend_id": "T-f05b88c083d4",
+      "metric": "operating_margin",
+      "label": "Operating margin",
+      "unit": "ratio",
+      "first_period": "FY2025 Q2",
+      "last_period": "FY2027 Q1",
+      "first_value": 0.4545754825367647,
+      "last_value": 0.4975671604590427,
+      "change": 0.04299167792227798,
+      "change_unit": "ratio_change",
+      "min_value": 0.44901296424693554,
+      "min_period": "FY2025 Q4",
+      "max_value": 0.4975671604590427,
+      "max_period": "FY2027 Q1",
+      "mean_value": 0.4664889999490837,
+      "observations": 8,
+      "direction": "up",
+      "input_ids": [
+        "C-0e496d99a0e8",
+        "C-4b8519644404",
+        "C-7e5691590d21",
+        "C-571116a630c5",
+        "C-1c4d384400ad",
+        "C-37739ee7a0e8",
+        "C-5fc2b44a1c6a",
+        "C-0fffa87cda80"
+      ],
+      "warnings": []
+    },
+    {
+      "trend_id": "T-5c944c1d61eb",
+      "metric": "net_margin",
+      "label": "Net profit margin",
+      "unit": "ratio",
+      "first_period": "FY2025 Q2",
+      "last_period": "FY2027 Q1",
+      "first_value": 0.34622012867647056,
+      "last_value": 0.39693754808786397,
+      "change": 0.050717419411393405,
+      "change_unit": "ratio_change",
+      "min_value": 0.34622012867647056,
+      "min_period": "FY2025 Q2",
+      "max_value": 0.473195280105324,
+      "max_period": "FY2026 Q2",
+      "mean_value": 0.3848966202663087,
+      "observations": 8,
+      "direction": "up",
+      "input_ids": [
+        "C-2b9a0cf24005",
+        "C-77e93c3c5561",
+        "C-4cd011964dc2",
+        "C-eff627be7dc6",
+        "C-b77f21eae502",
+        "C-c98008b45475",
+        "C-986396374788",
+        "C-0753b211630f"
+      ],
+      "warnings": []
+    },
+    {
+      "trend_id": "T-e7a455a2fd6d",
+      "metric": "free_cash_flow",
+      "label": "Free cash flow",
+      "unit": "USD",
+      "first_period": "FY2025 Q2",
+      "last_period": "FY2027 Q1",
+      "first_value": 6487000000.0,
+      "last_value": 18633000000.0,
+      "change": 12146000000.0,
+      "change_unit": "USD",
+      "min_value": 5882000000.0,
+      "min_period": "FY2026 Q2",
+      "max_value": 25663000000.0,
+      "max_period": "FY2026 Q1",
+      "mean_value": 17246750000.0,
+      "observations": 8,
+      "direction": "up",
+      "input_ids": [
+        "C-2aa3f5138ffd",
+        "C-2278dd00d414",
+        "C-f1a9aa44b6e1",
+        "C-ff1aa3ef664e",
+        "C-1c7b8afb36c4",
+        "C-a3d3793e11c5",
+        "C-9a3d3d702cab",
+        "C-928a8364b67e"
+      ],
+      "warnings": []
+    },
+    {
+      "trend_id": "T-f865367f59ed",
+      "metric": "fcf_margin",
+      "label": "FCF margin",
+      "unit": "ratio",
+      "first_period": "FY2025 Q2",
+      "last_period": "FY2027 Q1",
+      "first_value": 0.09316119025735294,
+      "last_value": 0.20192026354858636,
+      "change": 0.10875907329123342,
+      "change_unit": "ratio_change",
+      "min_value": 0.07237335892608862,
+      "min_period": "FY2026 Q2",
+      "max_value": 0.3344801873340223,
+      "max_period": "FY2025 Q4",
+      "mean_value": 0.2163623884521155,
+      "observations": 8,
+      "direction": "up",
+      "input_ids": [
+        "C-6f9d51bf8213",
+        "C-963d3cf26085",
+        "C-33b864a4b435",
+        "C-b062eb94899e",
+        "C-83d82e241f88",
+        "C-70c8919edcf5",
+        "C-221f54ee0c06",
+        "C-7aa3f7c1a20a"
+      ],
+      "warnings": []
+    },
+    {
+      "trend_id": "T-d63e7be8deee",
+      "metric": "capex_to_revenue",
+      "label": "CAPEX / revenue",
+      "unit": "ratio",
+      "first_period": "FY2025 Q2",
+      "last_period": "FY2027 Q1",
+      "first_value": 0.22696461397058823,
+      "last_value": 0.4266084374559759,
+      "change": 0.19964382348538764,
+      "change_unit": "ratio_change",
+      "min_value": 0.22342721837757223,
+      "min_period": "FY2025 Q4",
+      "max_value": 0.4266084374559759,
+      "max_period": "FY2027 Q1",
+      "mean_value": 0.31294478472867887,
+      "observations": 8,
+      "direction": "up",
+      "input_ids": [
+        "C-11360f0162aa",
+        "C-e7fb9370fcfb",
+        "C-7f3fc14a9326",
+        "C-caa87ac00e3b",
+        "C-d776893d1a7a",
+        "C-aafefbc29d73",
+        "C-960b029a2d68",
+        "C-370a3b82a9f4"
+      ],
+      "warnings": []
+    },
+    {
+      "trend_id": "T-62b1842d91bc",
+      "metric": "capex_yoy",
+      "label": "CAPEX growth YoY",
+      "unit": "ratio",
+      "first_period": "FY2025 Q2",
+      "last_period": "FY2027 Q1",
+      "first_value": 0.6234206471494607,
+      "last_value": 1.029854594204393,
+      "change": 0.4064339470549324,
+      "change_unit": "ratio_change",
+      "min_value": 0.23109637425214447,
+      "min_period": "FY2025 Q4",
+      "max_value": 1.0962585631477253,
+      "max_period": "FY2026 Q4",
+      "mean_value": 0.6929350615378317,
+      "observations": 8,
+      "direction": "up",
+      "input_ids": [
+        "C-ca96db214f82",
+        "C-58ada68619b7",
+        "C-6b280f1de220",
+        "C-f4d04e1c3127",
+        "C-8e79804504b4",
+        "C-32a957a97537",
+        "C-f93c813f089c",
+        "C-22bf3f24414f"
+      ],
+      "warnings": []
+    },
+    {
+      "trend_id": "T-1e7db65ac820",
+      "metric": "ocf_to_capex",
+      "label": "Operating cash flow / CAPEX",
+      "unit": "multiple",
+      "first_period": "FY2025 Q2",
+      "last_period": "FY2027 Q1",
+      "first_value": 1.4104657048848392,
+      "last_value": 1.473315213249676,
+      "change": 0.06284950836483683,
+      "change_unit": "multiple",
+      "min_value": 1.1968804391484804,
+      "min_period": "FY2026 Q2",
+      "max_value": 2.4970431524093915,
+      "max_period": "FY2025 Q4",
+      "mean_value": 1.7716946907488895,
+      "observations": 8,
+      "direction": "up",
+      "input_ids": [
+        "C-ecc19a26eca0",
+        "C-88afc0f33fa7",
+        "C-7d5609148db5",
+        "C-a8fe17c11773",
+        "C-7f98ea9fd844",
+        "C-27c52d5bac12",
+        "C-d60da0cad17b",
+        "C-cd1eae59fae9"
+      ],
+      "warnings": []
+    }
+  ],
+  "executive_summary": "In FY2027 Q1 (most recent reported quarter), MICROSOFT CORP reported revenue $92.28B; revenue growth YoY 18.8%; operating margin 49.8%; free cash flow $18.63B; FCF margin 20.2%; CAPEX intensity (CAPEX/revenue) 42.7%; OCF/CAPEX 1.47x.",
+  "main_findings": [
+    {
+      "finding_id": "FND-SUMMARY",
+      "section": "summary",
+      "text": "In FY2027 Q1 (most recent reported quarter), MICROSOFT CORP reported revenue $92.28B; revenue growth YoY 18.8%; operating margin 49.8%; free cash flow $18.63B; FCF margin 20.2%; CAPEX intensity (CAPEX/revenue) 42.7%; OCF/CAPEX 1.47x.",
+      "evidence_ids": [
+        "V-e00041bf3c82",
+        "C-bda3722fda16",
+        "C-0fffa87cda80",
+        "C-928a8364b67e",
+        "C-7aa3f7c1a20a",
+        "C-370a3b82a9f4",
+        "C-cd1eae59fae9"
+      ],
+      "kind": "verified_fact"
+    },
+    {
+      "finding_id": "FND-1",
+      "section": "growth",
+      "text": "Revenue growth YoY rose from 12.3% in FY2025 Q2 to 18.8% in FY2027 Q1 (a change of +6.5 pp); range 12.3% (FY2025 Q2) to 18.8% (FY2027 Q1) over 8 quarters.",
+      "evidence_ids": [
+        "T-ffd2a1a8c14a"
+      ],
+      "kind": "verified_fact"
+    },
+    {
+      "finding_id": "FND-2",
+      "section": "margins",
+      "text": "Gross margin declined from 68.7% in FY2025 Q2 to 67.8% in FY2027 Q1 (a change of -0.9 pp); range 67.2% (FY2026 Q4) to 69.0% (FY2026 Q1) over 8 quarters.",
+      "evidence_ids": [
+        "T-0b165be11dd3"
+      ],
+      "kind": "verified_fact"
+    },
+    {
+      "finding_id": "FND-3",
+      "section": "margins",
+      "text": "Operating margin rose from 45.5% in FY2025 Q2 to 49.8% in FY2027 Q1 (a change of +4.3 pp); range 44.9% (FY2025 Q4) to 49.8% (FY2027 Q1) over 8 quarters.",
+      "evidence_ids": [
+        "T-f05b88c083d4"
+      ],
+      "kind": "verified_fact"
+    },
+    {
+      "finding_id": "FND-4",
+      "section": "margins",
+      "text": "Net profit margin rose from 34.6% in FY2025 Q2 to 39.7% in FY2027 Q1 (a change of +5.1 pp); range 34.6% (FY2025 Q2) to 47.3% (FY2026 Q2) over 8 quarters.",
+      "evidence_ids": [
+        "T-5c944c1d61eb"
+      ],
+      "kind": "verified_fact"
+    },
+    {
+      "finding_id": "FND-5",
+      "section": "cash_flow",
+      "text": "Free cash flow rose from $6.49B in FY2025 Q2 to $18.63B in FY2027 Q1 (a change of $12.15B); range $5.88B (FY2026 Q2) to $25.66B (FY2026 Q1) over 8 quarters.",
+      "evidence_ids": [
+        "T-e7a455a2fd6d"
+      ],
+      "kind": "verified_fact"
+    },
+    {
+      "finding_id": "FND-6",
+      "section": "cash_flow",
+      "text": "FCF margin rose from 9.3% in FY2025 Q2 to 20.2% in FY2027 Q1 (a change of +10.9 pp); range 7.2% (FY2026 Q2) to 33.4% (FY2025 Q4) over 8 quarters.",
+      "evidence_ids": [
+        "T-f865367f59ed"
+      ],
+      "kind": "verified_fact"
+    },
+    {
+      "finding_id": "FND-7",
+      "section": "capital",
+      "text": "CAPEX / revenue rose from 22.7% in FY2025 Q2 to 42.7% in FY2027 Q1 (a change of +20.0 pp); range 22.3% (FY2025 Q4) to 42.7% (FY2027 Q1) over 8 quarters.",
+      "evidence_ids": [
+        "T-d63e7be8deee"
+      ],
+      "kind": "verified_fact"
+    },
+    {
+      "finding_id": "FND-8",
+      "section": "capital",
+      "text": "CAPEX growth YoY rose from 62.3% in FY2025 Q2 to 103.0% in FY2027 Q1 (a change of +40.6 pp); range 23.1% (FY2025 Q4) to 109.6% (FY2026 Q4) over 8 quarters.",
+      "evidence_ids": [
+        "T-62b1842d91bc"
+      ],
+      "kind": "verified_fact"
+    },
+    {
+      "finding_id": "FND-9",
+      "section": "capital",
+      "text": "Operating cash flow / CAPEX rose from 1.41x in FY2025 Q2 to 1.47x in FY2027 Q1 (a change of 0.06x); range 1.20x (FY2026 Q2) to 2.50x (FY2025 Q4) over 8 quarters.",
+      "evidence_ids": [
+        "T-1e7db65ac820"
+      ],
+      "kind": "verified_fact"
+    }
+  ],
+  "model_interpretations": [],
+  "model_executive_summary": null,
+  "source_references": [
+    {
+      "evidence_id": "F-0000950170-24-008814",
+      "kind": "filing",
+      "label": "10-Q filed 2024-01-30",
+      "period": null,
+      "value": null,
+      "unit": null,
+      "display": null,
+      "payload": {
+        "accession": "0000950170-24-008814",
+        "form": "10-Q",
+        "filing_date": "2024-01-30",
+        "report_date": "2023-12-31",
+        "acceptance_datetime": "2024-01-30T21:05:46.000Z",
+        "primary_document": "msft-20231231.htm",
+        "cik": "0000789019",
+        "is_amendment": false,
+        "index_url": "https://www.sec.gov/Archives/edgar/data/789019/000095017024008814/0000950170-24-008814-index.htm",
+        "document_url": "https://www.sec.gov/Archives/edgar/data/789019/000095017024008814/msft-20231231.htm"
+      }
+    },
+    {
+      "evidence_id": "F-0000950170-24-048288",
+      "kind": "filing",
+      "label": "10-Q filed 2024-04-25",
+      "period": null,
+      "value": null,
+      "unit": null,
+      "display": null,
+      "payload": {
+        "accession": "0000950170-24-048288",
+        "form": "10-Q",
+        "filing_date": "2024-04-25",
+        "report_date": "2024-03-31",
+        "acceptance_datetime": "2024-04-25T20:06:24.000Z",
+        "primary_document": "msft-20240331.htm",
+        "cik": "0000789019",
+        "is_amendment": false,
+        "index_url": "https://www.sec.gov/Archives/edgar/data/789019/000095017024048288/0000950170-24-048288-index.htm",
+        "document_url": "https://www.sec.gov/Archives/edgar/data/789019/000095017024048288/msft-20240331.htm"
+      }
+    },
+    {
+      "evidence_id": "F-0000950170-24-118967",
+      "kind": "filing",
+      "label": "10-Q filed 2024-10-30",
+      "period": null,
+      "value": null,
+      "unit": null,
+      "display": null,
+      "payload": {
+        "accession": "0000950170-24-118967",
+        "form": "10-Q",
+        "filing_date": "2024-10-30",
+        "report_date": "2024-09-30",
+        "acceptance_datetime": "2024-10-30T20:07:17.000Z",
+        "primary_document": "msft-20240930.htm",
+        "cik": "0000789019",
+        "is_amendment": false,
+        "index_url": "https://www.sec.gov/Archives/edgar/data/789019/000095017024118967/0000950170-24-118967-index.htm",
+        "document_url": "https://www.sec.gov/Archives/edgar/data/789019/000095017024118967/msft-20240930.htm"
+      }
+    },
+    {
+      "evidence_id": "F-0000950170-25-010491",
+      "kind": "filing",
+      "label": "10-Q filed 2025-01-29",
+      "period": null,
+      "value": null,
+      "unit": null,
+      "display": null,
+      "payload": {
+        "accession": "0000950170-25-010491",
+        "form": "10-Q",
+        "filing_date": "2025-01-29",
+        "report_date": "2024-12-31",
+        "acceptance_datetime": "2025-01-29T21:11:54.000Z",
+        "primary_document": "msft-20241231.htm",
+        "cik": "0000789019",
+        "is_amendment": false,
+        "index_url": "https://www.sec.gov/Archives/edgar/data/789019/000095017025010491/0000950170-25-010491-index.htm",
+        "document_url": "https://www.sec.gov/Archives/edgar/data/789019/000095017025010491/msft-20241231.htm"
+      }
+    },
+    {
+      "evidence_id": "F-0000950170-25-061046",
+      "kind": "filing",
+      "label": "10-Q filed 2025-04-30",
+      "period": null,
+      "value": null,
+      "unit": null,
+      "display": null,
+      "payload": {
+        "accession": "0000950170-25-061046",
+        "form": "10-Q",
+        "filing_date": "2025-04-30",
+        "report_date": "2025-03-31",
+        "acceptance_datetime": "2025-04-30T20:08:52.000Z",
+        "primary_document": "msft-20250331.htm",
+        "cik": "0000789019",
+        "is_amendment": false,
+        "index_url": "https://www.sec.gov/Archives/edgar/data/789019/000095017025061046/0000950170-25-061046-index.htm",
+        "document_url": "https://www.sec.gov/Archives/edgar/data/789019/000095017025061046/msft-20250331.htm"
+      }
+    },
+    {
+      "evidence_id": "F-0000950170-25-100235",
+      "kind": "filing",
+      "label": "10-K filed 2025-07-30",
+      "period": null,
+      "value": null,
+      "unit": null,
+      "display": null,
+      "payload": {
+        "accession": "0000950170-25-100235",
+        "form": "10-K",
+        "filing_date": "2025-07-30",
+        "report_date": "2025-06-30",
+        "acceptance_datetime": "2025-07-30T20:11:40.000Z",
+        "primary_document": "msft-20250630.htm",
+        "cik": "0000789019",
+        "is_amendment": false,
+        "index_url": "https://www.sec.gov/Archives/edgar/data/789019/000095017025100235/0000950170-25-100235-index.htm",
+        "document_url": "https://www.sec.gov/Archives/edgar/data/789019/000095017025100235/msft-20250630.htm"
+      }
+    },
+    {
+      "evidence_id": "F-0001193125-25-256321",
+      "kind": "filing",
+      "label": "10-Q filed 2025-10-29",
+      "period": null,
+      "value": null,
+      "unit": null,
+      "display": null,
+      "payload": {
+        "accession": "0001193125-25-256321",
+        "form": "10-Q",
+        "filing_date": "2025-10-29",
+        "report_date": "2025-09-30",
+        "acceptance_datetime": "2025-10-29T20:10:48.000Z",
+        "primary_document": "msft-20250930.htm",
+        "cik": "0000789019",
+        "is_amendment": false,
+        "index_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312525256321/0001193125-25-256321-index.htm",
+        "document_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312525256321/msft-20250930.htm"
+      }
+    },
+    {
+      "evidence_id": "F-0001193125-26-027207",
+      "kind": "filing",
+      "label": "10-Q filed 2026-01-28",
+      "period": null,
+      "value": null,
+      "unit": null,
+      "display": null,
+      "payload": {
+        "accession": "0001193125-26-027207",
+        "form": "10-Q",
+        "filing_date": "2026-01-28",
+        "report_date": "2025-12-31",
+        "acceptance_datetime": "2026-01-28T21:07:34.000Z",
+        "primary_document": "msft-20251231.htm",
+        "cik": "0000789019",
+        "is_amendment": false,
+        "index_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm",
+        "document_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/msft-20251231.htm"
+      }
+    },
+    {
+      "evidence_id": "F-0001193125-26-191507",
+      "kind": "filing",
+      "label": "10-Q filed 2026-04-29",
+      "period": null,
+      "value": null,
+      "unit": null,
+      "display": null,
+      "payload": {
+        "accession": "0001193125-26-191507",
+        "form": "10-Q",
+        "filing_date": "2026-04-29",
+        "report_date": "2026-03-31",
+        "acceptance_datetime": "2026-04-29T20:06:24.000Z",
+        "primary_document": "msft-20260331.htm",
+        "cik": "0000789019",
+        "is_amendment": false,
+        "index_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm",
+        "document_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/msft-20260331.htm"
+      }
+    },
+    {
+      "evidence_id": "F-0001193125-26-323660",
+      "kind": "filing",
+      "label": "10-K filed 2026-07-29",
+      "period": null,
+      "value": null,
+      "unit": null,
+      "display": null,
+      "payload": {
+        "accession": "0001193125-26-323660",
+        "form": "10-K",
+        "filing_date": "2026-07-29",
+        "report_date": "2026-06-30",
+        "acceptance_datetime": "2026-07-29T20:08:01.000Z",
+        "primary_document": "msft-20260630.htm",
+        "cik": "0000789019",
+        "is_amendment": false,
+        "index_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+        "document_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/msft-20260630.htm"
+      }
+    },
+    {
+      "evidence_id": "F-0001193125-26-436133",
+      "kind": "filing",
+      "label": "10-Q filed 2026-10-28",
+      "period": null,
+      "value": null,
+      "unit": null,
+      "display": null,
+      "payload": {
+        "accession": "0001193125-26-436133",
+        "form": "10-Q",
+        "filing_date": "2026-10-28",
+        "report_date": "2026-09-30",
+        "acceptance_datetime": "2026-10-28T20:07:39.000Z",
+        "primary_document": "msft-20260930.htm",
+        "cik": "0000789019",
+        "is_amendment": false,
+        "index_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/0001193125-26-436133-index.htm",
+        "document_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm"
+      }
+    }
+  ],
+  "snapshots": [
+    {
+      "sha256": "46f3d184653f44f040005c30746b50f6e6a3e93b6e08630d4b400a73a9f6738e",
+      "url": "https://data.sec.gov/submissions/CIK0000789019.json",
+      "retrieved_at": "2026-11-02T01:14:39.353078Z",
+      "origin": "live"
+    },
+    {
+      "sha256": "464cc12cc4796c90a6a0c709eb4920788aa7d4d5eee8b44f2d11d7d44804ae37",
+      "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000789019.json",
+      "retrieved_at": "2026-11-02T01:14:39.709249Z",
+      "origin": "live"
+    }
+  ],
+  "missing_data": [],
+  "limitations": [
+    "12 quarterly values are derived from cumulative YTD/annual filings (marked †); they are not directly reported quarterly figures.",
+    "Filing availability uses a conservative next-day policy (filing date + 1 day, 00:00 New York); intraday acceptance times are not used.",
+    "Only SEC XBRL financial statement data is used; no MD&A text, guidance, segment data, or market prices are analysed in v0.1.",
+    "LLM synthesis unavailable; narrative is a template-based factual summary."
+  ],
+  "verification": {
+    "status": "passed",
+    "checks": [
+      {
+        "name": "evidence_references",
+        "status": "passed",
+        "details": []
+      },
+      {
+        "name": "numeric_claims",
+        "status": "passed",
+        "details": []
+      },
+      {
+        "name": "arithmetic_consistency",
+        "status": "passed",
+        "details": []
+      },
+      {
+        "name": "provenance_complete",
+        "status": "passed",
+        "details": []
+      },
+      {
+        "name": "as_of_compliance",
+        "status": "passed",
+        "details": [
+          "No as_of cutoff requested; latest available data used."
+        ]
+      },
+      {
+        "name": "llm_output_screening",
+        "status": "passed",
+        "details": [
+          "LLM synthesis status: unavailable"
+        ]
+      },
+      {
+        "name": "data_availability",
+        "status": "passed",
+        "details": []
+      }
+    ]
+  },
+  "llm": {
+    "provider": "none",
+    "status": "unavailable",
+    "notes": [
+      "LLM synthesis disabled for this request."
+    ]
+  },
+  "markdown": "# MICROSOFT CORP (MSFT) — Company Research Report\n\n> **Live data retrieved from official SEC EDGAR APIs.**\n\n| Field | Value |\n|---|---|\n| Run ID | `2a0fed38-8866-4c52-b12e-90c30301dce0` |\n| CIK | 0000789019 |\n| Analysis timestamp (UTC) | 2026-11-02T01:14:41.398063+00:00 |\n| As-of cutoff | none (latest available) |\n| Periods | FY2025 Q2 … FY2027 Q1 (8 quarters) |\n| Verification | **passed** |\n| LLM synthesis | unavailable (none) |\n\n## 1. Executive summary\n\n**Verified facts (deterministic):**\n\nIn FY2027 Q1 (most recent reported quarter), MICROSOFT CORP reported revenue $92.28B; revenue growth YoY 18.8%; operating margin 49.8%; free cash flow $18.63B; FCF margin 20.2%; CAPEX intensity (CAPEX/revenue) 42.7%; OCF/CAPEX 1.47x.\n\n## 2. Financial performance\n\n| Metric | FY2025 Q2 | FY2025 Q3 | FY2025 Q4 | FY2026 Q1 | FY2026 Q2 | FY2026 Q3 | FY2026 Q4 | FY2027 Q1 |\n|---|---|---|---|---|---|---|---|---|\n| Revenue | $69.63B | $70.07B | $76.44B† | $77.67B | $81.27B | $82.89B | $90.01B† | $92.28B |\n| Operating income | $31.65B | $32.00B | $34.32B† | $37.96B | $38.27B | $38.40B | $40.60B† | $45.91B |\n| Net income | $24.11B | $25.82B | $27.23B† | $27.75B | $38.46B | $31.78B | $35.77B† | $36.63B |\n| Operating cash flow | $22.29B | $37.04B | $42.65B† | $45.06B | $35.76B | $46.68B | $55.44B† | $58.00B |\n| CAPEX | $15.80B | $16.75B | $17.08B† | $19.39B | $29.88B | $30.88B | $35.80B† | $39.37B |\n\n† standalone quarter derived from cumulative (YTD/annual) filings; ‡ value differs across filings (latest eligible filing used).\n\n## 3. Growth and margin analysis\n\n| Metric | FY2025 Q2 | FY2025 Q3 | FY2025 Q4 | FY2026 Q1 | FY2026 Q2 | FY2026 Q3 | FY2026 Q4 | FY2027 Q1 |\n|---|---|---|---|---|---|---|---|---|\n| Revenue YoY | 12.3% | 13.3% | 18.1% | 18.4% | 16.7% | 18.3% | 17.7% | 18.8% |\n| Revenue QoQ | 6.2% | 0.6% | 9.1% | 1.6% | 4.6% | 2.0% | 8.6% | 2.5% |\n| Gross margin | 68.7% | 68.7% | 68.6% | 69.0% | 68.0% | 67.6% | 67.2% | 67.8% |\n| Operating margin | 45.5% | 45.7% | 44.9% | 48.9% | 47.1% | 46.3% | 45.1% | 49.8% |\n| Net margin | 34.6% | 36.9% | 35.6% | 35.7% | 47.3% | 38.3% | 39.7% | 39.7% |\n\n- Revenue growth YoY rose from 12.3% in FY2025 Q2 to 18.8% in FY2027 Q1 (a change of +6.5 pp); range 12.3% (FY2025 Q2) to 18.8% (FY2027 Q1) over 8 quarters. `[T-ffd2a1a8c14a]`\n- Gross margin declined from 68.7% in FY2025 Q2 to 67.8% in FY2027 Q1 (a change of -0.9 pp); range 67.2% (FY2026 Q4) to 69.0% (FY2026 Q1) over 8 quarters. `[T-0b165be11dd3]`\n- Operating margin rose from 45.5% in FY2025 Q2 to 49.8% in FY2027 Q1 (a change of +4.3 pp); range 44.9% (FY2025 Q4) to 49.8% (FY2027 Q1) over 8 quarters. `[T-f05b88c083d4]`\n- Net profit margin rose from 34.6% in FY2025 Q2 to 39.7% in FY2027 Q1 (a change of +5.1 pp); range 34.6% (FY2025 Q2) to 47.3% (FY2026 Q2) over 8 quarters. `[T-5c944c1d61eb]`\n\n## 4. Cash flow and capital expenditures\n\n| Metric | FY2025 Q2 | FY2025 Q3 | FY2025 Q4 | FY2026 Q1 | FY2026 Q2 | FY2026 Q3 | FY2026 Q4 | FY2027 Q1 |\n|---|---|---|---|---|---|---|---|---|\n| Free cash flow | $6.49B | $20.30B | $25.57B | $25.66B | $5.88B | $15.80B | $19.64B | $18.63B |\n| FCF margin | 9.3% | 29.0% | 33.4% | 33.0% | 7.2% | 19.1% | 21.8% | 20.2% |\n| CAPEX / revenue | 22.7% | 23.9% | 22.3% | 25.0% | 36.8% | 37.3% | 39.8% | 42.7% |\n| CAPEX YoY | 62.3% | 52.9% | 23.1% | 30.0% | 89.0% | 84.4% | 109.6% | 103.0% |\n| OCF / CAPEX | 1.41x | 2.21x | 2.50x | 2.32x | 1.20x | 1.51x | 1.55x | 1.47x |\n\n- Free cash flow rose from $6.49B in FY2025 Q2 to $18.63B in FY2027 Q1 (a change of $12.15B); range $5.88B (FY2026 Q2) to $25.66B (FY2026 Q1) over 8 quarters. `[T-e7a455a2fd6d]`\n- FCF margin rose from 9.3% in FY2025 Q2 to 20.2% in FY2027 Q1 (a change of +10.9 pp); range 7.2% (FY2026 Q2) to 33.4% (FY2025 Q4) over 8 quarters. `[T-f865367f59ed]`\n- CAPEX / revenue rose from 22.7% in FY2025 Q2 to 42.7% in FY2027 Q1 (a change of +20.0 pp); range 22.3% (FY2025 Q4) to 42.7% (FY2027 Q1) over 8 quarters. `[T-d63e7be8deee]`\n- CAPEX growth YoY rose from 62.3% in FY2025 Q2 to 103.0% in FY2027 Q1 (a change of +40.6 pp); range 23.1% (FY2025 Q4) to 109.6% (FY2026 Q4) over 8 quarters. `[T-62b1842d91bc]`\n- Operating cash flow / CAPEX rose from 1.41x in FY2025 Q2 to 1.47x in FY2027 Q1 (a change of 0.06x); range 1.20x (FY2026 Q2) to 2.50x (FY2025 Q4) over 8 quarters. `[T-1e7db65ac820]`\n\n*CAPEX definition:* cash purchases of property, plant and equipment (`PaymentsToAcquirePropertyPlantAndEquipment`, fallback `PaymentsToAcquireProductiveAssets`); excludes finance-lease principal repayments, non-cash lease additions, acquisitions and intangibles. FCF = operating cash flow − CAPEX.\n\n## 5. Key trends\n\n### Verified findings (computed from source data)\n\n- **FND-1** Revenue growth YoY rose from 12.3% in FY2025 Q2 to 18.8% in FY2027 Q1 (a change of +6.5 pp); range 12.3% (FY2025 Q2) to 18.8% (FY2027 Q1) over 8 quarters. `[T-ffd2a1a8c14a]`\n- **FND-2** Gross margin declined from 68.7% in FY2025 Q2 to 67.8% in FY2027 Q1 (a change of -0.9 pp); range 67.2% (FY2026 Q4) to 69.0% (FY2026 Q1) over 8 quarters. `[T-0b165be11dd3]`\n- **FND-3** Operating margin rose from 45.5% in FY2025 Q2 to 49.8% in FY2027 Q1 (a change of +4.3 pp); range 44.9% (FY2025 Q4) to 49.8% (FY2027 Q1) over 8 quarters. `[T-f05b88c083d4]`\n- **FND-4** Net profit margin rose from 34.6% in FY2025 Q2 to 39.7% in FY2027 Q1 (a change of +5.1 pp); range 34.6% (FY2025 Q2) to 47.3% (FY2026 Q2) over 8 quarters. `[T-5c944c1d61eb]`\n- **FND-5** Free cash flow rose from $6.49B in FY2025 Q2 to $18.63B in FY2027 Q1 (a change of $12.15B); range $5.88B (FY2026 Q2) to $25.66B (FY2026 Q1) over 8 quarters. `[T-e7a455a2fd6d]`\n- **FND-6** FCF margin rose from 9.3% in FY2025 Q2 to 20.2% in FY2027 Q1 (a change of +10.9 pp); range 7.2% (FY2026 Q2) to 33.4% (FY2025 Q4) over 8 quarters. `[T-f865367f59ed]`\n- **FND-7** CAPEX / revenue rose from 22.7% in FY2025 Q2 to 42.7% in FY2027 Q1 (a change of +20.0 pp); range 22.3% (FY2025 Q4) to 42.7% (FY2027 Q1) over 8 quarters. `[T-d63e7be8deee]`\n- **FND-8** CAPEX growth YoY rose from 62.3% in FY2025 Q2 to 103.0% in FY2027 Q1 (a change of +40.6 pp); range 23.1% (FY2025 Q4) to 109.6% (FY2026 Q4) over 8 quarters. `[T-62b1842d91bc]`\n- **FND-9** Operating cash flow / CAPEX rose from 1.41x in FY2025 Q2 to 1.47x in FY2027 Q1 (a change of 0.06x); range 1.20x (FY2026 Q2) to 2.50x (FY2025 Q4) over 8 quarters. `[T-1e7db65ac820]`\n\n### Model-generated interpretation (not verified fact)\n\n- LLM synthesis unavailable. LLM synthesis disabled for this request. The report above is a template-based factual summary.\n\n## 6. Evidence and references\n\n**SEC filings used:**\n\n- `F-0000950170-24-008814` 10-Q filed 2024-01-30 — [0000950170-24-008814](https://www.sec.gov/Archives/edgar/data/789019/000095017024008814/msft-20231231.htm) (index: https://www.sec.gov/Archives/edgar/data/789019/000095017024008814/0000950170-24-008814-index.htm)\n- `F-0000950170-24-048288` 10-Q filed 2024-04-25 — [0000950170-24-048288](https://www.sec.gov/Archives/edgar/data/789019/000095017024048288/msft-20240331.htm) (index: https://www.sec.gov/Archives/edgar/data/789019/000095017024048288/0000950170-24-048288-index.htm)\n- `F-0000950170-24-118967` 10-Q filed 2024-10-30 — [0000950170-24-118967](https://www.sec.gov/Archives/edgar/data/789019/000095017024118967/msft-20240930.htm) (index: https://www.sec.gov/Archives/edgar/data/789019/000095017024118967/0000950170-24-118967-index.htm)\n- `F-0000950170-25-010491` 10-Q filed 2025-01-29 — [0000950170-25-010491](https://www.sec.gov/Archives/edgar/data/789019/000095017025010491/msft-20241231.htm) (index: https://www.sec.gov/Archives/edgar/data/789019/000095017025010491/0000950170-25-010491-index.htm)\n- `F-0000950170-25-061046` 10-Q filed 2025-04-30 — [0000950170-25-061046](https://www.sec.gov/Archives/edgar/data/789019/000095017025061046/msft-20250331.htm) (index: https://www.sec.gov/Archives/edgar/data/789019/000095017025061046/0000950170-25-061046-index.htm)\n- `F-0000950170-25-100235` 10-K filed 2025-07-30 — [0000950170-25-100235](https://www.sec.gov/Archives/edgar/data/789019/000095017025100235/msft-20250630.htm) (index: https://www.sec.gov/Archives/edgar/data/789019/000095017025100235/0000950170-25-100235-index.htm)\n- `F-0001193125-25-256321` 10-Q filed 2025-10-29 — [0001193125-25-256321](https://www.sec.gov/Archives/edgar/data/789019/000119312525256321/msft-20250930.htm) (index: https://www.sec.gov/Archives/edgar/data/789019/000119312525256321/0001193125-25-256321-index.htm)\n- `F-0001193125-26-027207` 10-Q filed 2026-01-28 — [0001193125-26-027207](https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/msft-20251231.htm) (index: https://www.sec.gov/Archives/edgar/data/789019/000119312526027207/0001193125-26-027207-index.htm)\n- `F-0001193125-26-191507` 10-Q filed 2026-04-29 — [0001193125-26-191507](https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/msft-20260331.htm) (index: https://www.sec.gov/Archives/edgar/data/789019/000119312526191507/0001193125-26-191507-index.htm)\n- `F-0001193125-26-323660` 10-K filed 2026-07-29 — [0001193125-26-323660](https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/msft-20260630.htm) (index: https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm)\n- `F-0001193125-26-436133` 10-Q filed 2026-10-28 — [0001193125-26-436133](https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm) (index: https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/0001193125-26-436133-index.htm)\n\n**Source snapshots (immutable, SHA-256):**\n\n- https://data.sec.gov/submissions/CIK0000789019.json — retrieved 2026-11-02T01:14:39.353078+00:00 — origin `live` — `46f3d184653f44f0…`\n- https://data.sec.gov/api/xbrl/companyfacts/CIK0000789019.json — retrieved 2026-11-02T01:14:39.709249+00:00 — origin `live` — `464cc12cc4796c90…`\n\nEvery figure maps to an evidence id in the JSON report: `V-…` normalized XBRL values (with accession, concept, unit, period and filing date), `C-…` calculations (formula + inputs), `T-…` trend statistics.\n\n## 7. Data limitations\n\n- 12 quarterly values are derived from cumulative YTD/annual filings (marked †); they are not directly reported quarterly figures.\n- Filing availability uses a conservative next-day policy (filing date + 1 day, 00:00 New York); intraday acceptance times are not used.\n- Only SEC XBRL financial statement data is used; no MD&A text, guidance, segment data, or market prices are analysed in v0.1.\n- LLM synthesis unavailable; narrative is a template-based factual summary.\n\n### Verification checks\n\n| Check | Status | Details |\n|---|---|---|\n| evidence_references | passed | — |\n| numeric_claims | passed | — |\n| arithmetic_consistency | passed | — |\n| provenance_complete | passed | — |\n| as_of_compliance | passed | No as_of cutoff requested; latest available data used. |\n| llm_output_screening | passed | LLM synthesis status: unavailable |\n| data_availability | passed | — |\n"
+}

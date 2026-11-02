@@ -1,0 +1,4 @@
+# Keep line endings stable across platforms (core.autocrlf would otherwise rewrite them).
+* text=auto eol=lf
+# Fixtures are hashed into content-addressed snapshots: store and check out byte-exact.
+tests/fixtures/** -text

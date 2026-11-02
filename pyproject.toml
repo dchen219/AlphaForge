@@ -1,0 +1,51 @@
+[project]
+name = "finance-agent"
+version = "0.1.0"
+description = "Modular finance research agent: SEC EDGAR + FRED/ALFRED data infrastructure, deterministic calculations, evidence-linked company research."
+readme = "README.md"
+authors = [
+    { name = "Danbo Chen", email = "chen.12712@buckeyemail.osu.edu" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.20.1",
+    "anthropic>=2.3.0",
+    "fastapi>=0.162.0",
+    "httpx>=0.28.1",
+    "langgraph>=1.2.19",
+    "pydantic>=2.14.2",
+    "pydantic-settings>=2.16.2",
+    "sqlalchemy>=2",
+    "typer>=0.27.3",
+    "tzdata>=2026.6",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.10.6,<0.11.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "ruff>=0.17.3",
+]
+
+[project.scripts]
+finance-agent = "finance_agent.interfaces.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+    "live: hits real external APIs (opt-in via RUN_LIVE_TESTS=1)",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+extend-exclude = ["src/finance_agent/storage/migrations/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["RUF001", "RUF002", "RUF003", "B008", "SIM108", "E501"]  # E501: line length is owned by `ruff format`
