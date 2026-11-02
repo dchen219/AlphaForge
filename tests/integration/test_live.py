@@ -72,7 +72,7 @@ def test_live_research_run(live_ctx):
 
 def test_live_fred(live_ctx):
     if not live_ctx.settings.fred_api_key:
-        pytest.skip("LIVE_FRED_API_KEY not set; live FRED/ALFRED unverified")
+        pytest.skip("LIVE_FRED_API_KEY not set; keyed FRED API unverified (keyless ALFRED is covered by the v0.2 live test)")
     res = live_ctx.macro("CPIAUCSL", as_of=None)
     assert res.data_origin == "live" and res.observations
 
@@ -82,3 +82,18 @@ def test_live_llm_synthesis(live_ctx):
         pytest.skip("LIVE_ANTHROPIC_API_KEY not set; live LLM synthesis unverified")
     rep = CompanyResearchWorkflow(live_ctx).run(ResearchRequest(ticker="MSFT", quarters=4))["report"]
     assert rep.llm.status == "generated", rep.llm.notes
+
+
+def test_live_v02_event_sources_and_briefing(live_ctx):
+    """Live SEC + Federal Reserve + BLS/BEA calendars + ALFRED (keyless) ingestion and briefing."""
+    from datetime import date
+
+    from finance_agent.events.briefing import BriefingRequest
+    from finance_agent.events.service import EventIngestor
+    from finance_agent.workflows.briefing import BriefingWorkflow
+
+    rep = EventIngestor(live_ctx).run(["sec", "fomc", "macro"], start=date(2026, 10, 1), tickers=["MSFT"])
+    assert rep.ok, rep.errors
+    assert all(rep.per_source[s]["inserted"] > 0 for s in ("sec", "fomc", "macro"))
+    br = BriefingWorkflow(live_ctx).run(BriefingRequest(date="2026-10-28", use_llm=False))["report"]
+    assert br.data_origins == ["live"] and br.verification.status != "failed"

@@ -1,0 +1,22 @@
+{
+  "description": "Curated pairwise ranking expectations over REAL ingested events (tests/fixtures, window 2025-07-01..2026-11-01).",
+  "label_provenance": "Written by the v0.2 implementer from documented economic reasoning; the same reasoning informed the judgmental weights.",
+  "independent_labels": false,
+  "metrics_policy": "Because labels are not independent of the scoring rules, these pairs are regression/sanity expectations only. No ranking-quality metric (e.g. pairwise accuracy vs. a chronological baseline) is reported from them.",
+  "pairs": [
+    {"higher": "FOMC|DECISION|2026-09-16", "lower": "FOMC|DECISION|2026-10-28",
+     "rationale": "A verified 25 bp rate change carries more policy information than a hold."},
+    {"higher": "FOMC|DECISION|2026-10-28", "lower": "SEC|0000789019|0001193125-26-323660",
+     "rationale": "An economy-wide policy decision outranks a routine annual report filing."},
+    {"higher": "MACRO|CPIAUCSL|2026-09|FIRST_RELEASE", "lower": "MACRO|PAYEMS|2026-08|REVISION|2026-10-02",
+     "rationale": "A new CPI release outranks a revision of an earlier payroll month."},
+    {"higher": "MACRO|PAYEMS|2026-08|FIRST_RELEASE", "lower": "MACRO|PAYEMS|2026-08|REVISION|2026-10-02",
+     "rationale": "A first release outranks a later revision of the same observation."},
+    {"higher": "SEC|0000789019|0001193125-26-436122", "lower": "SEC|0000789019|0001193125-26-436149",
+     "rationale": "An earnings 8-K (item 2.02) outranks an 'other events' 8-K (item 8.01) filed the same day."},
+    {"higher": "SEC|0000789019|0001193125-26-323660", "lower": "SEC|0000789019|0001193125-26-380280",
+     "rationale": "A 10-K outranks a Regulation FD 8-K."},
+    {"higher": "FOMC|DECISION|2025-12-10", "lower": "FOMC|DECISION|2025-08-22",
+     "rationale": "A rate cut outranks a framework statement that contains no rate decision."}
+  ]
+}
