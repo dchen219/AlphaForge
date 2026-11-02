@@ -534,3 +534,58 @@ live data. Live equity data remains **unverified**.
 | Live yields | passed |
 | Live Alpaca | skipped (no keys) |
 | Alembic | 0005 upgrade, check, and downgrade to 0003 and back to head: OK |
+
+---
+
+## Agent testing console (branch `feat/agent-testing-ui`, 2026-11-02)
+
+Base: master @ 07cbb0f (PR #1 merged). Local Streamlit console over the real FastAPI app;
+details in `docs/agent_testing_ui.md`. No new financial models, agents, providers or trading.
+
+- Dependencies: `streamlit 1.66.1` in a new `ui` dependency group (default-groups dev+ui);
+  core package unchanged (pandas/NumPy only arrive via Streamlit).
+- Backend (read-only, additive): `events/replay.py` (`replay_audit`; `calendar_visibility`
+  extracted verbatim from `BriefingWorkflow.retrieve`); `GET /events/replay`, `GET /research`,
+  `GET /intelligence/briefings`, `GET /workflows`; `GET /events/{id}?as_of=` (404 before
+  availability, masked links, `revision_history`); `subtype` filter on `GET /events`; optional
+  run metadata fields; `/health.fixture_event_window` (offline). `EventStore.revision_chain`,
+  `mask_future_links`; `BriefingStore.recent`; `Repository.list_runs`. No schema change (alembic
+  check clean).
+- Instrumentation: node wrappers record `started_at`/`finished_at`; node order exported as
+  `RESEARCH_NODES` / `BRIEFING_NODES`. Workflow logic unchanged.
+- Mode: offline/live is a server property; the UI picks one of two loopback backends and refuses
+  to send requests when `/health.offline_mode` disagrees with the selection.
+- Tests: +78 (client with mocked HTTP, validation, origin labels, Streamlit AppTest pages against
+  a real loopback API over recorded fixtures, replay/cutoff integrity incl. SYNTHETIC revision and
+  masked-link cases). Suite: 345 passed, 9 skipped (live).
+- Environment note: Windows Application Control blocked `.venv\Scripts\pytest.exe` after
+  `uv sync`; `python -m pytest` works.
+
+---
+
+## Agent testing dashboard (branch `feat/agent-dashboard`, 2026-11-02)
+
+Base: master @ 51373dc (tag `v0.3.0a`). The unmerged `feat/agent-testing-ui` (30776ab; no PR) was
+merged in to preserve it; conflicts were docs-only (CLAUDE.md, this log) plus `uv.lock`
+(regenerated). The merged tree passed unchanged before any new work: 422 passed, 11 skipped.
+
+- Backend (read-only, additive): `GET /system/overview` (`interfaces/system_api.py`): source
+  catalogue with credential presence as booleans + env-var names (Alpaca included without
+  changing the v0.1 `/health.credentials_configured` contract), event-store counts per source,
+  latest market ingestion runs (errors redacted), quality counts, run counts. No schema change.
+- Dashboard: 7 pages in sections — Dashboard (new), Company Research (+ Markdown/JSON export
+  prefixed with the origin label), Financial Events, Daily Briefing (+ export), Market Data (new:
+  prices with explicit basis/mode/cutoff, server-side returns, yields, calendar + event alignment,
+  quality), Agent Testing Lab (inspector → execute / inspect / compare runs), Historical Replay
+  (+ two-cutoff comparison for events, financials, prices, yields with per-cutoff integrity
+  checks against the server-echoed cutoff).
+- Launch: `python -m finance_agent.ui` (always 127.0.0.1) and `scripts/start_dashboard.ps1`.
+- Defects found while building (each covered by a test):
+  1. Node tables mixed integers and "not recorded" in one column; Arrow conversion failed. Fixed by
+     `components.display_rows` (mixed columns rendered as text, values unchanged).
+  2. An unknown ticker returns HTTP 200 with a stored *failed* run, not 404; the Lab shows the run
+     error and nodes (test expectation corrected to the real contract).
+- Tests: +33 (422 → 455 passed, 11 skipped live; client market/overview parsing with mocked HTTP, compare/validation helpers, page
+  tests against a real loopback API with SYNTHETIC NVDA/SPY bars and REAL 2026 yields, secret
+  leakage on `/health`, `/system/overview`, `/openapi.json`, launcher loopback binding).
+- Not verified: live Alpaca, live research/briefings, live LLM through the dashboard.

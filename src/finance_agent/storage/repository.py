@@ -226,3 +226,18 @@ class Repository:
             rows = s.scalars(select(ResearchEvidence).where(ResearchEvidence.run_id == run_id)).all()
             s.expunge_all()
             return list(rows)
+
+    def list_runs(self, limit: int = 50, status: str | None = None) -> list[tuple[ResearchRun, str | None]]:
+        """Most recent research runs with their report's verification status (if any)."""
+        q = (
+            select(ResearchRun, ResearchReport.verification_status)
+            .outerjoin(ResearchReport, ResearchReport.run_id == ResearchRun.id)
+            .order_by(ResearchRun.created_at.desc())
+            .limit(limit)
+        )
+        if status:
+            q = q.where(ResearchRun.status == status)
+        with self.db.session() as s:
+            rows = s.execute(q).all()
+            s.expunge_all()
+            return [(run, ver) for run, ver in rows]

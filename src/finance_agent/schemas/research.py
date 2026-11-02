@@ -105,3 +105,24 @@ class ResearchRunOut(BaseModel):
     error: str | None
     steps: list[dict]
     report: ResearchReportOut | None
+    as_of: datetime | None = None
+    params: dict = Field(default_factory=dict)
+
+
+class ResearchRunSummary(BaseModel):
+    run_id: str
+    status: str
+    question: str
+    ticker: str | None
+    as_of: datetime | None
+    use_llm: bool | None
+    created_at: datetime
+    completed_at: datetime | None
+    error: str | None
+    verification_status: str | None
+    steps_executed: int
+
+
+class ResearchRunList(BaseModel):
+    count: int
+    runs: list[ResearchRunSummary]
