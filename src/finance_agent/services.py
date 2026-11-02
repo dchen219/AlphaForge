@@ -88,6 +88,7 @@ class AppContext:
                 "www.federalreserve.gov": settings.official_max_requests_per_second,
                 "www.bls.gov": settings.official_max_requests_per_second,
                 "www.bea.gov": settings.official_max_requests_per_second,
+                "data.alpaca.markets": settings.alpaca_max_requests_per_second,
             },
         )
         self.snapshots = SnapshotStore(self.db, settings.snapshots_dir)

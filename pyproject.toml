@@ -10,6 +10,7 @@ requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.20.1",
     "anthropic>=2.3.0",
+    "exchange-calendars>=4.13.2",
     "fastapi>=0.162.0",
     "httpx>=0.28.1",
     "langgraph>=1.2.19",
@@ -39,6 +40,10 @@ testpaths = ["tests"]
 addopts = "-ra"
 markers = [
     "live: hits real external APIs (opt-in via RUN_LIVE_TESTS=1)",
+]
+filterwarnings = [
+    # Raised inside exchange_calendars (pandas 3.1 deprecation); not our code.
+    "ignore:Series.values returning an ndarray that drops timezone information",
 ]
 
 [tool.ruff]

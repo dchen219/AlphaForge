@@ -10,6 +10,8 @@ stored in UTC.
 | `09238e2d643f` (0001) | v0.1 schema |
 | `0002_snapshot_last_retrieved` | `source_snapshots.last_retrieved_at` (cache freshness) |
 | `0003_event_intelligence` | v0.2 event tables |
+| `0004_market_data` | v0.3-A market-data tables |
+| `0005_market_version_identity` | v0.3-A: market bar / corporate-action / yield versions unique by (key, `version`) instead of (key, `content_hash`), so a source reverting to an earlier value is recorded |
 
 ## v0.1 tables
 
@@ -55,3 +57,23 @@ vintage_prior) · `source_url` · `snapshot_id` → `source_snapshots` · `snaps
 
 ### `briefing_events`
 `(briefing_id, event_id)` UNIQUE · `section` (macro | corporate) · `rank` · `importance_score`.
+
+## v0.3-A market-data tables
+
+Raw provider responses stay in `source_snapshots` (immutable). Normalized observations are
+versioned: a new row per distinct observation, never an overwrite.
+
+| Table | Key columns |
+|---|---|
+| `market_instruments` | `instrument_id` (PK), name, asset_class, group_name, currency, primary_exchange, calendar, active |
+| `market_provider_mappings` | instrument → (provider, provider_symbol), valid_from/valid_to (symbol changes); UNIQUE(instrument, provider, symbol) |
+| `market_price_bars` | instrument, provider, provider_symbol, exchange, frequency, `adjustment` (raw / provider:split / provider:all), session_date, bar_timestamp, timezone, OHLCV, vwap, trade_count, currency, `content_hash`, `version`, snapshot_id/sha256, data_origin, retrieved_at, `available_at` (indexed), availability_precision, `bar_status` (FINAL/PROVISIONAL), `quality_status` (OK/WARNING/QUARANTINED). UNIQUE(instrument, provider, frequency, adjustment, session_date, version); index (instrument, adjustment, session_date) |
+| `market_corporate_actions` | provider `action_id`, instrument, action_type (STOCK_SPLIT/CASH_DIVIDEND/SYMBOL_CHANGE/MERGER/SPINOFF), ex/record/payable/process/declaration dates, old_rate/new_rate, cash_amount, currency, new_symbol, content_hash, version, snapshot, retrieved_at, available_at, precision, raw JSON. UNIQUE(provider, action_id, version) |
+| `market_trading_sessions` | (calendar, session_date) PK; market_open/close, pre_market_open, after_hours_close (UTC), early_close |
+| `market_quality_issues` | `fingerprint` UNIQUE (idempotent), check, severity, instrument, provider, session_date, detail, status (OPEN/QUARANTINED/EXPLAINED), run_id |
+| `market_ingestion_runs` | run_id, provider, params, status, stats (rows, versions, unchanged, duplicates, corrections, cache hits, requests, duration), errors, data_origin |
+| `market_yield_observations` | series_id, observation_date, value (percent; null = missing), units, vintage_date, first_vintage_rule, content_hash, version, available_at, precision, snapshot, data_origin, retrieved_at. UNIQUE(series, date, version) |
+
+Adjusted prices (split-adjusted, total-return) are **derived at query time** from raw bars and the
+corporate actions visible at the cutoff. They are not stored, so a point-in-time query can never
+pick up a future action.

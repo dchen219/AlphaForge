@@ -503,5 +503,367 @@ def briefing_show(briefing_id: str, output: Annotated[str, typer.Option("--forma
     sys.stdout.buffer.write((text + "\n").encode("utf-8"))
 
 
+# --------------------------------------------------------------------------- v0.3-A market data
+
+market_app = typer.Typer(
+    help="Market data (v0.3-A): instruments, ingestion, prices, returns, quality, calendar, yields.",
+    no_args_is_help=True,
+)
+app.add_typer(market_app, name="market")
+Fmt = Annotated[str, typer.Option("--format", help="table | json")]
+Basis = Annotated[str, typer.Option("--basis", help="raw | split_adjusted | total_return")]
+Mode = Annotated[str, typer.Option("--mode", help="point_in_time (default) | research (retrospective)")]
+
+
+def _emit_json(obj) -> None:
+    sys.stdout.buffer.write((json.dumps(obj, indent=2, default=str) + "\n").encode("utf-8"))
+
+
+def _origin_line(origins) -> str:
+    origins = sorted(set(origins))
+    if any("synthetic" in o for o in origins):
+        return "DATA ORIGIN: SYNTHETIC FIXTURE (not real market data) - " + ",".join(origins)
+    return "Data origin: " + (",".join(origins) or "none")
+
+
+def _basis_value(value: str):
+    from finance_agent.market.schemas import AdjustmentBasis
+
+    allowed = {"raw": AdjustmentBasis.RAW, "split_adjusted": AdjustmentBasis.SPLIT_ADJUSTED,
+               "total_return": AdjustmentBasis.TOTAL_RETURN}  # fmt: skip
+    if value not in allowed:
+        _fail(ValueError(f"--basis must be one of {list(allowed)}"))
+    return allowed[value]
+
+
+def _num(v, nd=4) -> str:
+    return "-" if v is None else f"{v:,.{nd}f}"
+
+
+@market_app.command("instruments")
+def market_instruments(offline: Offline = False, fmt: Fmt = "table") -> None:
+    """List the configured research universe (registers it on first use)."""
+    try:
+        from finance_agent.market.ingest import MarketDataIngestor
+        from finance_agent.market.universe import YIELD_SERIES
+
+        ctx = _ctx(offline, llm=False)
+        MarketDataIngestor(ctx).register_universe()
+        items = MarketDataIngestor(ctx).store.instruments()
+    except FinanceAgentError as exc:
+        _fail(exc)
+    if fmt == "json":
+        _emit_json({"instruments": [i.model_dump() for i in items], "yield_series": YIELD_SERIES})
+        return
+    t = Table(title="Market-data universe")
+    for c in ("id", "name", "class", "group", "calendar"):
+        t.add_column(c)
+    for i in items:
+        t.add_row(i.instrument_id, i.name, str(i.asset_class), i.group, i.calendar)
+    console.print(t)
+    console.print("Yield series (rates in percent, not prices): " + ", ".join(YIELD_SERIES))
+
+
+@market_app.command("ingest")
+def market_ingest(
+    start: Annotated[str, typer.Option("--start", help="YYYY-MM-DD")],
+    end: Annotated[str, typer.Option("--end", help="YYYY-MM-DD")],
+    ticker: Annotated[list[str] | None, typer.Option("--ticker", help="repeatable; default: all")] = None,
+    offline: Offline = False,
+    refresh: Annotated[bool, typer.Option("--refresh", help="re-fetch even if cached")] = False,
+    no_yields: Annotated[bool, typer.Option("--no-yields", help="skip DGS2/DGS10")] = False,
+    provider_adjusted: Annotated[
+        bool,
+        typer.Option("--provider-adjusted", help="also store provider split-adjusted bars (reconciliation)"),
+    ] = False,
+) -> None:
+    """Bounded, idempotent daily-bar + corporate-action ingestion (and Treasury yields)."""
+    from finance_agent.market.ingest import MarketDataIngestor
+    from finance_agent.market.schemas import AdjustmentBasis
+    from finance_agent.market.yields import YieldIngestor
+
+    a, b = _date(start, "--start"), _date(end, "--end")
+    try:
+        ctx = _ctx(offline, llm=False)
+        bases = (
+            (AdjustmentBasis.RAW, AdjustmentBasis.PROVIDER_SPLIT)
+            if provider_adjusted
+            else (AdjustmentBasis.RAW,)
+        )
+        run = MarketDataIngestor(ctx).run(
+            ticker, a, b, bases=bases, refresh=refresh, progress=lambda m: err.print(m)
+        )
+        y = None if no_yields else YieldIngestor(ctx).run(None, a, b)
+    except (FinanceAgentError, ValueError) as exc:
+        _fail(exc)
+    console.print(_origin_line((run.data_origin or "").split(",")))
+    console.print(
+        f"run {run.run_id} status={run.status} instruments={len(run.instruments)} rows={run.rows_received} "
+        f"new_versions={run.versions_inserted} unchanged={run.unchanged} corrections={run.corrections} "
+        f"duplicates={run.duplicates} actions={run.corporate_actions} quality_issues={run.quality_issues} "
+        f"requests={run.requests} cache_hits={run.cache_hits} seconds={run.duration_seconds}"
+    )
+    for e in run.errors:
+        console.print(f"  error: {e}")
+    if y:
+        console.print(f"yields: {y}")
+    if run.status == "failed":
+        raise typer.Exit(code=1)
+
+
+@market_app.command("prices")
+def market_prices(
+    ticker: str,
+    start: Annotated[str, typer.Option("--start")],
+    end: Annotated[str, typer.Option("--end")],
+    basis: Basis = "raw",
+    mode: Mode = "point_in_time",
+    as_of: AsOf = None,
+    include_provisional: Annotated[bool, typer.Option("--include-provisional")] = False,
+    offline: Offline = False,
+    fmt: Fmt = "table",
+) -> None:
+    """Daily prices for one instrument (explicit basis and query mode)."""
+    from finance_agent.market.service import MarketDataService
+
+    try:
+        ctx = _ctx(offline, llm=False)
+        ps = MarketDataService(ctx.db).prices(
+            ticker, _date(start, "--start"), _date(end, "--end"), basis=_basis_value(basis), mode=mode,
+            as_of=_as_of(as_of), include_provisional=include_provisional,
+        )  # fmt: skip
+    except (FinanceAgentError, ValueError) as exc:
+        _fail(exc)
+    if fmt == "json":
+        _emit_json({"contract": ps.contract(), "rows": ps.rows, "factors": [f.model_dump() for f in ps.factors.factors],
+                    "missing_sessions": ps.gaps, "notes": ps.notes, "data_origins": ps.data_origins})  # fmt: skip
+        return
+    console.print(_origin_line(ps.data_origins))
+    console.print(ps.contract()["statement"])
+    t = Table(title=f"{ps.instrument_id} {basis} prices")
+    for c in ("session", "open", "high", "low", "close", "volume", "status", "v"):
+        t.add_column(c)
+    for r in ps.rows:
+        if "close" not in r:
+            t.add_row(str(r["session_date"]), "-", "-", "-", "-", "-", f"GAP:{r.get('gap')}", "")
+            continue
+        t.add_row(str(r["session_date"]), _num(r["open"]), _num(r["high"]), _num(r["low"]), _num(r["close"]),
+                  _num(r["volume"], 0), f"{r['bar_status']}/{r['quality_status']}", str(r["version"]))  # fmt: skip
+    console.print(t)
+    for n in ps.notes:
+        console.print(f"note: {n}")
+
+
+@market_app.command("returns")
+def market_returns(
+    ticker: str,
+    start: Annotated[str, typer.Option("--start")],
+    end: Annotated[str, typer.Option("--end")],
+    basis: Basis = "split_adjusted",
+    kind: Annotated[str, typer.Option("--kind", help="simple | log")] = "simple",
+    mode: Mode = "point_in_time",
+    as_of: AsOf = None,
+    window: Annotated[int, typer.Option("--window", help="rolling volatility window")] = 20,
+    offline: Offline = False,
+    fmt: Fmt = "table",
+) -> None:
+    """Daily returns, cumulative return, rolling volatility and drawdown on a stated basis."""
+    from finance_agent.market.service import MarketDataService
+
+    if kind not in {"simple", "log"}:
+        _fail(ValueError("--kind must be simple or log"))
+    try:
+        ctx = _ctx(offline, llm=False)
+        res = MarketDataService(ctx.db).returns(
+            ticker, _date(start, "--start"), _date(end, "--end"), basis=_basis_value(basis), kind=kind,
+            mode=mode, as_of=_as_of(as_of), vol_window=window,
+        )  # fmt: skip
+    except (FinanceAgentError, ValueError) as exc:
+        _fail(exc)
+    if fmt == "json":
+        _emit_json(res)
+        return
+    console.print(_origin_line(res["data_origins"]))
+    console.print(res["contract"]["statement"])
+    rets = [r for r in res["returns"] if r["value"] is not None]
+    console.print(
+        f"{res['instrument_id']} basis={res['contract']['basis']} kind={kind}: {len(rets)} returns, "
+        f"{len(res['returns']) - len(rets)} not computable"
+    )
+    console.print(
+        f"cumulative return: {_num(res['cumulative_return'], 6)}"
+        + (f"  ({res['cumulative_note']})" if res["cumulative_note"] else "")
+    )
+    console.print(f"max drawdown: {_num(res['max_drawdown'], 6)}")
+    vol = [p for p in res["rolling_volatility"]["points"] if p["value"] is not None]
+    if vol:
+        console.print(
+            f"latest {window}-session annualized volatility: {_num(vol[-1]['value'], 6)} ({vol[-1]['session_date']})"
+        )
+    for r in res["returns"]:
+        if r["value"] is None:
+            console.print(f"  {r['session_date']}: not computed - {r['note']}")
+    for n in res["notes"]:
+        console.print(f"note: {n}")
+
+
+@market_app.command("correlations")
+def market_correlations(
+    tickers: list[str],
+    start: Annotated[str, typer.Option("--start")],
+    end: Annotated[str, typer.Option("--end")],
+    basis: Basis = "total_return",
+    mode: Mode = "point_in_time",
+    as_of: AsOf = None,
+    offline: Offline = False,
+    fmt: Fmt = "table",
+) -> None:
+    """Pairwise correlations of daily simple returns (sessions where both are valid)."""
+    from finance_agent.market.service import MarketDataService
+
+    try:
+        ctx = _ctx(offline, llm=False)
+        res = MarketDataService(ctx.db).correlations(
+            [t.upper() for t in tickers], _date(start, "--start"), _date(end, "--end"),
+            basis=_basis_value(basis), mode=mode, as_of=_as_of(as_of),
+        )  # fmt: skip
+    except (FinanceAgentError, ValueError) as exc:
+        _fail(exc)
+    if fmt == "json":
+        _emit_json(res)
+        return
+    t = Table(title=f"Return correlations ({basis}, {mode})")
+    t.add_column("")
+    for n in res["instruments"]:
+        t.add_column(n)
+    for a in res["instruments"]:
+        t.add_row(a, *[_num(res["pairs"][f"{a}|{b}"]["correlation"], 3) for b in res["instruments"]])
+    console.print(t)
+
+
+@market_app.command("quality")
+def market_quality(
+    ticker: Annotated[str | None, typer.Option("--ticker")] = None,
+    severity: Annotated[str | None, typer.Option("--severity", help="INFO | WARNING | ERROR")] = None,
+    check: Annotated[str | None, typer.Option("--check")] = None,
+    limit: Annotated[int, typer.Option("--limit")] = 200,
+    offline: Offline = False,
+    fmt: Fmt = "table",
+) -> None:
+    """Data-quality issues found during ingestion (flagged, explained or quarantined)."""
+    from finance_agent.market.store import MarketStore
+
+    try:
+        ctx = _ctx(offline, llm=False)
+        store = MarketStore(ctx.db)
+        items = store.issues(
+            instrument_id=ticker.upper() if ticker else None, severity=severity, check=check, limit=limit
+        )
+        summary = store.issue_counts()
+    except FinanceAgentError as exc:
+        _fail(exc)
+    if fmt == "json":
+        _emit_json({"summary": summary, "issues": [i.model_dump() for i in items]})
+        return
+    console.print("Summary: " + (", ".join(f"{k}={v}" for k, v in sorted(summary.items())) or "no issues"))
+    t = Table(title="Market-data quality issues")
+    for c in ("instrument", "session", "check", "severity", "status", "detail"):
+        t.add_column(c)
+    for i in items:
+        t.add_row(
+            i.instrument_id or "-",
+            str(i.session_date or "-"),
+            str(i.check),
+            i.severity,
+            i.status,
+            i.detail[:110],
+        )
+    console.print(t)
+
+
+@market_app.command("calendar")
+def market_calendar(
+    date_: Annotated[str | None, typer.Option("--date", help="YYYY-MM-DD")] = None,
+    start: Annotated[str | None, typer.Option("--from")] = None,
+    end: Annotated[str | None, typer.Option("--to")] = None,
+    event_time: Annotated[str | None, typer.Option("--event-time", help="ISO timestamp with offset")] = None,
+) -> None:
+    """NYSE sessions (holidays, early closes, DST-aware boundaries) and event alignment."""
+    from datetime import datetime as _dt
+
+    from finance_agent.market.calendar import get_calendar
+    from finance_agent.timeutil import ET
+
+    cal = get_calendar()
+    try:
+        if date_:
+            d = _date(date_, "--date")
+            if cal.is_session(d):
+                s = cal.session(d)
+                console.print(
+                    f"{d}: trading session  open {s.market_open.astimezone(ET):%H:%M} ET ({s.market_open:%H:%MZ})  "
+                    f"close {s.market_close.astimezone(ET):%H:%M} ET ({s.market_close:%H:%MZ})"
+                    + ("  EARLY CLOSE" if s.early_close else "")
+                )
+            else:
+                console.print(f"{d}: NOT a trading session ({d:%A})")
+            console.print(f"previous session {cal.previous_session(d)}, next session {cal.next_session(d)}")
+        if start and end:
+            for s in cal.session_table(_date(start, "--from"), _date(end, "--to")):
+                console.print(
+                    f"{s.session_date}  {s.market_open.astimezone(ET):%H:%M}-{s.market_close.astimezone(ET):%H:%M} ET"
+                    + ("  early close" if s.early_close else "")
+                )
+        if event_time:
+            t = _dt.fromisoformat(event_time)
+            a = cal.align(t)
+            console.print(f"{t.isoformat()}: {a.phase}; event session {a.event_session}; first reaction session "
+                          f"{a.first_reaction_session}. {a.note}")  # fmt: skip
+        if not (date_ or (start and end) or event_time):
+            _fail(ValueError("give --date, --from/--to, or --event-time"))
+    except (FinanceAgentError, ValueError) as exc:
+        _fail(exc)
+
+
+@market_app.command("yields")
+def market_yields(
+    series: str,
+    start: Annotated[str, typer.Option("--start")],
+    end: Annotated[str, typer.Option("--end")],
+    as_of: AsOf = None,
+    offline: Offline = False,
+    fmt: Fmt = "table",
+) -> None:
+    """Treasury constant-maturity yields (percent) and daily changes in basis points."""
+    from finance_agent.market.store import MarketStore
+    from finance_agent.market.universe import YIELD_SERIES
+    from finance_agent.market.yields import yield_series
+
+    sid = series.upper()
+    if sid not in YIELD_SERIES:
+        _fail(ValueError(f"unknown series {sid}; supported: {list(YIELD_SERIES)}"))
+    try:
+        ctx = _ctx(offline, llm=False)
+        res = yield_series(
+            MarketStore(ctx.db), sid, _date(start, "--start"), _date(end, "--end"), _as_of(as_of)
+        )
+    except FinanceAgentError as exc:
+        _fail(exc)
+    if fmt == "json":
+        _emit_json(res)
+        return
+    console.print(_origin_line([o["data_origin"] for o in res["observations"]]))
+    t = Table(title=f"{sid} ({res['units']})")
+    for c in ("date", "yield %", "change bp", "vs", "available_at"):
+        t.add_column(c)
+    avail = {o["observation_date"]: o["available_at"] for o in res["observations"]}
+    for c in res["changes"]:
+        t.add_row(str(c["date"]), _num(c["yield_pct"], 2), _num(c["change_bp"], 1), str(c.get("previous_date") or "-"),
+                  str(avail.get(c["date"])))  # fmt: skip
+    console.print(t)
+    for n in res["notes"]:
+        console.print(f"note: {n}")
+
+
 def main() -> None:  # pragma: no cover
     app()

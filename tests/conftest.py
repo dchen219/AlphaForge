@@ -15,7 +15,16 @@ from finance_agent.storage.db import Database
 FIXTURES = DEFAULT_FIXTURES_DIR
 
 # Never let a developer's real environment leak into tests.
-for _var in ("FRED_API_KEY", "ANTHROPIC_API_KEY", "SEC_USER_AGENT", "DATABASE_URL", "OFFLINE_MODE"):
+for _var in (
+    "FRED_API_KEY",
+    "ANTHROPIC_API_KEY",
+    "SEC_USER_AGENT",
+    "DATABASE_URL",
+    "OFFLINE_MODE",
+    "ALPACA_API_KEY_ID",
+    "ALPACA_API_SECRET_KEY",
+    "INGEST_ADMIN_TOKEN",
+):
     os.environ.pop(_var, None)
 
 
@@ -69,3 +78,28 @@ def events_ctx(tmp_path_factory):
     ctx.ingest_report = report
     yield ctx
     ctx.close()
+
+
+@pytest.fixture(scope="module")
+def market_ctx(tmp_path_factory):
+    """Offline context with the SYNTHETIC Alpaca-format bars and REAL ALFRED yields ingested once."""
+    from finance_agent.market.ingest import MarketDataIngestor
+    from finance_agent.market.schemas import AdjustmentBasis
+    from finance_agent.market.yields import YieldIngestor
+
+    tmp = tmp_path_factory.mktemp("market")
+    s = offline_settings(tmp)
+    db = Database(s.database_url)
+    db.create_all()
+    ctx = AppContext(s, db=db)
+    ctx.market_run = MarketDataIngestor(ctx).run(None, MARKET_START, MARKET_END)
+    # Provider split-adjusted bars (reconciliation only) exist for NVDA.
+    ctx.provider_split_run = MarketDataIngestor(ctx).run(
+        ["NVDA"], MARKET_START, MARKET_END, bases=(AdjustmentBasis.PROVIDER_SPLIT,), include_actions=False
+    )
+    ctx.yield_stats = YieldIngestor(ctx).run(None, MARKET_START, MARKET_END)
+    yield ctx
+    ctx.close()
+
+
+MARKET_START, MARKET_END = date(2024, 1, 2), date(2026, 10, 30)

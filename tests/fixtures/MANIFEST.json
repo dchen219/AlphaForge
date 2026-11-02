@@ -36,11 +36,61 @@
       "description": "REAL ALFRED vintage CSVs (keyless alfredgraph.csv), rows before 2015 dropped.",
       "retrieved_at": "2026-11-02T02:22:54+00:00",
       "built_by": "scripts/build_v02_fixtures.py"
+    },
+    "alpaca/": {
+      "kind": "synthetic",
+      "description": "SYNTHETIC daily bars and corporate actions in the Alpaca Market Data response format (seeded random walk, invented dividends; NVDA split date mirrors the public 2024 split but all prices are synthetic). NOT provider data; no live Alpaca response is committed.",
+      "retrieved_at": "2026-10-30T18:00:00+00:00",
+      "built_by": "scripts/build_v03_fixtures.py"
     }
   },
   "event_window": {
     "start": "2025-07-01",
     "as_of": "2026-11-02T04:59:59+00:00",
     "note": "Window used by scripts/build_v02_fixtures.py; offline macro replay probes exactly these vintages."
+  },
+  "yield_window": {
+    "start": "2024-01-02",
+    "vintage": "2026-11-01",
+    "note": "REAL ALFRED DGS2/DGS10 vintages; offline yield ingestion reads this vintage. Consecutive-day calibration vintages around holidays verify the availability rule.",
+    "calibration_windows": [
+      [
+        "2025-10-09",
+        "2025-10-15"
+      ],
+      [
+        "2025-11-07",
+        "2025-11-13"
+      ],
+      [
+        "2025-11-25",
+        "2025-12-02"
+      ],
+      [
+        "2025-12-23",
+        "2025-12-30"
+      ],
+      [
+        "2026-01-15",
+        "2026-01-21"
+      ],
+      [
+        "2026-04-01",
+        "2026-04-07"
+      ],
+      [
+        "2026-06-17",
+        "2026-06-23"
+      ],
+      [
+        "2026-07-01",
+        "2026-07-07"
+      ],
+      [
+        "2026-10-26",
+        "2026-10-31"
+      ]
+    ],
+    "recorded_at": "2026-11-02T17:09:10+00:00"
   }
 }
