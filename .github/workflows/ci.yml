@@ -1,0 +1,70 @@
+name: CI
+
+# Offline verification only: no secrets, no live provider calls, no paid LLM tests, no deploys.
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline:
+    name: Lint, migrations, offline tests, historical replay
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONIOENCODING: utf-8
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up uv and Python 3.12
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          python-version: "3.12"
+          enable-cache: true
+
+      - name: Install locked dependencies
+        run: uv sync --locked
+
+      - name: Confirm no live credentials are present
+        run: |
+          for v in ANTHROPIC_API_KEY FRED_API_KEY ALPACA_API_KEY_ID ALPACA_API_SECRET_KEY \
+                   LIVE_ANTHROPIC_API_KEY LIVE_FRED_API_KEY RUN_LIVE_TESTS INGEST_ADMIN_TOKEN; do
+            if [ -n "${!v:-}" ]; then
+              echo "::error::$v must not be set in CI (offline verification only)"
+              exit 1
+            fi
+          done
+          echo "No live credentials configured."
+
+      - name: Ruff lint
+        run: uv run ruff check .
+
+      - name: Ruff format check
+        run: uv run ruff format --check .
+
+      - name: Database migrations (upgrade, drift check, downgrade/upgrade round-trip)
+        env:
+          DATABASE_URL: sqlite:///${{ runner.temp }}/ci-migrations.db
+        run: |
+          uv run alembic upgrade head
+          uv run alembic check
+          uv run alembic downgrade 0003_event_intelligence
+          uv run alembic upgrade head
+          uv run alembic current
+
+      - name: Offline test suite
+        run: uv run python -m pytest -q -m "not live" --ignore=tests/historical_replay
+
+      - name: Historical replay (look-ahead) tests
+        run: uv run python -m pytest -q -m "not live" tests/historical_replay
