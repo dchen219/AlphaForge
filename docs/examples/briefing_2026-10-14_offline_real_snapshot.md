@@ -6,7 +6,7 @@
 
 - Cutoff (as_of): 2026-10-14T23:59:59-04:00 (New York) / 2026-10-15T03:59:59+00:00
 - Window: 2026-10-14T00:00:00-04:00 → 2026-10-14T23:59:59-04:00
-- Briefing ID: `3730a2ac-ea54-4b85-83c0-8da6af1e80d0` · Verification: **passed** · LLM: unavailable (none)
+- Briefing ID: `57db1d05-e5e2-49be-b4ad-20bcfe3ec475` · Verification: **passed** · LLM: unavailable (none)
 
 ## B. Executive summary
 
@@ -64,6 +64,7 @@
 - Market consensus forecasts are unavailable (no authenticated source); no surprise is reported.
 - No market prices were used: no realized market reaction is claimed.
 - Economic implications are hypotheses about direction, not estimated effects.
+- Release-calendar entries withheld: 1. The calendar snapshots containing them were retrieved after the cutoff, and historical calendars are not stored, so the schedule as known at the cutoff cannot be shown without look-ahead.
 - Macro release times use the official scheduled time; the publication *date* is confirmed by ALFRED vintages, the intraday time is not independently verified.
 - LLM synthesis unavailable; narrative is template-based.
 

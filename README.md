@@ -197,5 +197,6 @@ company-specific XBRL extension concepts are ignored; research requests run sync
 v0.2: no consensus-forecast or market-price source, so no surprises or market reactions are
 reported; importance weights are judgmental (not empirically validated); macro release
 *times* use the official schedule with the *date* confirmed by ALFRED; calendars are not
-versioned historically; 8-K press-release text is not parsed (classification uses SEC item
+versioned historically (historical briefings withhold calendar entries retrieved after their
+cutoff); 8-K press-release text is not parsed (classification uses SEC item
 metadata only); live LLM synthesis unverified (no API credit).

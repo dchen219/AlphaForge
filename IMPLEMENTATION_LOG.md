@@ -387,8 +387,41 @@ LLM API cost: $0 — no paid LLM calls were made (no credit); the deterministic 
 
 No consensus-forecast or market-price source (no surprises, no observed reactions);
 judgmental, unvalidated importance weights; macro intraday times taken from official
-schedules (dates confirmed by vintages); calendars not versioned (historical runs see today's
-schedule, affecting only SCHEDULED entries); 8-K press-release text not parsed; guidance
+schedules (dates confirmed by vintages); calendars not versioned (since the release-readiness
+audit, historical briefings withhold calendar entries observed after the cutoff); 8-K press-release text not parsed; guidance
 category reserved without a source; EDGAR dissemination lag not modelled; BEA historical
 release dates found by bisection (one ALFRED request per step); ingestion is synchronous and
 single-process (no daemon by design); keyed FRED API and Claude narrative unverified live.
+
+## v0.2 release-readiness audit (2026-11-02)
+
+Independent review of `feat/v0.2-market-intelligence` before the pull request. Method: code
+review of the macro/ALFRED/calendar/SEC/importance/briefing paths, a full dump of the 435
+events ingested from the real fixtures, and a sweep that ran an offline briefing for every
+day of the recorded window (488 briefings, 2025-07-02 → 2026-11-01).
+
+Verified, no change needed:
+- Macro timing: every CPI/Employment first release dated by ALFRED D−1/D vintages matches the
+  official calendar, including the 2025 shutdown reschedules (Sep CPI 2025-10-24, Sep
+  payrolls 2025-11-20, Oct+Nov payrolls 2025-12-16). Unpublished October 2025 CPI is absent
+  and the November CPI m/m is `INSUFFICIENT_DATA` (not filled). BEA dates found by bisection
+  are next-day conservative (e.g. Sep 2025 PCE → available 2025-12-06 00:00 ET).
+- Vintage handling: first-release values use only vintage D; revisions are separate events.
+- All 488 replayed briefings passed numeric, evidence, as-of and occurrence checks.
+- Importance across all real events: rate changes 72, payroll first releases ≈68, CPI ≈62,
+  holds 52, earnings ≈51, 10-K 41, 10-Q 39, revisions mostly LOW.
+- v0.1: master's original test files pass unchanged against the branch; populated v0.1
+  database (rev 0002) upgrades to 0003 in place and round-trips.
+
+Defects fixed (regression tests: `tests/historical_replay/test_release_readiness_regressions.py`):
+1. **High — calendar look-ahead in historical briefings.** Upcoming/due calendar entries came
+   from calendar snapshots retrieved after the cutoff (291 entries across the 488 replayed
+   briefings). Fix: `EventStore.schedule_known_at` (earliest schedule-source retrieval);
+   offline snapshots carry the MANIFEST recording time; briefings withhold later-observed
+   entries and disclose the count. After: 1 upcoming entry shown (2026-11-01, after recording).
+2. **Medium — earnings clustering was one-directional.** A 10-Q/10-K accepted shortly before
+   its earnings 8-K formed a separate cluster (double count). Fix: ±3-day nearest pairing;
+   cluster id named after the earliest member (never reveals a later accession). Not
+   present in the recorded real data; covered by synthetic tests.
+3. Source-link timestamps are normalized to UTC before storage (SQLite drops offsets).
+4. `tests/integration/test_live.py` reformatted (ruff format check failed).

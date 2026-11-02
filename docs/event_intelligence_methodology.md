@@ -62,9 +62,15 @@ Every event has `available_at` (the earliest instant it may be used in replay) a
 The observation period is never used as a publication time. Date-only CLI/API inputs mean
 23:59:59 New York (v0.1 convention). All timestamps are timezone-aware and stored in UTC.
 
-Limitations: calendars are fetched as of today (no calendar vintages), so a historical run
-sees today's version of a schedule; this affects only `SCHEDULED` entries, never
-occurred events. EDGAR dissemination lag after acceptance is not modelled.
+Calendar knowledge time: calendars are not versioned historically, so a scheduled entry is
+knowledge only from the moment a calendar snapshot containing it was retrieved (the earliest
+`event_sources.retrieved_at` with role `schedule`; offline, the recording time in
+`MANIFEST.json`). Briefings withhold upcoming and due calendar entries observed after their
+cutoff and say how many were withheld. Consequently historical replays before the calendar
+retrieval date show no upcoming schedule and cannot flag scheduled-but-unconfirmed releases.
+Occurred macro events still use the official scheduled time as `available_at` (the time is a
+property of the publication, confirmed by vintage dates), not the calendar's knowledge time.
+EDGAR dissemination lag after acceptance is not modelled.
 
 ## 5. Macro release detection
 
@@ -94,7 +100,9 @@ three periods are counted on the release event (`revised_observations_in_release
   conflicting re-ingestion is reported and the stored value kept. Derived fields
   (importance, channels, links, verification status) may be recomputed.
 * Clusters: one economic event, several disclosures. An earnings 8-K (item 2.02) and the
-  10-Q/10-K accepted within 3 days share `CL-EARN-<cik>-<8-K accession>`; indicators from
+  10-Q/10-K accepted within 3 days before or after it (nearest 8-K wins) share
+  `CL-EARN-<cik>-<accession of the earliest member>` — named after the earliest member so a
+  historical view never reveals a later filing's accession; indicators from
   one release share `CL-<group>-<date>`; FOMC `CL-FOMC-<date>`. Briefings rank a cluster
   once, by its highest-scoring member — repetition never adds importance.
 

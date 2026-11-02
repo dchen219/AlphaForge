@@ -200,5 +200,6 @@ per-process rate limiting; PostgreSQL untested; numeric checker does not verify
 direction words ("rose"/"fell").
 v0.2: no consensus or market-price source (no surprises/reactions); judgmental importance
 weights; macro intraday times from official schedules (dates confirmed); calendars not
-versioned historically; 8-K text not parsed (item metadata only); CORPORATE_GUIDANCE reserved
+versioned historically (briefings withhold calendar entries first observed after the cutoff —
+`EventStore.schedule_known_at`); 8-K text not parsed (item metadata only); CORPORATE_GUIDANCE reserved
 (no source); EDGAR dissemination lag not modelled.
