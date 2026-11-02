@@ -99,3 +99,41 @@ def test_live_v02_event_sources_and_briefing(live_ctx):
     assert all(rep.per_source[s]["inserted"] > 0 for s in ("sec", "fomc", "macro"))
     br = BriefingWorkflow(live_ctx).run(BriefingRequest(date="2026-10-28", use_llm=False))["report"]
     assert br.data_origins == ["live"] and br.verification.status != "failed"
+
+
+def test_live_v03a_treasury_yields_keyless(live_ctx):
+    """Live keyless ALFRED DGS2/DGS10 ingestion with point-in-time availability."""
+    from datetime import date, datetime, timedelta
+
+    from finance_agent.market.store import MarketStore
+    from finance_agent.market.yields import YieldIngestor
+    from finance_agent.timeutil import ET
+
+    start = date.today() - timedelta(days=30)
+    stats = YieldIngestor(live_ctx).run(None, start, date.today())
+    assert stats["inserted"] > 20
+    rows = MarketStore(live_ctx.db).yields("DGS10", start)
+    assert rows and all(r["data_origin"] == "live" for r in rows)
+    now = datetime.now(ET)
+    assert all(r["available_at"] <= now + timedelta(days=2) for r in rows)
+    assert all(r["value"] is None or 0 < r["value"] < 20 for r in rows)  # percent, not a price
+
+
+def test_live_v03a_alpaca_market_data(live_ctx):
+    """Live Alpaca bars + corporate actions. Requires LIVE_ALPACA_API_KEY_ID / LIVE_ALPACA_API_SECRET_KEY."""
+    from datetime import date, timedelta
+
+    from pydantic import SecretStr
+
+    from finance_agent.market.ingest import MarketDataIngestor
+
+    kid, sec = os.environ.get("LIVE_ALPACA_API_KEY_ID"), os.environ.get("LIVE_ALPACA_API_SECRET_KEY")
+    if not (kid and sec):
+        pytest.skip("LIVE_ALPACA_API_KEY_ID/SECRET not set; live Alpaca market data unverified")
+    live_ctx.settings = live_ctx.settings.model_copy(
+        update={"alpaca_api_key_id": SecretStr(kid), "alpaca_api_secret_key": SecretStr(sec)}
+    )
+    end = date.today() - timedelta(days=3)
+    run = MarketDataIngestor(live_ctx).run(["SPY", "NVDA"], end - timedelta(days=60), end)
+    assert run.status != "failed", run.errors
+    assert run.rows_received > 50 and run.data_origin == "live"

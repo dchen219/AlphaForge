@@ -1,0 +1,150 @@
+{
+ "corporate_actions": {
+  "cash_dividends": [
+   {
+    "id": "SYN-DIV-XLU-2024-03-21",
+    "symbol": "XLU",
+    "cusip": null,
+    "rate": 0.9429,
+    "special": false,
+    "foreign": false,
+    "process_date": "2024-04-20",
+    "ex_date": "2024-03-21",
+    "record_date": "2024-03-22",
+    "payable_date": "2024-04-11",
+    "currency": "USD"
+   },
+   {
+    "id": "SYN-DIV-XLU-2024-06-24",
+    "symbol": "XLU",
+    "cusip": null,
+    "rate": 0.9831,
+    "special": false,
+    "foreign": false,
+    "process_date": "2024-07-24",
+    "ex_date": "2024-06-24",
+    "record_date": "2024-06-25",
+    "payable_date": "2024-07-15",
+    "currency": "USD"
+   },
+   {
+    "id": "SYN-DIV-XLU-2024-09-23",
+    "symbol": "XLU",
+    "cusip": null,
+    "rate": 0.9567,
+    "special": false,
+    "foreign": false,
+    "process_date": "2024-10-23",
+    "ex_date": "2024-09-23",
+    "record_date": "2024-09-24",
+    "payable_date": "2024-10-14",
+    "currency": "USD"
+   },
+   {
+    "id": "SYN-DIV-XLU-2024-12-20",
+    "symbol": "XLU",
+    "cusip": null,
+    "rate": 0.9106,
+    "special": false,
+    "foreign": false,
+    "process_date": "2025-01-19",
+    "ex_date": "2024-12-20",
+    "record_date": "2024-12-21",
+    "payable_date": "2025-01-10",
+    "currency": "USD"
+   },
+   {
+    "id": "SYN-DIV-XLU-2025-03-21",
+    "symbol": "XLU",
+    "cusip": null,
+    "rate": 0.9399,
+    "special": false,
+    "foreign": false,
+    "process_date": "2025-04-20",
+    "ex_date": "2025-03-21",
+    "record_date": "2025-03-22",
+    "payable_date": "2025-04-11",
+    "currency": "USD"
+   },
+   {
+    "id": "SYN-DIV-XLU-2025-06-23",
+    "symbol": "XLU",
+    "cusip": null,
+    "rate": 1.0126,
+    "special": false,
+    "foreign": false,
+    "process_date": "2025-07-23",
+    "ex_date": "2025-06-23",
+    "record_date": "2025-06-24",
+    "payable_date": "2025-07-14",
+    "currency": "USD"
+   },
+   {
+    "id": "SYN-DIV-XLU-2025-09-22",
+    "symbol": "XLU",
+    "cusip": null,
+    "rate": 0.9792,
+    "special": false,
+    "foreign": false,
+    "process_date": "2025-10-22",
+    "ex_date": "2025-09-22",
+    "record_date": "2025-09-23",
+    "payable_date": "2025-10-13",
+    "currency": "USD"
+   },
+   {
+    "id": "SYN-DIV-XLU-2025-12-19",
+    "symbol": "XLU",
+    "cusip": null,
+    "rate": 0.9655,
+    "special": false,
+    "foreign": false,
+    "process_date": "2026-01-18",
+    "ex_date": "2025-12-19",
+    "record_date": "2025-12-20",
+    "payable_date": "2026-01-09",
+    "currency": "USD"
+   },
+   {
+    "id": "SYN-DIV-XLU-2026-03-20",
+    "symbol": "XLU",
+    "cusip": null,
+    "rate": 1.0954,
+    "special": false,
+    "foreign": false,
+    "process_date": "2026-04-19",
+    "ex_date": "2026-03-20",
+    "record_date": "2026-03-21",
+    "payable_date": "2026-04-10",
+    "currency": "USD"
+   },
+   {
+    "id": "SYN-DIV-XLU-2026-06-22",
+    "symbol": "XLU",
+    "cusip": null,
+    "rate": 1.0525,
+    "special": false,
+    "foreign": false,
+    "process_date": "2026-07-22",
+    "ex_date": "2026-06-22",
+    "record_date": "2026-06-23",
+    "payable_date": "2026-07-13",
+    "currency": "USD"
+   },
+   {
+    "id": "SYN-DIV-XLU-2026-09-22",
+    "symbol": "XLU",
+    "cusip": null,
+    "rate": 1.0479,
+    "special": false,
+    "foreign": false,
+    "process_date": "2026-10-22",
+    "ex_date": "2026-09-22",
+    "record_date": "2026-09-23",
+    "payable_date": "2026-10-13",
+    "currency": "USD"
+   }
+  ]
+ },
+ "next_page_token": null
+}
