@@ -148,6 +148,7 @@ ITEM_MAP: list[tuple[str, EventCategory, EventSubtype, str]] = [
 ITEM_DESCRIPTIONS = {code: desc for code, _, _, desc in ITEM_MAP} | {
     "9.01": "Financial Statements and Exhibits"
 }
+PERIODIC_FORMS = frozenset({"10-Q", "10-K", "10-QT", "10-KT"})
 EARNINGS_CLUSTER_WINDOW = timedelta(days=3)
 
 
@@ -273,22 +274,43 @@ class SecEventBuilder:
             out.append((ev, [link]))
         return out
 
-    def _cluster_for(self, f: FilingRecord, earnings_8k: list[FilingRecord]) -> tuple[str | None, str | None]:
-        """Earnings 8-K (item 2.02) and the 10-Q/10-K filed within 3 days form one economic cluster."""
-        anchor = None
+    @staticmethod
+    def _earnings_partner(p: FilingRecord, earnings_8k: list[FilingRecord]) -> FilingRecord | None:
+        """Nearest earnings 8-K accepted within ±3 days of a periodic report (either order)."""
+        if p.accepted_at is None:
+            return None
+        near = [
+            e
+            for e in earnings_8k
+            if e.accepted_at is not None and abs(p.accepted_at - e.accepted_at) <= EARNINGS_CLUSTER_WINDOW
+        ]
+        return min(near, key=lambda e: (abs(p.accepted_at - e.accepted_at), e.accession)) if near else None
+
+    def _cluster_for(
+        self, f: FilingRecord, earnings_8k: list[FilingRecord], periodic: list[FilingRecord]
+    ) -> tuple[str | None, str | None]:
+        """Earnings 8-K (item 2.02) and the 10-Q/10-K accepted within 3 days (before OR after it)
+        form one economic cluster. The cluster id is named after the earliest member, so it never
+        reveals a filing accepted later than the one being shown."""
         if f.form.startswith("8-K") and "2.02" in f.items:
-            anchor = f
-        elif f.form in {"10-Q", "10-K", "10-QT", "10-KT"} and f.accepted_at is not None:
-            near = [
-                e
-                for e in earnings_8k
-                if e.accepted_at is not None
-                and timedelta(0) <= f.accepted_at - e.accepted_at <= EARNINGS_CLUSTER_WINDOW
-            ]
-            anchor = near[-1] if near else None
-        if anchor is None:
+            earnings = f
+        elif f.form in PERIODIC_FORMS:
+            earnings = self._earnings_partner(f, earnings_8k)
+        else:
+            earnings = None
+        if earnings is None:
             return None, None
-        return f"CL-EARN-{f.cik}-{anchor.accession}", make_event_id(f"SEC|{anchor.cik}|{anchor.accession}")
+        members = [earnings] + [p for p in periodic if self._earnings_partner(p, earnings_8k) is earnings]
+        if f not in members:
+            return None, None
+        anchor = min(
+            members,
+            key=lambda m: (m.accepted_at or datetime.max.replace(tzinfo=UTC), m.accession),
+        )
+        return (
+            f"CL-EARN-{f.cik}-{anchor.accession}",
+            make_event_id(f"SEC|{earnings.cik}|{earnings.accession}"),
+        )
 
     def _filing_event(
         self,
@@ -321,7 +343,8 @@ class SecEventBuilder:
             ]
             if originals:
                 supersedes = make_event_id(f"SEC|{f.cik}|{originals[-1].accession}")
-        cluster, primary = self._cluster_for(f, earnings_8k)
+        periodic = [p for p in all_filings if p.form in PERIODIC_FORMS]
+        cluster, primary = self._cluster_for(f, earnings_8k, periodic)
         item_text = ", ".join(f"Item {i} {ITEM_DESCRIPTIONS.get(i, 'Unknown item')}" for i in f.items)
         title = f"{self.ticker} {f.form} filed {f.filing_date.isoformat()}"
         if f.form.startswith("8-K") and f.items:

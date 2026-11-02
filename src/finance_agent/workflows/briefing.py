@@ -77,6 +77,7 @@ class BriefingState(TypedDict, total=False):
     clusters: dict[str, list[FinancialEvent]]
     upcoming: list[FinancialEvent]
     unconfirmed: list[FinancialEvent]
+    schedule_withheld: int
     macro: list[tuple[str, list[FinancialEvent]]]
     corporate: list[tuple[str, list[FinancialEvent]]]
     sources: dict[str, list[dict]]
@@ -184,12 +185,24 @@ class BriefingWorkflow:
             events = [e for e in events if e.event_type in MACRO_TYPES or set(e.affected_entities) & t]
         upcoming = self.store.calendar(start=as_of, end=as_of + timedelta(days=7))
         due = self.store.calendar(start=start, end=as_of)
+        # A schedule is knowledge only once a calendar snapshot containing it was retrieved
+        # (calendars are not versioned historically). Withhold later-observed entries.
+        known = self.store.schedule_known_at([e.event_id for e in upcoming + due])
+        visible = {eid for eid, t in known.items() if t <= as_of}
+        withheld = sum(e.event_id not in visible for e in upcoming + due)
+        upcoming = [e for e in upcoming if e.event_id in visible]
+        due = [e for e in due if e.event_id in visible]
         unconfirmed = []
         for d in due:  # scheduled within window: occurred only if a linked publication is available by as_of
             linked = [e for e in events if e.related_event_id == d.event_id]
             if not linked:
                 unconfirmed.append(d)
-        return {"events": events, "upcoming": upcoming, "unconfirmed": unconfirmed}
+        return {
+            "events": events,
+            "upcoming": upcoming,
+            "unconfirmed": unconfirmed,
+            "schedule_withheld": withheld,
+        }
 
     def resolve(self, s):
         clusters: dict[str, list[FinancialEvent]] = defaultdict(list)
@@ -351,6 +364,12 @@ class BriefingWorkflow:
             "publication not confirmed as of cutoff (not reported as occurred)."
             for u in s["unconfirmed"]
         ]
+        if s.get("schedule_withheld"):
+            uncertainty.append(
+                f"Release-calendar entries withheld: {s['schedule_withheld']}. The calendar "
+                "snapshots containing them were retrieved after the cutoff, and historical calendars "
+                "are not stored, so the schedule as known at the cutoff cannot be shown without look-ahead."
+            )
         if any(e.availability_precision == "DATE_ONLY_CONSERVATIVE" for e in all_events):
             uncertainty.append(
                 "Some sources are date-stamped only; they are treated as available from the next day "

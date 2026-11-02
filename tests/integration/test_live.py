@@ -72,7 +72,9 @@ def test_live_research_run(live_ctx):
 
 def test_live_fred(live_ctx):
     if not live_ctx.settings.fred_api_key:
-        pytest.skip("LIVE_FRED_API_KEY not set; keyed FRED API unverified (keyless ALFRED is covered by the v0.2 live test)")
+        pytest.skip(
+            "LIVE_FRED_API_KEY not set; keyed FRED API unverified (keyless ALFRED is covered by the v0.2 live test)"
+        )
     res = live_ctx.macro("CPIAUCSL", as_of=None)
     assert res.data_origin == "live" and res.observations
 

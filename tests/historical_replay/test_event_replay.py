@@ -20,7 +20,7 @@ from finance_agent.events.schemas import (
     VerificationStatus,
 )
 from finance_agent.events.service import EventIngestor
-from finance_agent.events.store import EventStore
+from finance_agent.events.store import EventStore, SourceLink
 from finance_agent.services import AppContext
 from finance_agent.storage.db import Database
 from finance_agent.timeutil import ET
@@ -150,7 +150,11 @@ def test_scheduled_but_unconfirmed_release_is_never_reported_as_occurred(events_
         verification_status=VerificationStatus.SCHEDULE_ONLY,
         data_origin="fixture:synthetic",
     )
-    EventStore(events_ctx.db).upsert(sched)
+    # Observed in a calendar snapshot retrieved before the cutoff (see release-readiness audit).
+    seen = SourceLink(
+        "synthetic:calendar", "SYNTHETIC calendar", "schedule", retrieved_at=when - timedelta(days=7)
+    )
+    EventStore(events_ctx.db).upsert(sched, [seen])
     rep = BriefingWorkflow(events_ctx).run(BriefingRequest(date="2026-10-28", use_llm=False))["report"]
     assert all(sched.event_id not in e.event_ids for e in rep.macro_entries + rep.corporate_entries)
     assert any("SYNTHETIC test release" in u and "not confirmed" in u for u in rep.uncertainty)

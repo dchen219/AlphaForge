@@ -6,7 +6,7 @@ import logging
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 
-from sqlalchemy import Select, select
+from sqlalchemy import Select, func, select
 
 from finance_agent.events.schemas import (
     Comparison,
@@ -221,7 +221,12 @@ class EventStore:
                     )
                 )
                 if exists is None:
-                    s.add(EventSourceRecord(event_id=event.event_id, **src.__dict__))
+                    s.add(
+                        EventSourceRecord(
+                            event_id=event.event_id,
+                            **{**src.__dict__, "retrieved_at": _utc(src.retrieved_at)},
+                        )
+                    )
                     stats.sources_added += 1
         for c in stats.conflicts:
             log.warning("event conflict", extra={"detail": c})
@@ -251,6 +256,24 @@ class EventStore:
             ).all()
             s.expunge_all()
             return list(rows)
+
+    def schedule_known_at(self, event_ids: list[str]) -> dict[str, datetime]:
+        """Earliest time each scheduled entry was observed in a retrieved calendar snapshot.
+
+        Calendars are not versioned historically: a schedule is knowledge only from the moment a
+        snapshot containing it was retrieved. Entries without such a source are absent (unknown).
+        """
+        if not event_ids:
+            return {}
+        with self.db.session() as s:
+            rows = s.execute(
+                select(EventSourceRecord.event_id, func.min(EventSourceRecord.retrieved_at))
+                .where(EventSourceRecord.event_id.in_(event_ids))
+                .where(EventSourceRecord.role == "schedule")
+                .where(EventSourceRecord.retrieved_at.is_not(None))
+                .group_by(EventSourceRecord.event_id)
+            ).all()
+        return {eid: ensure_aware(t) for eid, t in rows if t is not None}
 
     def query(
         self,

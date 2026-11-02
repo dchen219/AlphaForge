@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date, datetime, timedelta
 
 from finance_agent.errors import FinanceAgentError
@@ -16,6 +16,7 @@ from finance_agent.events.store import EventStore, IngestStats, SourceLink
 from finance_agent.events.transmission import channels_for
 from finance_agent.providers.base import CachedFetcher
 from finance_agent.research.calculations import compute_quarterly_metrics
+from finance_agent.storage.snapshots import SnapshotRef
 from finance_agent.timeutil import ET, available_at, ensure_aware, utcnow
 
 log = logging.getLogger(__name__)
@@ -35,6 +36,18 @@ def fixture_event_window(fixtures_dir) -> tuple[date, datetime] | None:
     if not w:
         return None
     return date.fromisoformat(w["start"]), datetime.fromisoformat(w["as_of"])
+
+
+def fixture_retrieved_at(fixtures_dir, group: str) -> datetime | None:
+    """When a recorded fixture group was really retrieved (MANIFEST.json → groups → retrieved_at)."""
+    import json
+    from pathlib import Path
+
+    path = Path(fixtures_dir) / "MANIFEST.json"
+    if not path.exists():
+        return None
+    raw = json.loads(path.read_text(encoding="utf-8")).get("groups", {}).get(group, {}).get("retrieved_at")
+    return datetime.fromisoformat(raw) if raw else None
 
 
 @dataclass
@@ -73,6 +86,17 @@ class EventIngestor:
         self.calendar_ttl = timedelta(hours=s.cache_ttl_calendar_hours)
 
     # ------------------------------------------------------------ common
+    def _observed(self, ref: SnapshotRef | None, group: str) -> SnapshotRef | None:
+        """Calendar snapshot ref whose ``retrieved_at`` is when the schedule was really observed.
+
+        Calendars are not versioned historically, so a schedule is knowledge only from the time
+        it was retrieved. Offline, that is the recording time in MANIFEST.json, not replay time.
+        """
+        if ref is None or not self.ctx.http.is_fixture:
+            return ref
+        when = fixture_retrieved_at(self.ctx.settings.fixtures_dir, group)
+        return replace(ref, retrieved_at=when) if when else ref
+
     def _store(
         self, items: list[tuple[FinancialEvent, list[SourceLink]]], as_of: datetime | None
     ) -> IngestStats:
@@ -178,6 +202,7 @@ class EventIngestor:
         cal_bytes, cal_ref = self.official.get_bytes(
             source_key="fed:fomccalendars", kind="fomc_calendar", url=fomc.CALENDAR_URL, ttl=self.calendar_ttl
         )
+        cal_ref = self._observed(cal_ref, "fed/")
         meetings = fomc.parse_calendar(cal_bytes.decode("utf-8", errors="replace"))
         try:
             rss_bytes, _ = self.official.get_bytes(
@@ -222,6 +247,7 @@ class EventIngestor:
         ics, ics_ref = self.official.get_bytes(
             source_key="bls:ics", kind="bls_calendar", url=calendars.BLS_ICS_URL, ttl=self.calendar_ttl
         )
+        ics_ref = self._observed(ics_ref, "bls/")
         bls = [
             s
             for s in calendars.parse_bls_ics(ics.decode("utf-8", errors="replace"))
@@ -234,6 +260,7 @@ class EventIngestor:
                 url=calendars.BEA_SCHEDULE_URL,
                 ttl=self.calendar_ttl,
             )
+            bea_ref = self._observed(bea_ref, "bea/")
             bea = [
                 s
                 for s in calendars.parse_bea_schedule(bea_doc.decode("utf-8", errors="replace"))
