@@ -608,3 +608,37 @@ test, which motivates the event-induced-volatility diagnostic.
 | Peak traced memory | 3.5 MB (single), 7.0 MB (comparison) |
 
 Recomputation is bit-identical across repeated runs, and the run id is stable.
+
+## v0.3-B final release audit (2026-11-02, PR #4)
+
+Master was still `51373dc`; PR #3 (dashboard) and PR #4 were both open and based on it.
+The audit ran the real entry points (CLI on fresh Alembic databases, `serve --offline` with
+HTTP requests) as well as the test suites.
+
+Defects found and fixed, each with a regression test:
+- **Misleading "event not found" error.** After the README's default
+  `events ingest --offline`, which covers the 120 days before the cutoff, a study of the
+  2025-09-17 FOMC event failed with "not found (run `events ingest` first)", although ingest had
+  just run. The CLI and API 404 now explain the ingest window and, offline, name the exact
+  command (`events ingest --offline --start 2025-07-01`).
+- **Literal `None` in the Markdown report.** Windows without inference (missing observations,
+  not available at the cutoff) showed `None` as their inference status and degrees of freedom;
+  key/value tables showed `None` for unset fields. Such windows now read
+  `not computed (window <status>)`, and empty cells read `n/a`. The JSON was already explicit.
+  The examples in `docs/examples` were regenerated; numbers and run IDs are unchanged.
+
+Statistical spot checks on CLI-produced runs:
+- An independent numpy/scipy recomputation of the stored QQQ/SPY FOMC run reproduces α, β,
+  σ², CAR, SE (explicit L×L covariance), t, p and the CI to ~1e-16. The estimation sessions end
+  before day −20.
+- On the planted XLE move the diagnostic reports ELEVATED event-induced volatility (ratio 76),
+  and all windows are LIMITED in JSON and Markdown.
+- A second database built from scratch reproduces the same run with an identical spec hash,
+  data digest, result JSON and Markdown.
+- Two point-in-time cutoffs (2025-10-31 and 2026-11-01): the earlier is UNVERIFIED (backfill)
+  and withholds [0,+5]; the later is COMPLETED. CARs agree where both exist.
+
+Integration check: a trial merge of PR #3 into PR #4 conflicts in `CLAUDE.md`,
+`IMPLEMENTATION_LOG.md`, `interfaces/api.py` and `uv.lock`. All four resolve as a union (keep both
+routers; run `uv lock`). The combined tree passes Ruff and 504 offline tests. Neither PR adds a
+migration that competes with the other.

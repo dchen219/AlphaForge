@@ -105,10 +105,29 @@ class EventStudyService:
         self.calendar = get_calendar()
 
     # ------------------------------------------------------------------ helpers
+    def _missing_event_message(self, event_id: str) -> str:
+        """Actionable 404 text. `events ingest` only loads events dated inside its window (default:
+        120 days before the cutoff), so "run ingest first" alone misleads after a default ingest."""
+        msg = (
+            f"event {event_id} is not in the event store. `events ingest` loads only events dated "
+            "inside its window (default: the 120 days before the cutoff); pass --start to cover the "
+            "event's date"
+        )
+        if self.ctx.http.is_fixture:
+            from finance_agent.events.service import fixture_event_window
+
+            window = fixture_event_window(self.ctx.settings.fixtures_dir)
+            if window is not None:
+                msg += (
+                    f". Offline fixtures were recorded from {window[0].isoformat()}: run "
+                    f"`events ingest --offline --start {window[0].isoformat()}`"
+                )
+        return msg
+
     def _event(self, event_id: str) -> FinancialEvent:
         e = self.events.get(event_id)
         if e is None:
-            raise NotFoundError(f"event {event_id} not found (run `events ingest` first)")
+            raise NotFoundError(self._missing_event_message(event_id))
         if not e.has_occurred:
             raise ValueError(f"{event_id} is a {e.event_status} calendar entry, not an occurred event")
         return e

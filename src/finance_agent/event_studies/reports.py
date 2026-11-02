@@ -51,7 +51,7 @@ def bp(x: Any) -> str:
 
 def _table(header: list[str], rows: list[list[Any]]) -> str:
     out = ["| " + " | ".join(header) + " |", "|" + "---|" * len(header)]
-    out += ["| " + " | ".join(str(c) for c in r) + " |" for r in rows]
+    out += ["| " + " | ".join("n/a" if c is None else str(c) for c in r) + " |" for r in rows]
     return "\n".join(out)
 
 
@@ -189,7 +189,9 @@ def _single(run: dict) -> tuple[dict, str]:
     for w in wins:
         inf = w.get("inference") or {}
         pl = inf.get("placebo") or {}
-        rows.append([w["window"], inf.get("status"), num(inf.get("standard_error"), 6),
+        # a window without inference (invalid / unavailable data) says so instead of a blank status
+        status = inf.get("status") or f"not computed (window {w['status']})"
+        rows.append([w["window"], status, num(inf.get("standard_error"), 6),
                      num(inf.get("standard_error_ignoring_estimation_error"), 6), num(inf.get("test_statistic"), 3),
                      inf.get("degrees_of_freedom"), num(inf.get("p_value"), 4),
                      f"[{pct(inf.get('ci_low'))}, {pct(inf.get('ci_high'))}]", num(pl.get("empirical_p_value"), 4)])  # fmt: skip

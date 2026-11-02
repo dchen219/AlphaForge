@@ -33,7 +33,7 @@ Target `QQQ`; benchmark `SPY` - S&P 500 ETF (broad U.S. large-cap market proxy)
 | price_basis | total_return |
 | return_type | simple |
 | data_mode | research |
-| as_of | None |
+| as_of | n/a |
 | contract_statement | RETROSPECTIVE research view: latest data adjusted with all corporate actions known now; prices are not necessarily what an investor saw on those dates. |
 | retrospectively_adjusted | True |
 | adjustment_method | adjustment-v0.3a.1 |

@@ -81,7 +81,7 @@ uv run python -m finance_agent market calendar --event-time 2026-10-28T16:05:00-
 uv run python -m finance_agent market yields DGS10 --start 2026-10-01 --end 2026-10-30 --offline   # REAL ALFRED data
 
 # v0.3-B event studies (equity prices offline = SYNTHETIC -> methodological validation only)
-uv run python -m finance_agent events ingest --offline --start 2025-07-01        # recorded REAL events
+uv run python -m finance_agent events ingest --offline --start 2025-07-01        # recorded REAL events (the default window is only the last 120 days)
 uv run python -m finance_agent study run --event-id EV-e6a9f7badcb72f25 --ticker QQQ --benchmark SPY --model market-model --offline
 uv run python -m finance_agent study run --event-id EV-e6a9f7badcb72f25 --series DGS10 --offline   # REAL yields, bp
 uv run python -m finance_agent study compare --event-type MACRO_RELEASE --subtype CPI --ticker QQQ --benchmark SPY --offline

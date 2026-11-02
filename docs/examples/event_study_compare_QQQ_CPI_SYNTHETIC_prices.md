@@ -17,9 +17,9 @@ How did QQQ respond, on average, around MACRO_RELEASE ['CPI', 'CORE_CPI'] events
 | model | market_model |
 | price_basis | total_return |
 | data_mode | research |
-| as_of | None |
-| start | None |
-| end | None |
+| as_of | n/a |
+| start | n/a |
+| end | n/a |
 | first_release_only | True |
 | max_events | 40 |
 | events_selected | 30 |

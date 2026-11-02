@@ -171,6 +171,12 @@ def test_missing_benchmark_session_invalidates_window_and_is_never_filled(study_
         )
     o = next(o for o in r.result["observations"] if o["session"] == "2025-03-14")
     assert o["benchmark_return"] is None and o["abnormal_return"] is None
+    # Regression (release audit): invalid windows rendered `| None |` as their inference status
+    md = r.report_markdown
+    inference_md = md[md.index("## 10.") : md.index("## 11.")]
+    for label in ("[0,+1]", "[-1,+1]", "[0,+5]"):
+        assert f"| {label} | not computed (window MISSING_OBSERVATIONS) |" in inference_md
+    assert "| None" not in md and "None |" not in md
 
 
 def test_after_hours_earnings_and_provisional_bar(study_ctx):
@@ -392,3 +398,33 @@ def test_yield_report_is_labelled_in_basis_points_and_renders_tables(study_ctx):
     assert "## 9. Yield changes around the event (basis points" in md and "Abnormal returns and CAR" not in md
     header = next(line for line in md.splitlines() if line.startswith("| window | status | before"))
     assert header.count("|") == 7  # six columns: no stray pipes inside a header
+
+
+def test_event_outside_default_ingest_window_gets_actionable_error(tmp_path):
+    """Regression (release audit): after the README's default `events ingest --offline` (120-day
+    window ending 2026-11-01), a study of the 2025-09-17 FOMC event failed with "not found (run
+    `events ingest` first)" although ingest had just run. The error must name the window and the
+    exact command that covers the event; after that command the same request succeeds."""
+    from finance_agent.errors import NotFoundError
+    from finance_agent.events.service import EventIngestor
+    from finance_agent.services import AppContext
+    from finance_agent.storage.db import Database
+    from tests.conftest import fixture_window, offline_settings
+
+    s = offline_settings(tmp_path)
+    db = Database(s.database_url)
+    db.create_all()
+    ctx = AppContext(s, db=db)
+    try:
+        start, as_of = fixture_window()
+        EventIngestor(ctx).run(as_of=as_of)  # default window, as documented for v0.2
+        req = EventStudyRequest(event_id=FOMC_SEP25, series_id="DGS10", price_basis="total_return")
+        with pytest.raises(NotFoundError) as exc:
+            EventStudyService(ctx).run(req)
+        msg = str(exc.value)
+        assert "120 days" in msg and f"events ingest --offline --start {start.isoformat()}" in msg
+        assert "run `events ingest` first" not in msg
+        EventIngestor(ctx).run(as_of=as_of, start=start)  # the command the message names
+        assert EventStore(ctx.db).get(FOMC_SEP25) is not None
+    finally:
+        ctx.close()
