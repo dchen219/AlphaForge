@@ -435,3 +435,71 @@ historical query between the two acceptances. Fix: `EventStore.query(as_of=…)`
 events available after the cutoff and hides earnings clusters whose earnings release is not
 yet available (stored state unchanged). Regression:
 `test_point_in_time_query_masks_links_to_later_filings` (fails on the previous code).
+
+---
+
+# v0.3-A — Historical Market Data Infrastructure & CI (branch `feat/v0.3-market-data`)
+
+Started 2026-11-02 from `master` @ `07cbb0f` (tag `v0.2.0`). The unrelated, unmerged branch
+`feat/agent-testing-ui` was left untouched.
+
+## Provider assessment
+No equity provider was reachable without credentials:
+- Alpaca and Massive returned HTTP 401.
+- Stooq served a JavaScript challenge, which was not circumvented.
+- Nasdaq Data Link's US end-of-day data is premium.
+- yfinance runs on personal-use terms.
+
+**Alpaca was chosen as primary** for its explicit raw/split/dividend/all adjustment and its
+corporate-actions API. **Live Alpaca is unverified** (`docs/market_data_provider_evaluation.md`).
+The offline pipeline runs the real adapter against **synthetic** Alpaca-format fixtures.
+
+## Build
+- `market/`: schemas, providers, ingest, store, calendar, adjust, quality, calculations,
+  yields, service.
+- Interfaces: `interfaces/market_api.py`, the CLI `market` group and `python -m finance_agent`.
+- Migration `0004_market_data`: 8 tables.
+- CI: `.github/workflows/ci.yml`.
+- New dependency: `exchange-calendars` (pandas/numpy are transitive and confined to the calendar
+  wrapper).
+
+## Defects found during the build (each covered by a test)
+1. **Yield availability look-ahead (found on real data).** "Next Federal Reserve business day"
+   was earlier than ALFRED's real first vintage in 10 of 38 cases per series:
+   - Independence Day 2026 fell on a Saturday and was observed Friday 2026-07-03, so nothing
+     was published that day.
+   - 2025-12-24 and 2025-12-26 were non-publication days.
+   - Holiday rows are published two days later.
+
+   It was replaced by a federal-government (OPM) publication-day rule with evidenced closures.
+   Now 0 early, 35 exact and 3 one day late per series. The calibration test runs on the real
+   vintages.
+2. **Incremental re-fetch start was computed from raw bars for every basis.** As a result,
+   provider-split ingestion fetched only the last few sessions. It is now per basis.
+3. **Raw-basis max drawdown spanned a split (−91%).** It is no longer computed across a split.
+4. **The FastAPI lifespan closed an injected `AppContext`.** It now closes only one it created.
+5. **Missing Alpaca credentials were detected only after the fetcher lookup.** The adapter now
+   fails fast.
+6. **Adding Alpaca to `credential_status` changed the v0.1 `/health` contract.** Reverted;
+   the v0.1 tests pass unchanged.
+
+## Results (local, 2026-11-02)
+| Check | Result |
+|---|---|
+| Offline suite | 296 passed (live deselected) |
+| Historical replay | 44 passed |
+| v0.2.0 tests from `master`, run unchanged | 267 passed |
+| Live keyless yields | passed |
+| Live Alpaca | skipped (no keys) |
+| Ruff | clean |
+| actionlint | 0 errors |
+| Alembic | upgrade, check and round-trip OK |
+
+| Performance | Time | Detail |
+|---|---|---|
+| Cold ingest | 19.4 s | 12,086 bars |
+| Warm incremental | 2.4 s | |
+| Full re-verify | 5.6 s | |
+| Yields | 1.8 s | |
+
+Queries take 6–86 ms median; the database is about 9 MB.
