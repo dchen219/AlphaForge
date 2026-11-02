@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import json
 import os
+from datetime import date, datetime
 from pathlib import Path
 
 import pytest
 
 from finance_agent.config.settings import DEFAULT_FIXTURES_DIR, Settings
+from finance_agent.events.service import EventIngestor
 from finance_agent.services import AppContext
 from finance_agent.storage.db import Database
 
@@ -45,3 +48,24 @@ def ctx(settings: Settings):
     c = AppContext(settings, db=db)
     yield c
     c.close()
+
+
+def fixture_window() -> tuple[date, datetime]:
+    """The exact window the real v0.2 fixtures were recorded with (offline replay must match)."""
+    w = json.loads((FIXTURES / "MANIFEST.json").read_text(encoding="utf-8"))["event_window"]
+    return date.fromisoformat(w["start"]), datetime.fromisoformat(w["as_of"])
+
+
+@pytest.fixture(scope="module")
+def events_ctx(tmp_path_factory):
+    """Offline context with all v0.2 sources ingested once from REAL recorded snapshots."""
+    tmp = tmp_path_factory.mktemp("events")
+    s = offline_settings(tmp)
+    db = Database(s.database_url)
+    db.create_all()
+    ctx = AppContext(s, db=db)
+    start, as_of = fixture_window()
+    report = EventIngestor(ctx).run(as_of=as_of, start=start)
+    ctx.ingest_report = report
+    yield ctx
+    ctx.close()

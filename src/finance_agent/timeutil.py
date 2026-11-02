@@ -44,6 +44,17 @@ def latest_usable_source_date(as_of: datetime) -> date:
     return ensure_aware(as_of).astimezone(ET).date() - timedelta(days=1)
 
 
+def parse_window_start(value: str | datetime | date | None) -> datetime | None:
+    """Window *start*: a bare date means 00:00 New York that day (cutoffs use ``parse_as_of``)."""
+    if value is None or value == "":
+        return None
+    if isinstance(value, date) and not isinstance(value, datetime):
+        return datetime.combine(value, time(0, 0), tzinfo=ET).astimezone(UTC)
+    if isinstance(value, str) and len(value.strip()) == 10:
+        return parse_window_start(date.fromisoformat(value.strip()))
+    return parse_as_of(value)
+
+
 def parse_as_of(value: str | datetime | date | None) -> datetime | None:
     """Parse a user-supplied as_of. A bare date means end of that day in New York."""
     if value is None or value == "":

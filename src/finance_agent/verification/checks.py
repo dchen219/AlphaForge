@@ -26,12 +26,21 @@ class VerificationReport(BaseModel):
 # ----------------------------------------------------------------- numeric claims
 
 _STRIP = [
+    # v0.2: timestamps/periods/identifiers that are not financial figures (order matters)
+    re.compile(
+        r"\b\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?"
+    ),  # ISO datetimes
+    re.compile(r"\b\d{1,2}:\d{2}(?::\d{2})?\s*(?:[ap]\.?m\.?)?", re.IGNORECASE),  # clock times
+    re.compile(r"\bItems?\s+\d{1,2}\.\d{2}(?:\s*,\s*\d{1,2}\.\d{2})*", re.IGNORECASE),  # 8-K item numbers
+    re.compile(r"\b[A-Z]{2,}\d+[A-Z\d]*\b"),  # series ids such as GDPC1
+    re.compile(r"\b[A-Z]{2,4}-[A-Za-z0-9|_-]+"),  # cluster / comparison / event ids (CL-, CMP-, EV-)
     re.compile(r"\b[A-Z]{1,4}-[0-9a-f]{6,}\b"),  # evidence ids
     re.compile(r"\bF-\d{10}-\d{2}-\d{6}\b"),  # filing evidence ids
     re.compile(r"\b\d{10}-\d{2}-\d{6}\b"),  # accession numbers
     re.compile(r"\bFY\s?\d{4}(?:\s*Q[1-4])?\b"),  # fiscal labels
     re.compile(r"\b(?:Q[1-4]|H[12])\b"),
     re.compile(r"\b\d{4}-\d{2}-\d{2}\b"),  # ISO dates
+    re.compile(r"\b\d{4}-(?:\d{2}|Q[1-4])\b"),  # observation periods 2026-09 / 2026-Q3
     re.compile(r"\bFND-\d+\b"),
     re.compile(r"\b(?:10-[KQ]T?|8-K)(?:/A)?\b", re.IGNORECASE),  # form types
     re.compile(r"\b52/53-week\b", re.IGNORECASE),
@@ -40,7 +49,7 @@ _STRIP = [
 # these nouns, e.g. "8 quarters", "53-week". Any other unitless number must be supported.
 _COUNT_NOUN = re.compile(
     r"\s*-?\s*(?:quarters?|years?|months?|weeks?|days?|periods?|filings?|companies|metrics|"
-    r"observations?|segments?)\b",
+    r"observations?|segments?|events?|releases?|meetings?|sources?|disclosures?|clusters?)\b",
     re.IGNORECASE,
 )
 _NUM = re.compile(

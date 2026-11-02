@@ -9,7 +9,38 @@
       "kind": "real_snapshot",
       "description": "Real SEC EDGAR data (company_tickers, submissions, XBRL companyfacts) for MSFT, AAPL, AMZN, GOOGL, META, trimmed to supported concepts, periodic forms and periods ending 2019-01-01 or later.",
       "retrieved_at": "2026-11-02T00:27:45+00:00",
-      "source": "https://www.sec.gov/files/company_tickers.json; https://data.sec.gov/"
+      "source": "https://www.sec.gov/files/company_tickers.json; https://data.sec.gov/",
+      "submissions_refreshed_at": "2026-11-02T02:22:54+00:00",
+      "submissions_note": "sec/submissions re-recorded for v0.2 with 8-K forms, 'items' and acceptanceDateTime columns; companyfacts unchanged."
+    },
+    "fed/": {
+      "kind": "real_snapshot",
+      "description": "REAL Federal Reserve FOMC calendar, monetary-policy press RSS and policy statements (scripts/style stripped).",
+      "retrieved_at": "2026-11-02T02:22:54+00:00",
+      "built_by": "scripts/build_v02_fixtures.py"
+    },
+    "bls/": {
+      "kind": "real_snapshot",
+      "description": "REAL BLS release calendar (iCalendar).",
+      "retrieved_at": "2026-11-02T02:22:54+00:00",
+      "built_by": "scripts/build_v02_fixtures.py"
+    },
+    "bea/": {
+      "kind": "real_snapshot",
+      "description": "REAL BEA release schedule page (scripts/style stripped).",
+      "retrieved_at": "2026-11-02T02:22:54+00:00",
+      "built_by": "scripts/build_v02_fixtures.py"
+    },
+    "alfred/": {
+      "kind": "real_snapshot",
+      "description": "REAL ALFRED vintage CSVs (keyless alfredgraph.csv), rows before 2015 dropped.",
+      "retrieved_at": "2026-11-02T02:22:54+00:00",
+      "built_by": "scripts/build_v02_fixtures.py"
     }
+  },
+  "event_window": {
+    "start": "2025-07-01",
+    "as_of": "2026-11-02T04:59:59+00:00",
+    "note": "Window used by scripts/build_v02_fixtures.py; offline macro replay probes exactly these vintages."
   }
 }

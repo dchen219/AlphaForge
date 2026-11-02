@@ -37,18 +37,40 @@ class CachedFetcher:
         description: str | None = None,
         use_cache: bool = True,
     ) -> tuple[Any, SnapshotRef]:
+        content, ref = self.get_bytes(
+            source_key=source_key,
+            kind=kind,
+            url=url,
+            params=params,
+            ttl=ttl,
+            description=description,
+            use_cache=use_cache,
+        )
+        try:
+            return json.loads(content), ref
+        except (ValueError, UnicodeDecodeError) as exc:
+            raise MalformedDataError(f"Invalid JSON from {ref.url}: {exc}") from exc
+
+    def get_bytes(
+        self,
+        *,
+        source_key: str,
+        kind: str,
+        url: str,
+        params: dict[str, Any] | None = None,
+        ttl: timedelta,
+        description: str | None = None,
+        use_cache: bool = True,
+    ) -> tuple[bytes, SnapshotRef]:
+        """Fetch raw bytes (HTML, CSV, ICS, XML, JSON) through the immutable snapshot store."""
         mode_prefix = "fixture" if self.http.is_fixture else "live"
         if use_cache:
             cached = self.snapshots.latest_fresh(self.provider, source_key, ttl, mode_prefix)
             if cached is not None:
                 ref, content = cached
                 log.info("snapshot cache hit", extra={"source_key": source_key, "sha256": ref.sha256})
-                try:
-                    return json.loads(content), ref
-                except ValueError as exc:
-                    raise MalformedDataError(f"Cached snapshot for {source_key} is not JSON") from exc
+                return content, ref
         result = self.http.get(url, params=params)
-        payload = result.json()
         ref = self.snapshots.save(
             provider=self.provider,
             source_key=source_key,
@@ -56,4 +78,4 @@ class CachedFetcher:
             result=result,
             description=description,
         )
-        return payload, ref
+        return result.content, ref

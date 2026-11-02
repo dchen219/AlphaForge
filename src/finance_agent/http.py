@@ -44,6 +44,12 @@ class FetchResult:
     def __post_init__(self) -> None:
         self.sha256 = hashlib.sha256(self.content).hexdigest()
 
+    def text(self) -> str:
+        try:
+            return self.content.decode("utf-8")
+        except UnicodeDecodeError:
+            return self.content.decode("latin-1")
+
     def json(self) -> Any:
         try:
             return json.loads(self.content)
@@ -104,6 +110,23 @@ class FixtureTransport(httpx.BaseTransport):
                 return self.root / "fred" / "series" / f"{sid}.json"
             if path == "/fred/series/observations":
                 return self.root / "fred" / "observations" / f"{sid}.json"
+        # ---- v0.2 official event sources
+        if host == "www.federalreserve.gov":
+            if path == "/feeds/press_monetary.xml":
+                return self.root / "fed" / "press_monetary.xml"
+            if path == "/monetarypolicy/fomccalendars.htm":
+                return self.root / "fed" / "fomccalendars.htm"
+            if path.startswith("/newsevents/pressreleases/") and path.endswith(".htm"):
+                return self.root / "fed" / "statements" / Path(path).name
+        if host == "www.bls.gov" and path == "/schedule/news_release/bls.ics":
+            return self.root / "bls" / "bls.ics"
+        if host == "www.bea.gov" and path == "/news/schedule":
+            return self.root / "bea" / "schedule.htm"
+        if host == "alfred.stlouisfed.org" and path == "/graph/alfredgraph.csv":
+            sid = (qs.get("id") or [""])[0].upper()
+            vintage = (qs.get("vintage_date") or [""])[0]
+            if sid and vintage:
+                return self.root / "alfred" / sid / f"{vintage}.csv"
         return None
 
     def origin_for(self, path: Path) -> str:
@@ -145,9 +168,12 @@ class HttpClient:
         )
         self.max_attempts = max(1, max_attempts)
         self.backoff_base = backoff_base
-        self._limiters = {h: RateLimiter(r) for h, r in (rate_limits or {}).items()}
-        self._sleep = sleep
         self.is_fixture = isinstance(transport, FixtureTransport)
+        # Rate limits protect live providers; offline fixture replay reads local files.
+        self._limiters = (
+            {} if self.is_fixture else {h: RateLimiter(r) for h, r in (rate_limits or {}).items()}
+        )
+        self._sleep = sleep
         self.request_count = 0
 
     def close(self) -> None:

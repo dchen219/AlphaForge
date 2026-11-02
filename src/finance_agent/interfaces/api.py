@@ -138,6 +138,9 @@ def create_app(settings: Settings | None = None, ctx: AppContext | None = None) 
     def get_research(run_id: Annotated[str, Path(pattern=r"^[0-9a-f\-]{36}$")], ctx: Ctx) -> ResearchRunOut:
         return _run_out(ctx, run_id)
 
+    from finance_agent.interfaces.events_api import router as events_router
+
+    app.include_router(events_router)  # v0.2 event intelligence routes
     return app
 
 

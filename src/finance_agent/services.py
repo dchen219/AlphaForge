@@ -84,6 +84,10 @@ class AppContext:
                 "www.sec.gov": settings.sec_max_requests_per_second,
                 "data.sec.gov": settings.sec_max_requests_per_second,
                 "api.stlouisfed.org": settings.fred_max_requests_per_second,
+                "alfred.stlouisfed.org": settings.alfred_max_requests_per_second,
+                "www.federalreserve.gov": settings.official_max_requests_per_second,
+                "www.bls.gov": settings.official_max_requests_per_second,
+                "www.bea.gov": settings.official_max_requests_per_second,
             },
         )
         self.snapshots = SnapshotStore(self.db, settings.snapshots_dir)

@@ -40,6 +40,19 @@ class Settings(BaseSettings):
     http_max_attempts: int = 4
     sec_max_requests_per_second: float = 5.0  # SEC fair-access ceiling is 10/s
     fred_max_requests_per_second: float = 2.0
+    # v0.2 official event sources (robots.txt: ALFRED crawl-delay 2s, FRED 1s)
+    alfred_max_requests_per_second: float = 0.5
+    official_max_requests_per_second: float = 1.0  # federalreserve.gov, bls.gov, bea.gov
+    cache_ttl_calendar_hours: float = 12
+    # ALFRED vintages for past dates never change; today's vintage may still change.
+    cache_ttl_alfred_past_hours: float = 24 * 365 * 10
+    cache_ttl_alfred_today_hours: float = 1
+    # Administrative ingestion over HTTP is disabled unless a token is configured.
+    ingest_admin_token: SecretStr | None = None
+    # Macro releases confirmed by an ALFRED vintage on the scheduled date use the official
+    # scheduled release time as availability (precision SCHEDULED_TIME_CONFIRMED_DATE).
+    # Set false for the strict v0.1 next-day policy.
+    macro_use_confirmed_scheduled_time: bool = True
 
     # Cache TTLs for reusing stored source snapshots instead of re-fetching.
     cache_ttl_tickers_hours: float = 24 * 7

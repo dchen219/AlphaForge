@@ -6,10 +6,11 @@ command `finance-agent`, and database schema intentionally keep their original n
 do not rename them.)
 
 Guidance for AI coding agents and contributors working in this repository.
-Status: **v0.1 — Financial Research Foundation, frozen** (baseline audit 2026-11-02).
-Roadmap: v0.2 Market Intelligence & Event Detection · v0.3 Event-to-Asset Impact Engine ·
-v0.4 Portfolio Intelligence · v0.5 Quantitative Research Agents (none started). Do not start v0.2 work without an
-explicit request. Detailed history: `IMPLEMENTATION_LOG.md`. Accounting rules:
+Status: **v0.1 — Financial Research Foundation, frozen** on `master` (baseline audit 2026-11-02).
+**v0.2 — Market Intelligence & Event Detection** implemented on branch
+`feat/v0.2-market-intelligence` (in review; not merged). Roadmap: v0.3 Event-to-Asset Impact
+Engine · v0.4 Portfolio Intelligence · v0.5 Quantitative Research Agents (not started — do not
+start without an explicit request). Event semantics: `docs/event_intelligence_methodology.md`. Detailed history: `IMPLEMENTATION_LOG.md`. Accounting rules:
 `docs/accounting_methodology.md` (source of truth for data semantics).
 
 ## What this is
@@ -35,6 +36,14 @@ Redis/Celery/microservices, frontend.
    through `config/logging.py:redact`.
 6. **Source snapshots are immutable.** Content is addressed by SHA-256 and re-verified
    on read; only retrieval metadata (`last_retrieved_at`) may change.
+7. **(v0.2) A calendar entry is never an occurrence.** `SCHEDULED` events carry no values and
+   are excluded from occurred-event queries; a passed date without source confirmation is
+   `UNCONFIRMED`, never "happened".
+8. **(v0.2) No surprise without authenticated consensus; no market reaction without market
+   data.** The previous value is never a stand-in for consensus. Economic channels are
+   labelled hypotheses; no coefficients, probabilities or price impacts.
+9. **(v0.2) Observed event facts are immutable.** Revisions are new events that supersede
+   earlier ones; first releases are preserved.
 
 ## Stack
 
@@ -59,8 +68,13 @@ src/finance_agent/
   interfaces/   api.py, cli.py, asgi.py
   services.py   AppContext: wires providers/storage/LLM for API, CLI and workflow
 apps/api/main.py   thin ASGI entry
+  events/       v0.2: schemas (taxonomy), store (dedup/immutability/point-in-time), comparisons,
+                importance, transmission, briefing, service (ingestion), sources/{sec_events,fomc,macro,calendars}
+  workflows/briefing.py   bounded LangGraph: parse→window→retrieve→resolve→compare→rank→select→evidence→explain→verify→persist
+  interfaces/events_api.py  /events*, /intelligence/* routes
 tests/{unit,integration,historical_replay,fixtures}
-scripts/build_fixtures.py
+scripts/build_fixtures.py       v0.1 fixtures (SEC real, FRED synthetic)
+scripts/build_v02_fixtures.py   records REAL v0.2 fixtures by running ingestion live (~15 min)
 ```
 
 ## Commands
@@ -79,7 +93,19 @@ uv run finance-agent macro CPIAUCSL [--as-of …] [--offline]
 uv run finance-agent serve [--offline]          # http://127.0.0.1:8000/docs
 ```
 
-Live SEC requires `SEC_USER_AGENT` (name + contact). Offline mode serves `tests/fixtures`.
+v0.2:
+
+```bash
+uv run finance-agent events ingest [--source sec|fomc|macro|all] [--as-of …] [--start …] [--offline]
+uv run finance-agent events list --from 2026-10-01 --to 2026-11-01 [--as-of …] [--offline]
+uv run finance-agent events show EV-… | events calendar --from … --to …
+uv run finance-agent briefing daily --date 2026-10-28 [--no-llm] [--offline] [--no-ingest] [--format json]
+```
+
+Live SEC requires `SEC_USER_AGENT` (name + contact). Offline mode serves `tests/fixtures`
+(and, in v0.2, replays macro probing over the recorded window in `MANIFEST.json → event_window`;
+rate limits are not applied offline). v0.2 needs neither a FRED key (ALFRED keyless CSV) nor
+an Anthropic key.
 
 ## Source availability policy (`timeutil.py`)
 
@@ -94,6 +120,26 @@ Live SEC requires `SEC_USER_AGENT` (name + contact). Offline mode serves `tests/
 - FRED: observation date, vintage window, publication time (always unknown/null),
   `available_at` and `retrieved_at` are kept separate. Live `as_of` requests ALFRED for
   real-time date (as_of in ET) − 1 day.
+
+### v0.2 event timing
+
+| Source | `available_at` | Precision |
+|---|---|---|
+| SEC filings | EDGAR `acceptanceDateTime` (verified true UTC) | EXACT_TIMESTAMP |
+| FOMC statements | RSS `pubDate`, else "For release at …" header | EXACT_TIMESTAMP |
+| BLS/BEA releases | official scheduled time, date confirmed by ALFRED D−1 vs D vintages | SCHEDULED_TIME_CONFIRMED_DATE (strict mode: next-day) |
+| metric-change events | v0.1 next-day policy | DATE_ONLY_CONSERVATIVE |
+| calendars | none (not occurrences) | UNKNOWN |
+
+Window starts given as bare dates mean 00:00 New York (`parse_window_start`); cutoffs mean
+23:59:59 (`parse_as_of`). Rate limits: SEC 5/s, ALFRED 0.5/s (crawl-delay 2), Fed/BLS/BEA 1/s.
+
+### v0.2 importance (`importance-v0.2.1`)
+
+`score = 100 × Σ components / (100, +20 only if a consensus surprise exists)`; components
+category 40 (half for revisions), magnitude 25 (0 for qualitative disclosures), extremeness 10,
+novelty 10, relevance 15. Quantitative events without measurable magnitude are
+INSUFFICIENT_DATA with no ranking score. Weights are judgmental, not trained.
 
 ## Accounting assumptions (summary — see methodology doc)
 
@@ -126,7 +172,8 @@ Live SEC requires `SEC_USER_AGENT` (name + contact). Offline mode serves `tests/
 
 ## Persistence notes
 
-- Alembic head: `0002_snapshot_last_retrieved`. Always add a migration for model changes;
+- Alembic head: `0003_event_intelligence` (v0.2 tables: financial_events, event_sources,
+  briefings, briefing_events — `docs/database_schema.md`). Always add a migration for model changes;
   `tests/integration/test_storage.py` fails if models and migrations diverge.
 - Writes are idempotent and wrapped in `retry_on_conflict` (concurrent first loads);
   SQLite runs in WAL mode with a 30 s busy timeout.
@@ -134,12 +181,16 @@ Live SEC requires `SEC_USER_AGENT` (name + contact). Offline mode serves `tests/
 ## Testing conventions
 
 - Offline by default; fixtures: `tests/fixtures/sec` = real SEC snapshot (trimmed),
-  `tests/fixtures/fred` = **synthetic**. `MANIFEST.json` records provenance.
+  `tests/fixtures/fred` = **synthetic**, `tests/fixtures/{fed,bls,bea,alfred}` = **real** v0.2
+  snapshots. `MANIFEST.json` records provenance and the v0.2 recording window.
+- Synthetic event cases are constructed inline in tests and labelled SYNTHETIC.
+- `tests/fixtures/eval/ranking_expectations.json` are regression expectations, not independent
+  labels — never report ranking metrics from them.
 - Financial arithmetic tests use hand-calculated values; replay tests must cover both
   included and excluded observations; add a regression test for every fixed defect.
 - `tests/conftest.py` strips credential env vars; never rely on a developer's env.
 
-## Known limitations (v0.1)
+## Known limitations
 
 Live FRED and live LLM synthesis unverified (no key / no API credit at freeze); only
 us-gaap statement facts (no extensions, segments, MD&A text, prices); filing-level (not
@@ -147,3 +198,8 @@ passage-level) citations; current ticker map/company name used for historical ru
 "as originally reported" mode not implemented; synchronous research endpoint;
 per-process rate limiting; PostgreSQL untested; numeric checker does not verify
 direction words ("rose"/"fell").
+v0.2: no consensus or market-price source (no surprises/reactions); judgmental importance
+weights; macro intraday times from official schedules (dates confirmed); calendars not
+versioned historically (briefings withhold calendar entries first observed after the cutoff —
+`EventStore.schedule_known_at`); 8-K text not parsed (item metadata only); CORPORATE_GUIDANCE reserved
+(no source); EDGAR dissemination lag not modelled.
