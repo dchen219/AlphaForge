@@ -269,5 +269,239 @@ def serve(host: str = "127.0.0.1", port: int = 8000, offline: Offline = False) -
     uvicorn.run("finance_agent.interfaces.asgi:app", host=host, port=port)
 
 
+# ============================================================== v0.2 event intelligence
+
+events_app = typer.Typer(help="Financial events: ingest, list, inspect, calendar.", no_args_is_help=True)
+briefing_app = typer.Typer(help="Daily intelligence briefings.", no_args_is_help=True)
+app.add_typer(events_app, name="events")
+app.add_typer(briefing_app, name="briefing")
+
+
+def _date(value: str | None, name: str):
+    from datetime import date as _d
+
+    if value is None:
+        return None
+    try:
+        return _d.fromisoformat(value)
+    except ValueError:
+        _fail(ValueError(f"Invalid {name} {value!r}; use YYYY-MM-DD."))
+
+
+def _window_start(value: str | None):
+    from finance_agent.timeutil import parse_window_start
+
+    try:
+        return parse_window_start(value)
+    except ValueError:
+        _fail(ValueError(f"Invalid --from {value!r}; use YYYY-MM-DD or ISO 8601."))
+
+
+@events_app.command("ingest")
+def events_ingest(
+    source: Annotated[
+        list[str] | None, typer.Option("--source", "-s", help="sec | fomc | macro | all (repeatable)")
+    ] = None,
+    as_of: AsOf = None,
+    start: Annotated[
+        str | None, typer.Option("--start", help="Earliest date (YYYY-MM-DD); default 120 days back.")
+    ] = None,
+    ticker: Annotated[
+        list[str] | None, typer.Option("--ticker", "-t", help="SEC tickers (repeatable)")
+    ] = None,
+    offline: Offline = False,
+) -> None:
+    """Ingest events from official sources (manual / scheduler-invoked; no daemon)."""
+    from finance_agent.events.service import SOURCES, EventIngestor
+
+    requested = source or ["all"]
+    sources = list(SOURCES) if "all" in requested else requested
+    bad = [x for x in sources if x not in SOURCES]
+    if bad:
+        _fail(ValueError(f"Unknown source(s) {bad}; choose from {list(SOURCES)} or 'all'."))
+    ctx = _ctx(offline, llm=False)
+    report = EventIngestor(ctx).run(
+        sources, as_of=_as_of(as_of), start=_date(start, "--start"), tickers=ticker
+    )
+    for name, stats in report.per_source.items():
+        if "error" in stats:
+            console.print(f"[red]{name}: FAILED[/] {redact(stats['error'])}")
+        else:
+            console.print(
+                f"{name}: inserted={stats['inserted']} updated={stats['updated']} unchanged={stats['unchanged']} "
+                f"sources_added={stats['sources_added']} conflicts={len(stats['conflicts'])}"
+            )
+    if not report.ok:
+        raise typer.Exit(code=1)
+
+
+def _events_table(evs, title: str) -> None:
+    from finance_agent.timeutil import ET
+
+    t = Table(
+        "Available/Scheduled (ET)",
+        "Type",
+        "Subtype",
+        "Status",
+        "Importance",
+        "Title",
+        "Event ID",
+        title=title,
+    )
+    for e in evs:
+        when = e.available_at or e.scheduled_for
+        score = f"{e.importance_level or '-'} {e.importance_score if e.importance_score is not None else ''}"
+        t.add_row(
+            when.astimezone(ET).strftime("%Y-%m-%d %H:%M") if when else "-",
+            str(e.event_type),
+            str(e.event_subtype),
+            str(e.event_status),
+            score,
+            e.title[:70],
+            e.event_id,
+        )
+    console.print(t)
+
+
+@events_app.command("list")
+def events_list(
+    start: Annotated[
+        str | None, typer.Option("--from", help="Window start (available_at), YYYY-MM-DD or ISO")
+    ] = None,
+    end: Annotated[
+        str | None, typer.Option("--to", help="Window end (available_at), YYYY-MM-DD or ISO")
+    ] = None,
+    as_of: AsOf = None,
+    category: Annotated[list[str] | None, typer.Option("--category", "-c")] = None,
+    ticker: Annotated[str | None, typer.Option("--ticker")] = None,
+    level: Annotated[
+        list[str] | None, typer.Option("--level", help="HIGH | MEDIUM | LOW | INSUFFICIENT_DATA")
+    ] = None,
+    limit: Annotated[int, typer.Option(min=1, max=1000)] = 100,
+    offline: Offline = False,
+    output: Annotated[str, typer.Option("--format", help="table | json")] = "table",
+) -> None:
+    """List events that became available in a window (optionally as of a historical cutoff)."""
+    from finance_agent.events.store import EventStore
+
+    ctx = _ctx(offline, llm=False)
+    evs = EventStore(ctx.db).query(
+        as_of=_as_of(as_of),
+        start=_window_start(start),
+        end=_as_of(end),
+        categories=[c.upper() for c in category] if category else None,
+        ticker=ticker,
+        levels=[x.upper() for x in level] if level else None,
+        limit=limit,
+    )
+    if output == "json":
+        sys.stdout.write(json.dumps([e.model_dump(mode="json") for e in evs], indent=2) + "\n")
+        return
+    _events_table(evs, f"{len(evs)} events")
+
+
+@events_app.command("show")
+def events_show(event_id: str, offline: Offline = False) -> None:
+    """Show one event with its sources, comparisons and importance components (JSON)."""
+    from finance_agent.events.store import EventStore
+
+    store = EventStore(_ctx(offline, llm=False).db)
+    ev = store.get(event_id)
+    if ev is None:
+        _fail(FinanceAgentError(f"Event {event_id} not found"))
+    out = ev.model_dump(mode="json")
+    out["sources"] = [
+        {
+            "source_name": r.source_name,
+            "role": r.role,
+            "url": r.source_url,
+            "snapshot_sha256": r.snapshot_sha256,
+            "excerpt": r.excerpt,
+        }
+        for r in store.sources(event_id)
+    ]
+    sys.stdout.write(json.dumps(out, indent=2) + "\n")
+
+
+@events_app.command("calendar")
+def events_calendar(
+    start: Annotated[str | None, typer.Option("--from")] = None,
+    end: Annotated[str | None, typer.Option("--to")] = None,
+    offline: Offline = False,
+) -> None:
+    """Scheduled releases/meetings (calendar only - not evidence that anything occurred)."""
+    from datetime import timedelta
+
+    from finance_agent.events.store import EventStore
+    from finance_agent.timeutil import utcnow
+
+    s = _window_start(start) or utcnow()
+    e = _as_of(end) or s + timedelta(days=30)
+    _events_table(
+        EventStore(_ctx(offline, llm=False).db).calendar(start=s, end=e), "Scheduled (not occurred)"
+    )
+
+
+@briefing_app.command("daily")
+def briefing_daily(
+    date: Annotated[str | None, typer.Option("--date", help="New York date; cutoff 23:59:59 ET")] = None,
+    as_of: AsOf = None,
+    window_hours: Annotated[int | None, typer.Option("--window-hours", min=1, max=744)] = None,
+    no_llm: Annotated[bool, typer.Option("--no-llm", help="Deterministic template narrative only.")] = False,
+    offline: Offline = False,
+    ingest: Annotated[
+        bool, typer.Option("--ingest/--no-ingest", help="Ingest sources for the window first.")
+    ] = True,
+    output: Annotated[str, typer.Option("--format", help="markdown | json")] = "markdown",
+    save: Annotated[Path | None, typer.Option(help="Also write the briefing to this file.")] = None,
+) -> None:
+    """Generate the daily intelligence briefing (fully functional without an LLM)."""
+    from datetime import timedelta
+
+    from finance_agent.events.briefing import BriefingRequest
+    from finance_agent.events.service import EventIngestor
+    from finance_agent.workflows.briefing import BriefingWorkflow, resolve_window
+
+    if date:
+        _date(date, "--date")
+    try:
+        req = BriefingRequest(date=date, as_of=_as_of(as_of), window_hours=window_hours, use_llm=not no_llm)
+    except ValueError as exc:
+        _fail(exc)
+    ctx = _ctx(offline, llm=not no_llm)
+    if ingest:
+        cutoff, start = resolve_window(req)
+        rep = EventIngestor(ctx).run(as_of=cutoff, start=(start - timedelta(days=45)).date())
+        for e in rep.errors:
+            err.print(f"[yellow]ingestion warning:[/] {redact(e)}")
+    state = BriefingWorkflow(ctx).run(req)
+    if state.get("error"):
+        err.print(f"[bold red]Briefing failed:[/] {redact(state['error'])}")
+        raise typer.Exit(code=1)
+    r = state["report"]
+    text = r.model_dump_json(indent=2) if output == "json" else r.markdown
+    sys.stdout.buffer.write((text + "\n").encode("utf-8"))
+    if save:
+        save.write_text(text, encoding="utf-8")
+    err.print(
+        f"[dim]briefing_id={r.briefing_id} verification={r.verification.status} llm={r.llm['status']}[/]"
+    )
+
+
+@briefing_app.command("show")
+def briefing_show(briefing_id: str, output: Annotated[str, typer.Option("--format")] = "markdown") -> None:
+    """Show a stored briefing."""
+    from finance_agent.events.store import BriefingStore
+
+    rec = BriefingStore(_ctx(False, llm=False).db).get(briefing_id)
+    if rec is None:
+        _fail(FinanceAgentError(f"Briefing {briefing_id} not found"))
+    if output == "json":
+        text = json.dumps(rec.report_json, indent=2)
+    else:
+        text = rec.markdown or f"status={rec.status} error={rec.error}"
+    sys.stdout.buffer.write((text + "\n").encode("utf-8"))
+
+
 def main() -> None:  # pragma: no cover
     app()
