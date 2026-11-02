@@ -60,7 +60,8 @@ def create_app(settings: Settings | None = None, ctx: AppContext | None = None) 
         configure_logging(settings.log_level, settings.log_json)
         app.state.ctx = ctx or AppContext(settings)
         yield
-        app.state.ctx.close()
+        if ctx is None:  # only close a context this app created (an injected one is the caller's)
+            app.state.ctx.close()
 
     app = FastAPI(
         title="AlphaForge",
@@ -139,8 +140,10 @@ def create_app(settings: Settings | None = None, ctx: AppContext | None = None) 
         return _run_out(ctx, run_id)
 
     from finance_agent.interfaces.events_api import router as events_router
+    from finance_agent.interfaces.market_api import router as market_router
 
     app.include_router(events_router)  # v0.2 event intelligence routes
+    app.include_router(market_router)  # v0.3-A market data routes
     return app
 
 
