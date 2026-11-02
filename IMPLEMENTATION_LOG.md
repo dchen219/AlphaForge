@@ -276,3 +276,119 @@ code** (11 failing / 5 control cases passing) and pass after the fix.
 
 Unchanged from the build log, plus: the numeric checker does not validate direction words
 ("rose"/"fell"); rate limiting and conflict retry are per process.
+
+---
+
+# v0.2 — Market Intelligence & Event Detection (2026-11-01/02)
+
+Branch `feat/v0.2-market-intelligence` from `master` @ `4450f41` (local = origin, clean).
+Not merged to `master`.
+
+## Phase 0 — inspection and source investigation
+
+Repository identity, clean tree and remote verified; 164 baseline tests reproduced.
+Source formats and access policies investigated **before** writing parsers:
+
+| Source | Finding |
+|---|---|
+| SEC submissions | 8-K `items` column present; `acceptanceDateTime` is **true UTC** — verified against EDGAR SGML `ACCEPTANCE-DATETIME` (ET) for an EDT (16:04:44 → 20:04:44Z) and an EST filing (16:07:34 → 21:07:34Z) |
+| Federal Reserve | no robots.txt; RSS `pubDate` exact (18:00 GMT = 2 p.m. EDT); statement text states the decision explicitly; calendar lists statement links (future meetings have none) |
+| BLS | `bls.ics` machine-readable calendar with TZID US-Eastern 08:30; robots-permitted |
+| BEA | schedule page lists upcoming releases only (no history); robots-permitted |
+| ALFRED | keyless `alfredgraph.csv?id=&vintage_date=` serves real historical vintages; header echoes the requested date (no hidden vintage date); one vintage per request; robots crawl-delay 2 s |
+
+Consequence: v0.2 needs **no FRED key** — real first-release values and revisions come from
+ALFRED vintages; release dates are confirmed by comparing vintages D−1 and D.
+
+## Phases 1–7 — implementation
+
+New: `events/{schemas,store,comparisons,importance,transmission,briefing,service}.py`,
+`events/sources/{calendars,fomc,macro,sec_events}.py`, `workflows/briefing.py`,
+`interfaces/events_api.py`, migration `0003_event_intelligence`, CLI groups `events` and
+`briefing`, `scripts/build_v02_fixtures.py`.
+Changed (additive, v0.1 behaviour preserved): `http.py` (fixture mapping for new hosts,
+`FetchResult.text`, no rate limiting offline), `providers/base.py` (`get_bytes`; `get_json`
+built on it), `providers/sec.py` (`submissions_raw`), `config/settings.py` (rate limits,
+TTLs, `INGEST_ADMIN_TOKEN`, `MACRO_USE_CONFIRMED_SCHEDULED_TIME`), `services.py` (rate
+limits), `storage/models.py` (4 tables), `timeutil.py` (`parse_window_start`),
+`verification/checks.py` (strip timestamps/periods/item codes/ids; more count nouns),
+`interfaces/api.py` (mounts router), `interfaces/cli.py`.
+
+## Real fixtures
+
+Recorded by running the actual ingestion code live through a recording transport
+(window 2025-07-01 → 2026-11-01): 356 files, 362 ALFRED requests, ~15 min, 0 errors;
+435 events (SEC 136, FOMC 33, macro 266). SEC submissions fixtures were re-recorded with
+8-K forms, `items` and acceptance times (companyfacts unchanged); all v0.1 tests still pass.
+Offline macro replay probes exactly the recorded window (`MANIFEST.json → event_window`).
+Synthetic data is used only inline in tests for edge cases (cancelled/unconfirmed release,
+amendments, DST strings, conflicting values, consensus), always labelled SYNTHETIC.
+
+## Defects found during v0.2 and fixed (each with a regression test)
+
+1. Calendar parser matched "GDP by County" as a national GDP release → tightened pattern.
+2. FOMC calendar row for the Aug-2025 *Statement on Longer-Run Goals* (no rate decision):
+   was titled as a target-range statement and would have become the comparison base for the
+   next decision → document title used; only statements stating a range serve as base.
+3. SQLite stores wall-clock time: event timestamps are normalized to UTC on write and query.
+4. Offline replay applied live rate limits (ALFRED 0.5/s) → ~12 min per ingestion; offline
+   now unthrottled (2.8 s).
+5. 8-K descriptions listed bare item codes ("2.02"), correctly rejected by the numeric
+   verifier → written as "Item 2.02 …".
+6. Date-only window starts (`from=2026-10-28`) meant 23:59:59 → `parse_window_start` (00:00 NY).
+7. Importance v0.2.0 calibration on real data: normalizing over available components let a
+   10-K (63 HIGH) outrank an FOMC hold (58) and small-base payroll revisions (83) outrank a rate
+   hike (80). v0.2.1: fixed denominator (only missing consensus excluded), N/A magnitude = 0,
+   revisions at half weight with sd-scaled magnitude, INSUFFICIENT_DATA not ranked.
+
+## Test results (executed 2026-11-02)
+
+| Suite | Result |
+|---|---|
+| offline `uv run pytest` | **259 passed, 8 skipped** (unit 146, integration 89, replay 24; skips = opt-in live) |
+| original v0.1 test files | 164 passed (unchanged) |
+| live `-m live` (SEC UA, no keys) | **7 passed, 2 skipped** — SEC×5, v0.1 live research, v0.2 live ingestion+briefing; skipped: keyed FRED API, Anthropic (no credit) |
+| ruff check / format | clean (98 files) |
+| Alembic | head `0003_event_intelligence`; check clean; full downgrade/upgrade; pre-v0.2 DB upgraded in place |
+| CLI smoke | 12 commands incl. error paths — correct exit codes; v0.1 commands intact |
+| API smoke (uvicorn) | /events, /events/important, /events/calendar, /events/{id}, POST/GET briefing, protected ingest (403 without token), v0.1 endpoints — all expected codes |
+
+## Performance and cost (measured)
+
+Offline full ingestion 2.8 s; offline test suite 34 s; live briefing for 2026-10-28 including
+fresh ingestion 59 s (42 snapshots); fixture recording ~15 min (ALFRED crawl-delay bound).
+LLM API cost: $0 — no paid LLM calls were made (no credit); the deterministic path was used.
+
+## Acceptance criteria
+
+| # | Criterion | Status |
+|---|---|---|
+| 1 | v0.1 suite passing | Met (164/164) |
+| 2 | builds and launches | Met |
+| 3 | structured, queryable event DB | Met |
+| 4 | macro ingestion with verified metadata or labelled fixtures | Met — real ALFRED/BLS/BEA, live-verified |
+| 5 | SEC events normalized and deduplicated | Met |
+| 6 | deterministic, explainable importance | Met (judgmental weights, documented) |
+| 7 | missing consensus handled | Met (`consensus_status=unavailable`, excluded from score) |
+| 8 | briefings without an LLM | Met |
+| 9 | numbers traceable to stored observations | Met (verifier) |
+| 10 | briefings carry source references | Met |
+| 11 | replay respects availability | Met (24 replay tests incl. negative) |
+| 12 | no scheduled-but-unpublished event reported as occurred | Met |
+| 13 | idempotent ingestion | Met |
+| 14 | migrations pass | Met |
+| 15 | new API/CLI work | Met |
+| 16 | existing API/CLI compatible | Met |
+| 17 | no credentials/local DBs committed | Met (audit before commit) |
+| 18 | accurate test reporting | Met |
+| — | LLM-assisted briefing narrative | Implemented + tested with fake provider; **live unverified** (no credit) |
+
+## Limitations
+
+No consensus-forecast or market-price source (no surprises, no observed reactions);
+judgmental, unvalidated importance weights; macro intraday times taken from official
+schedules (dates confirmed by vintages); calendars not versioned (historical runs see today's
+schedule, affecting only SCHEDULED entries); 8-K press-release text not parsed; guidance
+category reserved without a source; EDGAR dissemination lag not modelled; BEA historical
+release dates found by bisection (one ALFRED request per step); ingestion is synchronous and
+single-process (no daemon by design); keyed FRED API and Claude narrative unverified live.
