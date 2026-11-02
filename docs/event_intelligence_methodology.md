@@ -102,7 +102,10 @@ three periods are counted on the release event (`revised_observations_in_release
 * Clusters: one economic event, several disclosures. An earnings 8-K (item 2.02) and the
   10-Q/10-K accepted within 3 days before or after it (nearest 8-K wins) share
   `CL-EARN-<cik>-<accession of the earliest member>` — named after the earliest member so a
-  historical view never reveals a later filing's accession; indicators from
+  historical view never reveals a later filing's accession. Links are derived fields that may
+  be recomputed on re-ingestion, so point-in-time queries (`EventStore.query(as_of=…)`) mask
+  `related_event_id`/`supersedes_event_id` targets available after the cutoff and show an
+  earnings cluster only once its earnings release is available; indicators from
   one release share `CL-<group>-<date>`; FOMC `CL-FOMC-<date>`. Briefings rank a cluster
   once, by its highest-scoring member — repetition never adds importance.
 

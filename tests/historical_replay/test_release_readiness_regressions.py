@@ -117,3 +117,23 @@ def test_unrelated_periodic_filing_is_not_clustered():
         e.source_document_id: e for e, _ in SecEventBuilder("SYN", "Syn").filing_events([EIGHTK, far], REF)
     }
     assert evs[far.accession].event_cluster_id is None
+
+
+def test_point_in_time_query_masks_links_to_later_filings(tmp_path):
+    """Integration review (PR #1): after full ingestion the 10-Q stores a link to, and an earnings
+    cluster label implying, an 8-K accepted AFTER it. A historical query must not reveal either."""
+    from finance_agent.storage.db import Database
+
+    db = Database(f"sqlite:///{(tmp_path / 'pit.db').as_posix()}")
+    db.create_all()
+    store = EventStore(db)
+    for ev, _ in SecEventBuilder("SYN", "Syn").filing_events([TENQ, EIGHTK], REF):  # ingested later
+        store.upsert(ev)
+    between = datetime(2026, 10, 28, 20, 2, tzinfo=UTC)
+    (q,) = store.query(as_of=between, limit=10)
+    assert q.source_document_id == TENQ.accession
+    assert q.related_event_id is None and q.event_cluster_id is None
+    after = {e.source_document_id: e for e in store.query(as_of=EIGHTK.accepted_at, limit=10)}
+    assert after[TENQ.accession].event_cluster_id == after[EIGHTK.accession].event_cluster_id
+    assert after[TENQ.accession].related_event_id == after[EIGHTK.accession].event_id
+    assert store.get(q.event_id).related_event_id is not None  # stored state untouched

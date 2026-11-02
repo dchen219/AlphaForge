@@ -12,6 +12,7 @@ from finance_agent.events.schemas import (
     Comparison,
     EconomicChannel,
     EventStatus,
+    EventSubtype,
     FinancialEvent,
 )
 from finance_agent.storage.db import Database, retry_on_conflict
@@ -327,10 +328,56 @@ class EventStore:
         )
         with self.db.session() as s:
             rows = [record_to_event(r) for r in s.scalars(q).all()]
+        if as_of is not None:
+            rows = self._point_in_time_links(rows, as_of)
         if ticker:
             t = ticker.upper()
             rows = [e for e in rows if t in e.affected_entities]
         return rows[:limit]
+
+    def _point_in_time_links(self, rows: list[FinancialEvent], as_of: datetime) -> list[FinancialEvent]:
+        """Mask derived links that would reveal information published after ``as_of``.
+
+        Links/clusters are recomputed on re-ingestion, so a stored event can point at a later
+        event (e.g. a 10-Q accepted minutes before its earnings 8-K). In a point-in-time view:
+        ``related_event_id``/``supersedes_event_id`` to events available after the cutoff are
+        cleared, and an earnings cluster is shown only once its earnings release is available.
+        """
+        cut = _utc(as_of)
+        targets = {i for e in rows for i in (e.related_event_id, e.supersedes_event_id) if i}
+        earn = {e.event_cluster_id for e in rows if (e.event_cluster_id or "").startswith("CL-EARN-")}
+        with self.db.session() as s:
+            future = (
+                set(
+                    s.scalars(
+                        select(FinancialEventRecord.event_id)
+                        .where(FinancialEventRecord.event_id.in_(targets))
+                        .where(FinancialEventRecord.available_at > cut)
+                    ).all()
+                )
+                if targets
+                else set()
+            )
+            earn_ok = (
+                set(
+                    s.scalars(
+                        select(FinancialEventRecord.event_cluster_id)
+                        .where(FinancialEventRecord.event_cluster_id.in_(earn))
+                        .where(FinancialEventRecord.event_subtype == EventSubtype.EARNINGS_RELEASE)
+                        .where(FinancialEventRecord.available_at <= cut)
+                    ).all()
+                )
+                if earn
+                else set()
+            )
+        for e in rows:
+            if e.related_event_id in future:
+                e.related_event_id = None
+            if e.supersedes_event_id in future:
+                e.supersedes_event_id = None
+            if e.event_cluster_id in earn and e.event_cluster_id not in earn_ok:
+                e.event_cluster_id = None
+        return rows
 
     def calendar(self, *, start: datetime, end: datetime, limit: int = 500) -> list[FinancialEvent]:
         """Scheduled entries with ``scheduled_for`` in (start, end]. Not evidence of occurrence."""

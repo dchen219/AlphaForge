@@ -425,3 +425,13 @@ Defects fixed (regression tests: `tests/historical_replay/test_release_readiness
    present in the recorded real data; covered by synthetic tests.
 3. Source-link timestamps are normalized to UTC before storage (SQLite drops offsets).
 4. `tests/integration/test_live.py` reformatted (ruff format check failed).
+
+### PR #1 integration review (2026-11-02)
+
+Found while re-verifying point-in-time safety before merge (medium; introduced by audit fix 2,
+synthetic scenario only): after full ingestion, a 10-Q accepted minutes before its earnings
+8-K stored `related_event_id` → the later 8-K and a `CL-EARN-…` label, both visible to a
+historical query between the two acceptances. Fix: `EventStore.query(as_of=…)` masks links to
+events available after the cutoff and hides earnings clusters whose earnings release is not
+yet available (stored state unchanged). Regression:
+`test_point_in_time_query_masks_links_to_later_filings` (fails on the previous code).
