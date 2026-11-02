@@ -22,11 +22,19 @@ from finance_agent.errors import (
     NotFoundError,
     ProviderError,
 )
+from finance_agent.events.service import fixture_event_window
 from finance_agent.schemas.macro import MacroSeriesResponse
-from finance_agent.schemas.research import ResearchReportOut, ResearchRequest, ResearchRunOut
+from finance_agent.schemas.research import (
+    ResearchReportOut,
+    ResearchRequest,
+    ResearchRunList,
+    ResearchRunOut,
+    ResearchRunSummary,
+)
 from finance_agent.services import AppContext, CompanyOverview, FinancialsResponse
-from finance_agent.timeutil import AVAILABILITY_POLICY, parse_as_of, utcnow
-from finance_agent.workflows.company_research import CompanyResearchWorkflow
+from finance_agent.timeutil import AVAILABILITY_POLICY, ensure_aware, parse_as_of, utcnow
+from finance_agent.workflows.briefing import BRIEFING_NODES
+from finance_agent.workflows.company_research import RESEARCH_NODES, CompanyResearchWorkflow
 
 log = logging.getLogger(__name__)
 
@@ -50,6 +58,8 @@ class HealthResponse(BaseModel):
     credentials_configured: dict[str, bool]
     llm_provider: str
     availability_policy: str
+    # Offline only: the window the real v0.2 event fixtures were recorded over.
+    fixture_event_window: dict[str, str] | None = None
 
 
 def create_app(settings: Settings | None = None, ctx: AppContext | None = None) -> FastAPI:
@@ -93,7 +103,11 @@ def create_app(settings: Settings | None = None, ctx: AppContext | None = None) 
     @app.get("/health", response_model=HealthResponse)
     def health(ctx: Ctx) -> HealthResponse:
         db_ok = ctx.db.ping()
+        window = fixture_event_window(ctx.settings.fixtures_dir) if ctx.http.is_fixture else None
         return HealthResponse(
+            fixture_event_window={"start": window[0].isoformat(), "as_of": window[1].isoformat()}
+            if window
+            else None,
             status="ok" if db_ok else "degraded",
             version=__version__,
             time=utcnow(),
@@ -134,6 +148,36 @@ def create_app(settings: Settings | None = None, ctx: AppContext | None = None) 
         state = CompanyResearchWorkflow(ctx).run(req)
         return _run_out(ctx, state["run_id"])
 
+    @app.get("/research", response_model=ResearchRunList)
+    def list_research(
+        ctx: Ctx,
+        limit: Annotated[int, Query(ge=1, le=200)] = 50,
+        status: Annotated[str | None, Query(pattern=r"^(running|completed|failed)$")] = None,
+    ) -> ResearchRunList:
+        """Stored research runs, most recent first (read-only)."""
+        runs = [
+            ResearchRunSummary(
+                run_id=run.id,
+                status=run.status,
+                question=run.question,
+                ticker=run.ticker,
+                as_of=ensure_aware(run.as_of) if run.as_of else None,
+                use_llm=(run.params or {}).get("use_llm"),
+                created_at=ensure_aware(run.created_at),
+                completed_at=ensure_aware(run.completed_at) if run.completed_at else None,
+                error=run.error,
+                verification_status=ver,
+                steps_executed=len(run.steps or []),
+            )
+            for run, ver in ctx.repo.list_runs(limit, status)
+        ]
+        return ResearchRunList(count=len(runs), runs=runs)
+
+    @app.get("/workflows")
+    def workflows() -> dict[str, list[str]]:
+        """Planned node order of each bounded LangGraph workflow (``fail`` handles any error)."""
+        return {"company_research": list(RESEARCH_NODES), "daily_briefing": list(BRIEFING_NODES)}
+
     @app.get("/research/{run_id}", response_model=ResearchRunOut)
     def get_research(run_id: Annotated[str, Path(pattern=r"^[0-9a-f\-]{36}$")], ctx: Ctx) -> ResearchRunOut:
         return _run_out(ctx, run_id)
@@ -159,4 +203,6 @@ def _run_out(ctx: AppContext, run_id: str) -> ResearchRunOut:
         error=run.error,
         steps=run.steps or [],
         report=ResearchReportOut.model_validate(rep.report_json) if rep else None,
+        as_of=ensure_aware(run.as_of) if run.as_of else None,
+        params=run.params or {},
     )

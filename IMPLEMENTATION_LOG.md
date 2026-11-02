@@ -435,3 +435,27 @@ historical query between the two acceptances. Fix: `EventStore.query(as_of=…)`
 events available after the cutoff and hides earnings clusters whose earnings release is not
 yet available (stored state unchanged). Regression:
 `test_point_in_time_query_masks_links_to_later_filings` (fails on the previous code).
+
+## Agent testing console (branch `feat/agent-testing-ui`, 2026-11-02)
+
+Base: master @ 07cbb0f (PR #1 merged). Local Streamlit console over the real FastAPI app;
+details in `docs/agent_testing_ui.md`. No new financial models, agents, providers or trading.
+
+- Dependencies: `streamlit 1.66.1` in a new `ui` dependency group (default-groups dev+ui);
+  core package unchanged (pandas/NumPy only arrive via Streamlit).
+- Backend (read-only, additive): `events/replay.py` (`replay_audit`; `calendar_visibility`
+  extracted verbatim from `BriefingWorkflow.retrieve`); `GET /events/replay`, `GET /research`,
+  `GET /intelligence/briefings`, `GET /workflows`; `GET /events/{id}?as_of=` (404 before
+  availability, masked links, `revision_history`); `subtype` filter on `GET /events`; optional
+  run metadata fields; `/health.fixture_event_window` (offline). `EventStore.revision_chain`,
+  `mask_future_links`; `BriefingStore.recent`; `Repository.list_runs`. No schema change (alembic
+  check clean).
+- Instrumentation: node wrappers record `started_at`/`finished_at`; node order exported as
+  `RESEARCH_NODES` / `BRIEFING_NODES`. Workflow logic unchanged.
+- Mode: offline/live is a server property; the UI picks one of two loopback backends and refuses
+  to send requests when `/health.offline_mode` disagrees with the selection.
+- Tests: +78 (client with mocked HTTP, validation, origin labels, Streamlit AppTest pages against
+  a real loopback API over recorded fixtures, replay/cutoff integrity incl. SYNTHETIC revision and
+  masked-link cases). Suite: 345 passed, 9 skipped (live).
+- Environment note: Windows Application Control blocked `.venv\Scripts\pytest.exe` after
+  `uv sync`; `python -m pytest` works.

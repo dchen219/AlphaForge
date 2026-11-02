@@ -10,7 +10,8 @@ Status: **v0.1 — Financial Research Foundation, frozen** on `master` (baseline
 **v0.2 — Market Intelligence & Event Detection** implemented on branch
 `feat/v0.2-market-intelligence` (in review; not merged). Roadmap: v0.3 Event-to-Asset Impact
 Engine · v0.4 Portfolio Intelligence · v0.5 Quantitative Research Agents (not started — do not
-start without an explicit request). Event semantics: `docs/event_intelligence_methodology.md`. Detailed history: `IMPLEMENTATION_LOG.md`. Accounting rules:
+start without an explicit request). Local Streamlit testing console on branch
+`feat/agent-testing-ui` (`docs/agent_testing_ui.md`). Event semantics: `docs/event_intelligence_methodology.md`. Detailed history: `IMPLEMENTATION_LOG.md`. Accounting rules:
 `docs/accounting_methodology.md` (source of truth for data semantics).
 
 ## What this is
@@ -72,7 +73,11 @@ apps/api/main.py   thin ASGI entry
                 importance, transmission, briefing, service (ingestion), sources/{sec_events,fomc,macro,calendars}
   workflows/briefing.py   bounded LangGraph: parse→window→retrieve→resolve→compare→rank→select→evidence→explain→verify→persist
   interfaces/events_api.py  /events*, /intelligence/* routes
-tests/{unit,integration,historical_replay,fixtures}
+  events/replay.py   point-in-time visibility audit + calendar_visibility (shared with briefing workflow)
+  ui/           testing console: client.py (typed httpx, loopback-only), validation.py, labels.py
+                (origin banners), components.py, pages/ (5 pages, each render()); no domain logic
+apps/ui/app.py     Streamlit entry (st.navigation); .streamlit/config.toml binds 127.0.0.1
+tests/{unit,integration,historical_replay,ui,fixtures}
 scripts/build_fixtures.py       v0.1 fixtures (SEC real, FRED synthetic)
 scripts/build_v02_fixtures.py   records REAL v0.2 fixtures by running ingestion live (~15 min)
 ```
@@ -101,6 +106,19 @@ uv run finance-agent events list --from 2026-10-01 --to 2026-11-01 [--as-of …]
 uv run finance-agent events show EV-… | events calendar --from … --to …
 uv run finance-agent briefing daily --date 2026-10-28 [--no-llm] [--offline] [--no-ingest] [--format json]
 ```
+
+Testing console (Streamlit in the `ui` dependency group; read-only, never ingests):
+
+```bash
+uv run finance-agent serve --offline --port 8000        # ALPHAFORGE_API_URL
+uv run finance-agent serve --port 8001                  # live, optional: ALPHAFORGE_LIVE_API_URL
+uv run python -m streamlit run apps/ui/app.py           # 127.0.0.1:8501
+```
+
+On Windows hosts with Application Control, `.venv\Scripts\*.exe` shims (pytest, streamlit) may
+be blocked: use `uv run python -m pytest` / `python -m streamlit`. Workflow steps record
+`started_at`/`finished_at` (observability only). Read-only console routes: `GET /events/replay`,
+`/research`, `/intelligence/briefings`, `/workflows`; `/events/{id}?as_of=`.
 
 Live SEC requires `SEC_USER_AGENT` (name + contact). Offline mode serves `tests/fixtures`
 (and, in v0.2, replays macro probing over the recorded window in `MANIFEST.json → event_window`;

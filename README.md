@@ -64,6 +64,9 @@ uv run finance-agent briefing daily --date 2026-10-28 --no-llm                  
 
 # API
 uv run finance-agent serve [--offline]    # http://127.0.0.1:8000/docs
+
+# Local agent-testing console (Streamlit; needs the API running) — docs/agent_testing_ui.md
+uv run python -m streamlit run apps/ui/app.py    # http://127.0.0.1:8501
 ```
 
 Scheduling: v0.2 runs no daemon. `finance-agent briefing daily` (ingest + brief, exit code
