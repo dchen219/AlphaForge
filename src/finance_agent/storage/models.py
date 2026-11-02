@@ -205,3 +205,112 @@ class ResearchReport(Base):
     markdown: Mapped[str] = mapped_column(Text)
     verification_status: Mapped[str] = mapped_column(String(32))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+# ============================================================== v0.2 event intelligence
+
+
+class FinancialEventRecord(Base):
+    """A normalized financial event. ``canonical_event_key`` is the deduplication identity.
+
+    Published values are never overwritten: a revision is a new row that supersedes the
+    earlier one (``supersedes_event_id``), so first releases remain available for replay.
+    """
+
+    __tablename__ = "financial_events"
+    __table_args__ = (
+        UniqueConstraint("canonical_event_key", name="uq_event_canonical_key"),
+        Index("ix_event_available_at", "available_at"),
+        Index("ix_event_type_status", "event_type", "event_status"),
+        Index("ix_event_scheduled_for", "scheduled_for"),
+    )
+
+    event_id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    canonical_event_key: Mapped[str] = mapped_column(String(255))
+    event_type: Mapped[str] = mapped_column(String(32))
+    event_subtype: Mapped[str] = mapped_column(String(48))
+    event_status: Mapped[str] = mapped_column(String(16))
+    title: Mapped[str] = mapped_column(Text)
+    description: Mapped[str | None] = mapped_column(Text)
+    source_name: Mapped[str] = mapped_column(String(64))
+    source_url: Mapped[str | None] = mapped_column(Text)
+    source_document_id: Mapped[str | None] = mapped_column(String(255))
+    source_snapshot_hash: Mapped[str | None] = mapped_column(String(64))
+    data_origin: Mapped[str] = mapped_column(String(64))
+    affected_entities: Mapped[list] = mapped_column(JSON, default=list)
+    affected_industries: Mapped[list] = mapped_column(JSON, default=list)
+    occurred_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    scheduled_for: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    available_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    ingested_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    availability_precision: Mapped[str] = mapped_column(String(40))
+    series_id: Mapped[str | None] = mapped_column(String(64), index=True)
+    observation_period: Mapped[str | None] = mapped_column(String(16))
+    observation_date: Mapped[date | None] = mapped_column(Date)
+    value: Mapped[float | None] = mapped_column(Float)
+    previous_value: Mapped[float | None] = mapped_column(Float)
+    consensus_value: Mapped[float | None] = mapped_column(Float)
+    consensus_status: Mapped[str] = mapped_column(String(16))
+    unit: Mapped[str | None] = mapped_column(String(32))
+    revision_status: Mapped[str] = mapped_column(String(16))
+    importance_score: Mapped[float | None] = mapped_column(Float)
+    importance_level: Mapped[str | None] = mapped_column(String(20))
+    importance_components: Mapped[dict] = mapped_column(JSON, default=dict)
+    verification_status: Mapped[str] = mapped_column(String(20))
+    related_event_id: Mapped[str | None] = mapped_column(String(32))
+    supersedes_event_id: Mapped[str | None] = mapped_column(String(32))
+    event_cluster_id: Mapped[str | None] = mapped_column(String(64), index=True)
+    comparisons: Mapped[list] = mapped_column(JSON, default=list)
+    channels: Mapped[list] = mapped_column(JSON, default=list)
+    attributes: Mapped[dict] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class EventSourceRecord(Base):
+    """Raw source evidence for an event. Several sources may corroborate one event."""
+
+    __tablename__ = "event_sources"
+    __table_args__ = (UniqueConstraint("event_id", "source_key", name="uq_event_source"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    event_id: Mapped[str] = mapped_column(ForeignKey("financial_events.event_id"), index=True)
+    source_key: Mapped[str] = mapped_column(String(255))
+    source_name: Mapped[str] = mapped_column(String(64))
+    source_url: Mapped[str | None] = mapped_column(Text)
+    role: Mapped[str] = mapped_column(String(32))  # primary | corroborating | schedule | vintage
+    snapshot_id: Mapped[int | None] = mapped_column(ForeignKey("source_snapshots.id"))
+    snapshot_sha256: Mapped[str | None] = mapped_column(String(64))
+    retrieved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    excerpt: Mapped[str | None] = mapped_column(Text)  # verbatim source passage, if used
+
+
+class BriefingRecord(Base):
+    __tablename__ = "briefings"
+
+    briefing_id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    as_of: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    window_start: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    window_end: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    status: Mapped[str] = mapped_column(String(16))  # running | completed | failed
+    verification_status: Mapped[str | None] = mapped_column(String(32))
+    params: Mapped[dict] = mapped_column(JSON, default=dict)
+    steps: Mapped[list] = mapped_column(JSON, default=list)
+    report_json: Mapped[dict | None] = mapped_column(JSON)
+    markdown: Mapped[str | None] = mapped_column(Text)
+    error: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class BriefingEventRecord(Base):
+    __tablename__ = "briefing_events"
+    __table_args__ = (UniqueConstraint("briefing_id", "event_id", name="uq_briefing_event"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    briefing_id: Mapped[str] = mapped_column(ForeignKey("briefings.briefing_id"), index=True)
+    event_id: Mapped[str] = mapped_column(ForeignKey("financial_events.event_id"))
+    section: Mapped[str] = mapped_column(String(32))
+    rank: Mapped[int] = mapped_column(Integer)
+    importance_score: Mapped[float | None] = mapped_column(Float)

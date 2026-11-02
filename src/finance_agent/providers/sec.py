@@ -219,15 +219,19 @@ class SecProvider:
             raise UnknownTickerError(f"Ticker {t} not found in SEC company_tickers.json")
         return entry
 
-    def submissions(self, cik: str) -> tuple[CompanyProfile, list[FilingMeta], SnapshotRef]:
+    def submissions_raw(self, cik: str) -> tuple[Any, SnapshotRef]:
+        """Raw submissions JSON (shares the snapshot cache with ``submissions``)."""
         cik = pad_cik(cik)
-        payload, ref = self.fetcher.get_json(
+        return self.fetcher.get_json(
             source_key=f"submissions:{cik}",
             kind="submissions",
             url=SUBMISSIONS_URL.format(cik=cik),
             ttl=self.ttl_sec,
             description=f"SEC submissions CIK{cik}",
         )
+
+    def submissions(self, cik: str) -> tuple[CompanyProfile, list[FilingMeta], SnapshotRef]:
+        payload, ref = self.submissions_raw(cik)
         profile, filings = parse_submissions(payload)
         return profile, filings, ref
 
