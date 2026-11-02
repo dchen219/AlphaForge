@@ -36,6 +36,7 @@ class CachedFetcher:
         ttl: timedelta,
         description: str | None = None,
         use_cache: bool = True,
+        headers: dict[str, str] | None = None,
     ) -> tuple[Any, SnapshotRef]:
         content, ref = self.get_bytes(
             source_key=source_key,
@@ -45,6 +46,7 @@ class CachedFetcher:
             ttl=ttl,
             description=description,
             use_cache=use_cache,
+            headers=headers,
         )
         try:
             return json.loads(content), ref
@@ -61,6 +63,7 @@ class CachedFetcher:
         ttl: timedelta,
         description: str | None = None,
         use_cache: bool = True,
+        headers: dict[str, str] | None = None,
     ) -> tuple[bytes, SnapshotRef]:
         """Fetch raw bytes (HTML, CSV, ICS, XML, JSON) through the immutable snapshot store."""
         mode_prefix = "fixture" if self.http.is_fixture else "live"
@@ -70,7 +73,7 @@ class CachedFetcher:
                 ref, content = cached
                 log.info("snapshot cache hit", extra={"source_key": source_key, "sha256": ref.sha256})
                 return content, ref
-        result = self.http.get(url, params=params)
+        result = self.http.get(url, params=params, headers=headers)
         ref = self.snapshots.save(
             provider=self.provider,
             source_key=source_key,

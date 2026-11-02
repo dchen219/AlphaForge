@@ -54,6 +54,17 @@ class Settings(BaseSettings):
     # Set false for the strict v0.1 next-day policy.
     macro_use_confirmed_scheduled_time: bool = True
 
+    # v0.3-A market data (Alpaca Market Data API; keys never logged or stored).
+    alpaca_api_key_id: SecretStr | None = None
+    alpaca_api_secret_key: SecretStr | None = None
+    alpaca_data_url: str = "https://data.alpaca.markets"
+    # 'sip' = consolidated tape (all US exchanges); 'iex' = IEX only (partial volume).
+    alpaca_feed: str = "sip"
+    alpaca_max_requests_per_second: float = 3.0  # free plan: 200 requests/minute
+    cache_ttl_market_bars_hours: float = 12
+    # Extreme daily move flagged for review (never deleted): fraction, e.g. 0.25 = 25 %.
+    market_extreme_return_threshold: float = 0.25
+
     # Cache TTLs for reusing stored source snapshots instead of re-fetching.
     cache_ttl_tickers_hours: float = 24 * 7
     cache_ttl_sec_hours: float = 12

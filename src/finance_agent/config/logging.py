@@ -13,6 +13,7 @@ _SECRET_PATTERNS = [
     re.compile(r"(x-api-key[\"']?\s*[:=]\s*[\"']?)[^\s\"',}]+", re.IGNORECASE),
     re.compile(r"(sk-ant-[A-Za-z0-9_\-]{4})[A-Za-z0-9_\-]+"),
     re.compile(r"(authorization[\"']?\s*[:=]\s*[\"']?bearer\s+)[^\s\"',}]+", re.IGNORECASE),
+    re.compile(r"(apca-api-(?:key-id|secret-key)[\"']?\s*[:=]\s*[\"']?)[^\s\"',}]+", re.IGNORECASE),
 ]
 
 

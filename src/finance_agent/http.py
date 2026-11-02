@@ -127,6 +127,14 @@ class FixtureTransport(httpx.BaseTransport):
             vintage = (qs.get("vintage_date") or [""])[0]
             if sid and vintage:
                 return self.root / "alfred" / sid / f"{vintage}.csv"
+        # ---- v0.3-A market data (Alpaca format; SYNTHETIC fixtures, see MANIFEST.json)
+        if host == "data.alpaca.markets":
+            sym = (qs.get("symbols") or [""])[0].upper()
+            if path == "/v2/stocks/bars" and sym and "," not in sym:
+                adj = (qs.get("adjustment") or ["raw"])[0]
+                return self.root / "alpaca" / "bars" / adj / f"{sym}.json"
+            if path == "/v1/corporate-actions" and sym and "," not in sym:
+                return self.root / "alpaca" / "corporate_actions" / f"{sym}.json"
         return None
 
     def origin_for(self, path: Path) -> str:
@@ -187,7 +195,9 @@ class HttpClient:
                 pass
         return min(30.0, self.backoff_base * (2**attempt)) + random.uniform(0, 0.25)
 
-    def get(self, url: str, params: dict[str, Any] | None = None) -> FetchResult:
+    def get(
+        self, url: str, params: dict[str, Any] | None = None, headers: dict[str, str] | None = None
+    ) -> FetchResult:
         host = httpx.URL(url).host
         limiter = self._limiters.get(host)
         last_exc: Exception | None = None
@@ -196,7 +206,7 @@ class HttpClient:
                 limiter.acquire()
             try:
                 self.request_count += 1
-                resp = self._client.get(url, params=params)
+                resp = self._client.get(url, params=params, headers=headers)
             except (httpx.TimeoutException, httpx.TransportError) as exc:
                 last_exc = exc
                 log.warning(
