@@ -6,11 +6,12 @@ command `finance-agent`, and database schema intentionally keep their original n
 do not rename them.)
 
 Guidance for AI coding agents and contributors working in this repository.
-Status: **v0.1 — Financial Research Foundation, frozen** on `master` (baseline audit 2026-11-02).
-**v0.2 — Market Intelligence & Event Detection** implemented on branch
-`feat/v0.2-market-intelligence` (in review; not merged). Roadmap: v0.3 Event-to-Asset Impact
-Engine · v0.4 Portfolio Intelligence · v0.5 Quantitative Research Agents (not started — do not
-start without an explicit request). Event semantics: `docs/event_intelligence_methodology.md`. Detailed history: `IMPLEMENTATION_LOG.md`. Accounting rules:
+Status: **v0.2.0 released** on `master` (v0.1 Financial Research Foundation + v0.2 Market
+Intelligence & Event Detection; tag `v0.2.0`). **v0.3-A — Historical Market Data Infrastructure
+& CI** implemented on branch `feat/v0.3-market-data` (in review; not merged). Roadmap: v0.3-B+
+Event-to-Asset Impact Engine (event studies) · v0.4 Portfolio Intelligence · v0.5 Quantitative
+Research Agents (not started — do not start without an explicit request). Market-data rules:
+`docs/market_data_methodology.md`, `docs/trading_calendar_methodology.md`. Event semantics: `docs/event_intelligence_methodology.md`. Detailed history: `IMPLEMENTATION_LOG.md`. Accounting rules:
 `docs/accounting_methodology.md` (source of truth for data semantics).
 
 ## What this is
@@ -44,13 +45,24 @@ Redis/Celery/microservices, frontend.
    labelled hypotheses; no coefficients, probabilities or price impacts.
 9. **(v0.2) Observed event facts are immutable.** Revisions are new events that supersede
    earlier ones; first releases are preserved.
+10. **(v0.3-A) Market observations are versioned, never overwritten.** A provider correction is
+    a new version visible only from when it was observed. Provisional (unfinished-session)
+    bars are never presented as final or used in calculations.
+11. **(v0.3-A) Price basis is always explicit.** Raw, split-adjusted and total-return are
+    different series; returns never span a split on the raw basis; provider-adjusted bars are
+    never re-adjusted. Point-in-time queries use only corporate actions available at the
+    cutoff; retrospective (`research`) output is labelled as such.
+12. **(v0.3-A) Gaps are never filled.** Missing sessions are classified (closure / missing
+    data / provider failure / not finalized / quarantined) and reported. Extreme moves are
+    flagged, never deleted. Treasury yields are rates (percent; changes in bp), not prices.
 
 ## Stack
 
 Python 3.12 (uv) · FastAPI · Pydantic v2 / pydantic-settings · SQLAlchemy 2.x + Alembic ·
 SQLite (PostgreSQL-compatible schema) · httpx · LangGraph (bounded linear workflow) ·
 Anthropic SDK (`claude-opus-5-5`) · Typer/Rich · pytest · Ruff. `tzdata` is required on
-Windows. pandas/NumPy are intentionally not used (scalar, auditable arithmetic).
+Windows. pandas/NumPy are not used for calculations (scalar, auditable arithmetic); since v0.3-A
+they arrive only as dependencies of `exchange_calendars`, confined to `market/calendar.py`.
 
 ## Layout
 
@@ -72,9 +84,15 @@ apps/api/main.py   thin ASGI entry
                 importance, transmission, briefing, service (ingestion), sources/{sec_events,fomc,macro,calendars}
   workflows/briefing.py   bounded LangGraph: parse→window→retrieve→resolve→compare→rank→select→evidence→explain→verify→persist
   interfaces/events_api.py  /events*, /intelligence/* routes
+  market/       v0.3-A: schemas, providers (MarketDataProvider, AlpacaProvider), ingest, store
+                (versioned bars/actions, point-in-time reads), calendar (exchange_calendars XNYS),
+                adjust, quality, calculations, yields (ALFRED DGS2/DGS10), service (query modes)
+  interfaces/market_api.py  /market/* routes
+.github/workflows/ci.yml   CI: ruff, migrations, offline suite, replay (no secrets)
 tests/{unit,integration,historical_replay,fixtures}
 scripts/build_fixtures.py       v0.1 fixtures (SEC real, FRED synthetic)
 scripts/build_v02_fixtures.py   records REAL v0.2 fixtures by running ingestion live (~15 min)
+scripts/build_v03_fixtures.py   SYNTHETIC Alpaca-format bars (deterministic) + --record-yields REAL ALFRED (~5 min)
 ```
 
 ## Commands
@@ -101,6 +119,19 @@ uv run finance-agent events list --from 2026-10-01 --to 2026-11-01 [--as-of …]
 uv run finance-agent events show EV-… | events calendar --from … --to …
 uv run finance-agent briefing daily --date 2026-10-28 [--no-llm] [--offline] [--no-ingest] [--format json]
 ```
+
+v0.3-A (use `uv run python -m finance_agent …` where .exe launchers are blocked; same for
+`uv run python -m pytest`):
+
+```bash
+uv run python -m finance_agent market ingest --start 2024-01-02 --end 2026-10-30 [--ticker T …] [--offline] [--refresh] [--no-yields] [--provider-adjusted]
+uv run python -m finance_agent market prices NVDA --start … --end … [--basis raw|split_adjusted|total_return] [--mode point_in_time|research] [--as-of …] [--include-provisional]
+uv run python -m finance_agent market returns SPY --start … --end … --basis total_return [--kind log] [--window 20]
+uv run python -m finance_agent market quality | market calendar --date 2026-11-26 | market yields DGS10 --start … --end …
+```
+
+Live market data needs `ALPACA_API_KEY_ID` + `ALPACA_API_SECRET_KEY` (unverified — no keys at
+build time). Offline prices are SYNTHETIC; offline yields are REAL (MANIFEST `yield_window`).
 
 Live SEC requires `SEC_USER_AGENT` (name + contact). Offline mode serves `tests/fixtures`
 (and, in v0.2, replays macro probing over the recorded window in `MANIFEST.json → event_window`;
@@ -172,8 +203,8 @@ INSUFFICIENT_DATA with no ranking score. Weights are judgmental, not trained.
 
 ## Persistence notes
 
-- Alembic head: `0003_event_intelligence` (v0.2 tables: financial_events, event_sources,
-  briefings, briefing_events — `docs/database_schema.md`). Always add a migration for model changes;
+- Alembic head: `0004_market_data` (v0.3-A market tables; v0.2 tables: financial_events,
+  event_sources, briefings, briefing_events — `docs/database_schema.md`). Always add a migration for model changes;
   `tests/integration/test_storage.py` fails if models and migrations diverge.
 - Writes are idempotent and wrapped in `retry_on_conflict` (concurrent first loads);
   SQLite runs in WAL mode with a 30 s busy timeout.
@@ -189,6 +220,10 @@ INSUFFICIENT_DATA with no ranking score. Weights are judgmental, not trained.
 - Financial arithmetic tests use hand-calculated values; replay tests must cover both
   included and excluded observations; add a regression test for every fixed defect.
 - `tests/conftest.py` strips credential env vars; never rely on a developer's env.
+- (v0.3-A) `tests/fixtures/alpaca` is **synthetic** (never call it provider data); never commit
+  real provider responses (licensed). `tests/fixtures/alfred/DGS*` are **real**. The yield
+  availability rule must stay "never earlier" on the recorded calibration vintages.
+- CI (`.github/workflows/ci.yml`) must stay credential-free; live tests are opt-in only.
 
 ## Known limitations
 
@@ -203,3 +238,7 @@ weights; macro intraday times from official schedules (dates confirmed); calenda
 versioned historically (briefings withhold calendar entries first observed after the cutoff —
 `EventStore.schedule_known_at`); 8-K text not parsed (item metadata only); CORPORATE_GUIDANCE reserved
 (no source); EDGAR dissemination lag not modelled.
+v0.3-A: live Alpaca unverified (no credentials; offline prices synthetic); delisted coverage and
+provider correction behaviour unverified; corporate actions carry no announcement date (known
+from ex-date); halts indistinguishable from missing data; backfill assumes first-retrieved =
+originally published; single-process SQLite (no demonstrated bottleneck at 12k bars).
