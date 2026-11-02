@@ -301,11 +301,11 @@ def _yield(run: dict) -> tuple[dict, str]:
     md += [f"## {SECTION_TITLES[0]}", s[SECTION_TITLES[0]], "",
            f"## {SECTION_TITLES[4]}", f"Event time {(res.get('alignment') or {}).get('event_time_local') or 'date only'}; "
            f"yield day 0 = **{res.get('day0')}** - {res.get('day0_rule')}", "",
-           f"## {SECTION_TITLES[8]} (yield changes)",
+           "## 9. Yield changes around the event (basis points; no abnormal-return model)",
            _table(["rel", "date", "yield %", "change", "no-quote days bridged"],
                   [[d["relative_day"], d["date"], num(d["yield_pct"], 2), bp(d["change_bp"]),
                     ", ".join(d["no_quote_days_between"])] for d in res.get("daily_changes", [])]), "",
-           _table(["window", "status", "before (date)", "after", "change", "share of pre-event |changes| >= this"],
+           _table(["window", "status", "before (date)", "after", "change", "share of pre-event abs. changes >= this"],
                   [[w["window"], w["status"], f"{num(w.get('yield_before_pct'), 2)} ({w.get('yield_before_date', '')})",
                     num(w.get("yield_after_pct"), 2), bp(w.get("change_bp")),
                     num((w.get("pre_event_reference") or {}).get("share_with_larger_absolute_change"), 3)]

@@ -384,3 +384,11 @@ def test_yield_window_beyond_published_data_is_out_of_range_not_shortened(study_
         "last available 2026-10-29" in win(r, "[0,+5]")["reason"]
         and "not shortened" in win(r, "[0,+5]")["reason"]
     )
+
+
+def test_yield_report_is_labelled_in_basis_points_and_renders_tables(study_ctx):
+    """Regression: the yield report must not reuse the equity CAR heading or break its Markdown table."""
+    md = run(study_ctx, FOMC_SEP25, series_id="DGS2").report_markdown
+    assert "## 9. Yield changes around the event (basis points" in md and "Abnormal returns and CAR" not in md
+    header = next(line for line in md.splitlines() if line.startswith("| window | status | before"))
+    assert header.count("|") == 7  # six columns: no stray pipes inside a header
