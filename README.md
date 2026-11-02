@@ -1,6 +1,9 @@
-# Finance Agent v0.1
+# AlphaForge
 
-A modular, local-first financial research agent. It retrieves official SEC EDGAR filings
+*An agentic financial intelligence and quantitative research platform.*
+
+**Current release: v0.1 — Financial Research Foundation.** AlphaForge is a modular,
+local-first financial research platform. It retrieves official SEC EDGAR filings
 and FRED/ALFRED macro data, normalizes them with full provenance, runs deterministic
 fundamental calculations, and produces evidence-linked company research reports via a
 FastAPI service and a CLI.
@@ -11,6 +14,22 @@ calculation over such facts. LLM output (optional) is limited to interpretation,
 against the evidence, and is labelled separately from verified facts.
 
 No trading, brokerage execution, or price prediction is implemented.
+
+> **Naming:** the platform is branded AlphaForge; the Python package (`finance_agent`),
+> distribution (`finance-agent`) and CLI command (`finance-agent`) keep their original
+> names for compatibility.
+
+## Roadmap
+
+| Version | Milestone | Status |
+|---|---|---|
+| v0.1 | Financial Research Foundation — SEC/FRED data layer, provenance, deterministic fundamentals, evidence-linked company research | **Released** |
+| v0.2 | Market Intelligence & Event Detection | Planned |
+| v0.3 | Event-to-Asset Impact Engine | Planned |
+| v0.4 | Portfolio Intelligence | Planned |
+| v0.5 | Quantitative Research Agents | Planned |
+
+Only v0.1 is implemented; later milestones are not yet built.
 
 ## Quick start
 

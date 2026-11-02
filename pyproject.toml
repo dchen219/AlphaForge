@@ -1,7 +1,7 @@
 [project]
 name = "finance-agent"
 version = "0.1.0"
-description = "Modular finance research agent: SEC EDGAR + FRED/ALFRED data infrastructure, deterministic calculations, evidence-linked company research."
+description = "AlphaForge — an agentic financial intelligence and quantitative research platform. v0.1: SEC EDGAR + FRED/ALFRED data infrastructure, deterministic calculations, evidence-linked company research."
 readme = "README.md"
 authors = [
     { name = "Danbo Chen", email = "chen.12712@buckeyemail.osu.edu" }

@@ -20,7 +20,7 @@ from finance_agent.research.report import origin_banner
 from finance_agent.timeutil import parse_as_of
 
 app = typer.Typer(
-    help="Finance Agent v0.1 - SEC/FRED data infrastructure and company research.",
+    help="AlphaForge v0.1 - agentic financial intelligence and research platform (SEC/FRED data, company research).",
     no_args_is_help=True,
     add_completion=False,
 )

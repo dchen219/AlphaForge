@@ -63,10 +63,11 @@ def create_app(settings: Settings | None = None, ctx: AppContext | None = None) 
         app.state.ctx.close()
 
     app = FastAPI(
-        title="Finance Agent",
+        title="AlphaForge",
         version=__version__,
         lifespan=lifespan,
-        description="Financial data infrastructure and company research agent (v0.1).",
+        description="An agentic financial intelligence and quantitative research platform. "
+        "v0.1: Financial Research Foundation (SEC/FRED data, company research).",
     )
 
     def _as_of(value: str | None) -> datetime | None:

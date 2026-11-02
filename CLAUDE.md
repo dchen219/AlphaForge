@@ -1,7 +1,14 @@
-# CLAUDE.md — Finance Agent
+# CLAUDE.md — AlphaForge
+
+AlphaForge: *an agentic financial intelligence and quantitative research platform.*
+(Formerly "Finance Agent". The Python package `finance_agent`, distribution and CLI
+command `finance-agent`, and database schema intentionally keep their original names —
+do not rename them.)
 
 Guidance for AI coding agents and contributors working in this repository.
-Status: **v0.1 frozen** (baseline audit 2026-11-02). Do not start v0.2 work without an
+Status: **v0.1 — Financial Research Foundation, frozen** (baseline audit 2026-11-02).
+Roadmap: v0.2 Market Intelligence & Event Detection · v0.3 Event-to-Asset Impact Engine ·
+v0.4 Portfolio Intelligence · v0.5 Quantitative Research Agents (none started). Do not start v0.2 work without an
 explicit request. Detailed history: `IMPLEMENTATION_LOG.md`. Accounting rules:
 `docs/accounting_methodology.md` (source of truth for data semantics).
 
