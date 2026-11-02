@@ -503,3 +503,34 @@ The offline pipeline runs the real adapter against **synthetic** Alpaca-format f
 | Yields | 1.8 s | |
 
 Queries take 6–86 ms median; the database is about 9 MB.
+
+## v0.3-A release review (2026-11-02, PR #2)
+
+**Live Alpaca validation: not performed.** No Alpaca credentials are configured locally. The
+unauthenticated probe still returns HTTP 401, and `test_live_v03a_alpaca_market_data` skips.
+Also untested: IEX vs SIP, history depth, timestamps, pagination, splits and dividends against
+live data. Live equity data remains **unverified**.
+
+**Defect found in review (medium):** a correction that reverts to an earlier value was discarded.
+- *Symptom:* `MarketStore.insert_bar` / `insert_action` / `insert_yield` treated an observation as
+  `unchanged` if it matched **any** earlier version. A provider correcting A -> B and later
+  reverting to A was therefore dropped, and the current and post-revert point-in-time views kept
+  serving the stale value B.
+- *Cause in the schema:* migration 0004's unique constraints on `(key, content_hash)` made the
+  revert impossible to store at all.
+- *Fix:*
+  - Duplicate detection now compares with the **latest** version.
+  - A replay of an older version from a retrieval (bars, actions) or vintage (yields) no newer
+    than the latest is still ignored.
+  - Migration `0005_market_version_identity` makes versions unique by `(key, version)`.
+- *Regression tests* (`tests/historical_replay/test_market_replay.py`): bar revert, stale replay,
+  corporate-action revert, and a yield revision revert vs an older-vintage replay.
+
+| Check | Result |
+|---|---|
+| Offline suite | 296 passed |
+| Historical replay | 48 passed (44 + 4 regression) |
+| v0.2.0 tests from tag `v0.2.0`, run unchanged against the branch | 267 passed / 9 skipped |
+| Live yields | passed |
+| Live Alpaca | skipped (no keys) |
+| Alembic | 0005 upgrade, check, and downgrade to 0003 and back to head: OK |

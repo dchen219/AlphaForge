@@ -203,7 +203,7 @@ INSUFFICIENT_DATA with no ranking score. Weights are judgmental, not trained.
 
 ## Persistence notes
 
-- Alembic head: `0004_market_data` (v0.3-A market tables; v0.2 tables: financial_events,
+- Alembic head: `0005_market_version_identity` (v0.3-A market tables in 0004; 0005 makes market versions unique by sequence; v0.2 tables: financial_events,
   event_sources, briefings, briefing_events — `docs/database_schema.md`). Always add a migration for model changes;
   `tests/integration/test_storage.py` fails if models and migrations diverge.
 - Writes are idempotent and wrapped in `retry_on_conflict` (concurrent first loads);

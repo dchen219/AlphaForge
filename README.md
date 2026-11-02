@@ -175,7 +175,7 @@ Rules          market/calendar.py (exchange_calendars XNYS) · market/adjust.py 
 Queries        market/calculations.py · market/service.py · interfaces/market_api.py · CLI `market`
 ```
 
-Database tables added in v0.3-A (migration `0004_market_data`): `market_instruments`,
+Database tables added in v0.3-A (migrations `0004_market_data`, `0005_market_version_identity`): `market_instruments`,
 `market_provider_mappings`, `market_price_bars`, `market_corporate_actions`,
 `market_trading_sessions`, `market_quality_issues`, `market_ingestion_runs`,
 `market_yield_observations`. Methodology: [docs/market_data_methodology.md](docs/market_data_methodology.md),

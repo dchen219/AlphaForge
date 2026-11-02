@@ -1,7 +1,7 @@
 # Market-data methodology (v0.3-A)
 
 Implementation: `src/finance_agent/market/`. Tables: `docs/database_schema.md` (migration
-`0004_market_data`). Provider choice: `docs/market_data_provider_evaluation.md`. Calendars:
+`0004_market_data`, `0005_market_version_identity`). Provider choice: `docs/market_data_provider_evaluation.md`. Calendars:
 `docs/trading_calendar_methodology.md`.
 
 ## 1. Raw vs normalized storage
@@ -18,7 +18,10 @@ Implementation: `src/finance_agent/market/`. Tables: `docs/database_schema.md` (
   - bar status (FINAL / PROVISIONAL) and quality status (OK / WARNING / QUARANTINED);
   - version.
 * **Versions, never overwrites:** re-ingesting an identical observation is a no-op
-  (`content_hash`). A different value becomes version n+1, and earlier versions are kept.
+  (`content_hash` equal to the latest version, or a replay of an older version from a retrieval
+  no newer than the latest). A different value becomes version n+1, and earlier versions are kept.
+  A source reverting to an earlier value (A -> B -> A) is a new version, visible from when the
+  revert was observed. Yields order observations by ALFRED vintage date instead of retrieval time.
 
 ## 2. Timestamps and availability
 
