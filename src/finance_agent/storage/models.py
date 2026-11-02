@@ -359,8 +359,8 @@ class MarketPriceBar(Base):
             "frequency",
             "adjustment",
             "session_date",
-            "content_hash",
-            name="uq_market_bar_version",
+            "version",
+            name="uq_market_bar_seq",
         ),
         Index("ix_market_bar_lookup", "instrument_id", "adjustment", "session_date"),
     )
@@ -398,9 +398,7 @@ class MarketPriceBar(Base):
 
 class MarketCorporateAction(Base):
     __tablename__ = "market_corporate_actions"
-    __table_args__ = (
-        UniqueConstraint("provider", "action_id", "content_hash", name="uq_market_action_version"),
-    )
+    __table_args__ = (UniqueConstraint("provider", "action_id", "version", name="uq_market_action_seq"),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     action_id: Mapped[str] = mapped_column(String(64))
@@ -476,7 +474,7 @@ class MarketYieldObservation(Base):
 
     __tablename__ = "market_yield_observations"
     __table_args__ = (
-        UniqueConstraint("series_id", "observation_date", "content_hash", name="uq_market_yield_version"),
+        UniqueConstraint("series_id", "observation_date", "version", name="uq_market_yield_seq"),
         Index("ix_market_yield_lookup", "series_id", "observation_date"),
     )
 

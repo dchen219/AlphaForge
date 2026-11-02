@@ -16,7 +16,7 @@ import pytest
 from finance_agent.events.sources.macro import parse_alfred_csv
 from finance_agent.market.ingest import MarketDataIngestor
 from finance_agent.market.providers import ProviderBar
-from finance_agent.market.schemas import AdjustmentBasis, BarStatus, QualityStatus
+from finance_agent.market.schemas import AdjustmentBasis, BarStatus, PriceBar, QualityStatus
 from finance_agent.market.service import MarketDataService
 from finance_agent.market.store import MarketStore
 from finance_agent.market.yields import first_vintage_rule
@@ -234,3 +234,128 @@ def test_point_in_time_yields(tmp_path):
     assert Path(FIXTURES / "alfred" / "DGS10" / "2026-10-29.csv").exists()
     assert obs in _vintage("DGS10", date(2026, 10, 29)) and obs not in _vintage("DGS10", date(2026, 10, 28))
     ctx.close()
+
+
+# ------------------------------------------------------------------ correction reverts (regression)
+def _store_with_msft(tmp_path) -> MarketStore:
+    from finance_agent.market.universe import DEFAULT_UNIVERSE, default_mappings
+
+    db = Database(offline_settings(tmp_path).database_url)
+    db.create_all()
+    store = MarketStore(db)
+    store.register(
+        [i for i in DEFAULT_UNIVERSE if i.instrument_id == "MSFT"],
+        [m for m in default_mappings("alpaca") if m.instrument_id == "MSFT"],
+    )
+    return store
+
+
+def _msft_bar(close: float, retrieved: datetime) -> PriceBar:
+    """SYNTHETIC bar values; only the versioning behaviour is under test."""
+    d = date(2026, 10, 28)
+    return PriceBar(
+        instrument_id="MSFT",
+        provider="alpaca",
+        provider_symbol="MSFT",
+        session_date=d,
+        bar_timestamp=datetime(2026, 10, 28, 4, 0, tzinfo=UTC),
+        open=close,
+        high=close,
+        low=close,
+        close=close,
+        volume=1000.0,
+        data_origin="fixture:synthetic",
+        retrieved_at=retrieved,
+        available_at=datetime(2026, 10, 29, 4, 0, tzinfo=UTC),
+    )
+
+
+def test_correction_reverted_to_original_value_is_a_new_version(tmp_path):
+    """A -> B -> A: the provider's revert must become visible from when it was observed;
+    it must not be discarded because it matches an older version (stale current view)."""
+    store = _store_with_msft(tmp_path)
+    t1 = datetime(2026, 10, 30, 12, 0, tzinfo=UTC)
+    t2, t3 = t1 + timedelta(days=2), t1 + timedelta(days=4)
+    assert store.insert_bar(_msft_bar(100.0, t1)) == "inserted"
+    assert store.insert_bar(_msft_bar(101.0, t2)) == "correction"
+    assert store.insert_bar(_msft_bar(100.0, t3)) == "correction"
+    close = lambda cut: store.bars("MSFT", as_of=cut)[date(2026, 10, 28)].close  # noqa: E731
+    assert close(t1) == 100.0 and close(t2) == 101.0 and close(t3) == 100.0
+    assert store.bars("MSFT")[date(2026, 10, 28)].close == 100.0
+    assert [v.close for v in store.bar_versions("MSFT", date(2026, 10, 28))] == [100.0, 101.0, 100.0]
+    # Idempotence still holds: re-reading the latest observation adds nothing.
+    assert store.insert_bar(_msft_bar(100.0, t3 + timedelta(hours=1))) == "unchanged"
+
+
+def test_stale_replay_of_older_observation_is_not_a_new_version(tmp_path):
+    """Re-ingesting an older snapshot (retrieved before the latest version) changes nothing."""
+    store = _store_with_msft(tmp_path)
+    t1 = datetime(2026, 10, 30, 12, 0, tzinfo=UTC)
+    store.insert_bar(_msft_bar(100.0, t1))
+    store.insert_bar(_msft_bar(101.0, t1 + timedelta(days=2)))
+    assert store.insert_bar(_msft_bar(100.0, t1)) == "unchanged"
+    assert store.bars("MSFT")[date(2026, 10, 28)].close == 101.0
+
+
+def test_corporate_action_correction_revert_is_a_new_version(tmp_path):
+    """SYNTHETIC dividend amount A -> B -> A: the revert is visible from when it was observed."""
+    from finance_agent.market.schemas import CorporateAction, CorporateActionType
+
+    store = _store_with_msft(tmp_path)
+    t1 = datetime(2026, 9, 1, 12, 0, tzinfo=UTC)
+    t2, t3 = t1 + timedelta(days=2), t1 + timedelta(days=4)
+
+    def div(amount: float, seen: datetime) -> CorporateAction:
+        return CorporateAction(
+            action_id="SYN-DIV-1",
+            provider="alpaca",
+            instrument_id="MSFT",
+            action_type=CorporateActionType.CASH_DIVIDEND,
+            ex_date=date(2026, 8, 20),
+            cash_amount=amount,
+            data_origin="fixture:synthetic",
+            retrieved_at=seen,
+            available_at=datetime(2026, 8, 20, 4, 0, tzinfo=UTC),
+        )
+
+    assert store.insert_action(div(0.83, t1)) == "inserted"
+    assert store.insert_action(div(0.91, t2)) == "correction"
+    assert store.insert_action(div(0.83, t3)) == "correction"
+    assert store.insert_action(div(0.83, t1)) == "unchanged"  # stale replay
+    amount = lambda cut: [a.cash_amount for a in store.actions("MSFT", as_of=cut)]  # noqa: E731
+    assert amount(t1) == [0.83] and amount(t2) == [0.91] and amount(t3) == [0.83]
+
+
+def test_yield_revision_revert_is_a_new_version_but_older_vintage_is_not(tmp_path):
+    """SYNTHETIC yield values: vintage V1 = 4.00, V2 revises to 4.10, V3 reverts to 4.00."""
+    from finance_agent.market.schemas import AvailabilityPrecision
+    from finance_agent.timeutil import available_at
+
+    db = Database(offline_settings(tmp_path).database_url)
+    db.create_all()
+    store = MarketStore(db)
+    obs = date(2026, 9, 1)
+
+    def row(value: float, vintage: date) -> dict:
+        return {
+            "series_id": "DGS10",
+            "observation_date": obs,
+            "value": value,
+            "units": "Percent",
+            "vintage_date": vintage,
+            "first_vintage_rule": date(2026, 9, 2),
+            "available_at": available_at(date(2026, 9, 2)),
+            "revision_available_at": available_at(vintage),
+            "availability_precision": AvailabilityPrecision.RULE_BASED_CONSERVATIVE,
+            "data_origin": "fixture:synthetic",
+            "retrieved_at": datetime(2026, 9, 30, tzinfo=UTC),
+        }
+
+    v1, v2, v3 = date(2026, 9, 2), date(2026, 9, 10), date(2026, 9, 20)
+    assert store.insert_yield(row(4.00, v1)) == "inserted"
+    assert store.insert_yield(row(4.10, v2)) == "revision"
+    assert store.insert_yield(row(4.10, date(2026, 9, 15))) == "unchanged"  # later vintage, same value
+    assert store.insert_yield(row(4.00, v1)) == "unchanged"  # older vintage replayed
+    assert store.insert_yield(row(4.00, v3)) == "revision"
+    value = lambda d: store.yields("DGS10", as_of=available_at(d))[0]["value"]  # noqa: E731
+    assert value(v1) == 4.00 and value(v2) == 4.10 and value(v3) == 4.00

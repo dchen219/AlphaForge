@@ -48,6 +48,22 @@ def content_hash(payload: dict) -> str:
     return hashlib.sha256(json.dumps(payload, sort_keys=True, default=str).encode()).hexdigest()
 
 
+def _is_known(versions: list, h: str, observed: object, order_attr: str) -> bool:
+    """True when an observation adds nothing: it equals the latest version, or it re-plays an
+    older version from an observation (retrieval time / vintage) no newer than the latest one.
+    A source reverting to an earlier value (A -> B -> A, observed later) is a NEW version, so the
+    revert becomes visible from when it was observed instead of being discarded as a duplicate."""
+    if not versions:
+        return False
+    latest = versions[-1]
+    if latest.content_hash == h:
+        return True
+    last = getattr(latest, order_attr)
+    if isinstance(last, datetime):
+        last = _utc(last)
+    return any(v.content_hash == h for v in versions) and observed <= last
+
+
 def bar_hash(bar: PriceBar) -> str:
     return content_hash({"values": bar.values(), "status": str(bar.bar_status)})
 
@@ -258,7 +274,7 @@ class MarketStore:
                 )
                 .order_by(MarketPriceBar.version)
             ).all()
-            if any(v.content_hash == h for v in versions):
+            if _is_known(versions, h, _utc(bar.retrieved_at), "retrieved_at"):
                 return "unchanged"
             outcome = "inserted"
             available, precision = bar.available_at, bar.availability_precision
@@ -409,7 +425,7 @@ class MarketStore:
                 )
                 .order_by(MarketCorporateAction.version)
             ).all()
-            if any(v.content_hash == h for v in versions):
+            if _is_known(versions, h, _utc(a.retrieved_at), "retrieved_at"):
                 return "unchanged"
             available, precision = a.available_at, a.availability_precision
             if versions:  # corrected corporate action: known from when it was observed
@@ -598,7 +614,7 @@ class MarketStore:
                 )
                 .order_by(MarketYieldObservation.version)
             ).all()
-            if any(v.content_hash == h for v in versions):
+            if _is_known(versions, h, row["vintage_date"], "vintage_date"):
                 return "unchanged"
             available, precision = row["available_at"], row["availability_precision"]
             if versions:  # revised value: known from the vintage in which it was observed
