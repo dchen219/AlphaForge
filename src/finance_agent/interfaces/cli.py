@@ -865,5 +865,153 @@ def market_yields(
         console.print(f"note: {n}")
 
 
+# --------------------------------------------------------------------------- v0.3-B event studies
+
+study_app = typer.Typer(
+    help="Event studies (v0.3-B): single-event CAR / yield changes, reports, multi-event comparisons.",
+    no_args_is_help=True,
+)
+app.add_typer(study_app, name="study")
+ReportFmt = Annotated[str, typer.Option("--format", help="markdown | json")]
+
+
+def _write(text: str) -> None:
+    sys.stdout.buffer.write((text + "\n").encode("utf-8"))
+
+
+def _study_out(run, fmt: str) -> None:
+    if fmt == "json":
+        _emit_json({"run_id": run.run_id, "status": str(run.status), "existing": run.existing,
+                    "data_origin": run.data_origin, "synthetic": run.synthetic, "spec_hash": run.spec_hash,
+                    "data_digest": run.data_digest, "specification": run.specification, "result": run.result})  # fmt: skip
+        return
+    if run.synthetic:
+        err.print(
+            "[bold yellow]SYNTHETIC DATA - methodological validation only (not an empirical finding).[/]"
+        )
+    if run.existing:
+        err.print(f"identical run already stored: {run.run_id} (not recomputed)")
+    _write(run.report_markdown or "")
+
+
+@study_app.command("run")
+def study_run(
+    event_id: Annotated[str, typer.Option("--event-id", help="Financial event id (EV-...).")],
+    ticker: Annotated[str | None, typer.Option("--ticker", help="Equity/ETF target.")] = None,
+    series: Annotated[
+        str | None, typer.Option("--series", help="Treasury yield series (DGS2 | DGS10).")
+    ] = None,
+    benchmark: Annotated[str, typer.Option("--benchmark")] = "SPY",
+    model: Annotated[
+        str, typer.Option("--model", help="market-model | market-adjusted | raw")
+    ] = "market-model",
+    basis: Annotated[
+        str, typer.Option("--basis", help="raw | split_adjusted | total_return (recorded in the spec)")
+    ] = "total_return",
+    return_type: Annotated[str, typer.Option("--return-type", help="simple | log")] = "simple",
+    mode: Annotated[
+        str, typer.Option("--mode", help="research (retrospective) | point_in_time (needs --as-of)")
+    ] = "research",
+    as_of: AsOf = None,
+    window: Annotated[
+        list[str] | None, typer.Option("--window", help="Event window, e.g. 0:1 or -1:1 (repeatable).")
+    ] = None,
+    est_start: Annotated[int, typer.Option("--est-start")] = -150,
+    est_end: Annotated[int, typer.Option("--est-end")] = -21,
+    min_obs: Annotated[int, typer.Option("--min-obs")] = 100,
+    robustness: Annotated[bool, typer.Option("--robustness/--no-robustness")] = True,
+    offline: Offline = False,
+    fmt: ReportFmt = "markdown",
+) -> None:
+    """Run (and persist) one event study; prints the report. Identical runs are not recomputed."""
+    from finance_agent.event_studies.schemas import DataMode, EventStudyRequest, ReturnType
+    from finance_agent.event_studies.service import EventStudyService
+
+    try:
+        req = EventStudyRequest(
+            event_id=event_id, ticker=ticker, series_id=series, benchmark=benchmark, model=model,
+            price_basis=basis, return_type=ReturnType(return_type), data_mode=DataMode(mode),
+            as_of=_as_of(as_of), windows=window, estimation_start=est_start, estimation_end=est_end,
+            min_observations=min_obs, robustness=robustness,
+        )  # fmt: skip
+        run = EventStudyService(_ctx(offline, llm=False)).run(req)
+    except (FinanceAgentError, ValueError) as exc:
+        _fail(exc)
+    _study_out(run, fmt)
+
+
+@study_app.command("report")
+def study_report(
+    run_id: Annotated[str, typer.Option("--run-id")],
+    offline: Offline = False,
+    fmt: ReportFmt = "markdown",
+) -> None:
+    """Print a stored run's report (Markdown, or JSON sections)."""
+    from finance_agent.event_studies.service import EventStudyService
+
+    try:
+        rep = EventStudyService(_ctx(offline, llm=False)).report(run_id)
+    except FinanceAgentError as exc:
+        _fail(exc)
+    if fmt == "json":
+        _emit_json(rep)
+    else:
+        _write(rep["markdown"])
+
+
+@study_app.command("compare")
+def study_compare(
+    event_type: Annotated[
+        str, typer.Option("--event-type", help="MACRO_RELEASE | CENTRAL_BANK | CORPORATE_EARNINGS | ...")
+    ],
+    ticker: Annotated[str, typer.Option("--ticker")],
+    benchmark: Annotated[str, typer.Option("--benchmark")] = "SPY",
+    subtype: Annotated[
+        list[str] | None, typer.Option("--subtype", help="Event subtype filter (repeatable).")
+    ] = None,
+    model: Annotated[str, typer.Option("--model")] = "market-model",
+    basis: Annotated[str, typer.Option("--basis")] = "total_return",
+    start: Annotated[str | None, typer.Option("--start", help="Events available after YYYY-MM-DD.")] = None,
+    end: Annotated[str | None, typer.Option("--end", help="Events available up to YYYY-MM-DD.")] = None,
+    window: Annotated[list[str] | None, typer.Option("--window")] = None,
+    mode: Annotated[str, typer.Option("--mode")] = "research",
+    as_of: AsOf = None,
+    max_events: Annotated[int, typer.Option("--max-events", help="Bounded (<= 100).")] = 40,
+    include_revisions: Annotated[bool, typer.Option("--include-revisions")] = False,
+    offline: Offline = False,
+    fmt: ReportFmt = "markdown",
+) -> None:
+    """Aggregate one target's responses across events (dependence handled conservatively)."""
+    from finance_agent.event_studies.schemas import DataMode
+    from finance_agent.event_studies.service import EventStudyService
+    from finance_agent.timeutil import parse_window_start
+
+    try:
+        run = EventStudyService(_ctx(offline, llm=False)).compare(
+            category=event_type.upper(), ticker=ticker, benchmark=benchmark, subtypes=subtype, model=model,
+            price_basis=basis, start=parse_window_start(start) if start else None,
+            end=_as_of(end) if end else None, windows=window, data_mode=DataMode(mode), as_of=_as_of(as_of),
+            max_events=max_events, first_release_only=not include_revisions,
+        )  # fmt: skip
+    except (FinanceAgentError, ValueError) as exc:
+        _fail(exc)
+    _study_out(run, fmt)
+
+
+@study_app.command("list")
+def study_list(offline: Offline = False, limit: Annotated[int, typer.Option("--limit")] = 20) -> None:
+    """List stored event-study runs."""
+    from finance_agent.event_studies.service import EventStudyService
+
+    rows = EventStudyService(_ctx(offline, llm=False)).store.list(limit)
+    t = Table(title="Event-study runs")
+    for c in ("run_id", "kind", "status", "target", "events", "origin", "created"):
+        t.add_column(c)
+    for r in rows:
+        t.add_row(r["run_id"], r["kind"], r["status"], str(r["target"]), ",".join(r["event_ids"][:2]),
+                  ("SYNTHETIC " if r["synthetic"] else "") + r["data_origin"], str(r["created_at"])[:19])  # fmt: skip
+    console.print(t)
+
+
 def main() -> None:  # pragma: no cover
     app()
