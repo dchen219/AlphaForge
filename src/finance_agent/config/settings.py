@@ -64,6 +64,8 @@ class Settings(BaseSettings):
     cache_ttl_market_bars_hours: float = 12
     # Extreme daily move flagged for review (never deleted): fraction, e.g. 0.25 = 25 %.
     market_extreme_return_threshold: float = 0.25
+    # v0.3-B event studies: wall-clock budget for one multi-event comparison (checked between events)
+    event_study_time_budget_seconds: float = 120.0
 
     # Cache TTLs for reusing stored source snapshots instead of re-fetching.
     cache_ttl_tickers_hours: float = 24 * 7
