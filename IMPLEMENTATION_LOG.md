@@ -282,7 +282,7 @@ Unchanged from the build log, plus: the numeric checker does not validate direct
 # v0.2 — Market Intelligence & Event Detection (2026-11-01/02)
 
 Branch `feat/v0.2-market-intelligence` from `master` @ `4450f41` (local = origin, clean).
-Not merged to `master`.
+Not merged to `master` at the time of writing (later merged via PR #1 as `07cbb0f`, tag `v0.2.0`).
 
 ## Phase 0 — inspection and source investigation
 
@@ -642,3 +642,16 @@ Integration check: a trial merge of PR #3 into PR #4 conflicts in `CLAUDE.md`,
 `IMPLEMENTATION_LOG.md`, `interfaces/api.py` and `uv.lock`. All four resolve as a union (keep both
 routers; run `uv lock`). The combined tree passes Ruff and 504 offline tests. Neither PR adds a
 migration that competes with the other.
+
+## v0.3-B release (2026-11-02)
+
+- PR #4 was merged into `master` with a normal merge commit, preserving every feature commit.
+- The annotated tag `v0.3.0b` marks the verified merge commit.
+- The release-status docs (README, CLAUDE.md, acceptance reports) were updated in the last
+  commit before the merge.
+- **Scope of the release:** v0.3.0b is a methodological engine:
+  - synthetic-price equity/ETF workflows;
+  - real, live-verified Treasury yields;
+  - classical inference only;
+  - inferred confounder coverage;
+  - no live Alpaca equity validation.

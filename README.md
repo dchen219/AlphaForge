@@ -2,9 +2,9 @@
 
 *An agentic financial intelligence and quantitative research platform.*
 
-**Released: v0.3.0a — Historical Market Data Infrastructure & CI** (on v0.2.0 Market Intelligence &
-Event Detection and v0.1's Financial Research Foundation). **In review: v0.3-B — Quantitative
-Event-Study Research Engine** (branch `feat/v0.3b-event-study`). AlphaForge is a modular,
+**Released: v0.3.0b — Quantitative Event-Study Research Engine** (on v0.3.0a Historical Market
+Data Infrastructure & CI, v0.2.0 Market Intelligence & Event Detection and v0.1's Financial
+Research Foundation). AlphaForge is a modular,
 local-first financial research platform. It retrieves official SEC EDGAR filings,
 Federal Reserve communications, BLS/BEA release calendars and ALFRED vintage data,
 normalizes them with full provenance, runs deterministic calculations, detects and ranks
@@ -29,15 +29,24 @@ No trading, brokerage execution, or price prediction is implemented.
 | v0.1 | Financial Research Foundation — SEC/FRED data layer, provenance, deterministic fundamentals, evidence-linked company research | **Released** |
 | v0.2 | Market Intelligence & Event Detection — macro/FOMC/SEC event ingestion, dedup, explainable importance, daily briefings | **Released (v0.2.0)** |
 | v0.3-A | Historical market-data infrastructure — provider interface, versioned daily bars, corporate actions, adjustments, NYSE calendar, data quality, Treasury yields, CI | **Released (v0.3.0a)** |
-| v0.3-B | Quantitative event-study engine — event-session alignment, market-adjusted/market-model abnormal returns, CAR inference, Treasury yield-change studies, confounder audit, multi-event aggregation, reproducible runs | **Implemented — in review** |
+| v0.3-B | Quantitative event-study engine — event-session alignment, market-adjusted/market-model abnormal returns, CAR inference, Treasury yield-change studies, confounder audit, multi-event aggregation, reproducible runs | **Released (v0.3.0b)** — methodological engine (synthetic equity prices; real yields) |
 | v0.3 (C+) | Further event-to-asset impact research | Planned |
 | v0.4 | Portfolio Intelligence | Planned |
 | v0.5 | Quantitative Research Agents | Planned |
 
 v0.3-C–v0.5 are not yet built. v0.3-B estimates *descriptive and statistical* event responses
-(no causal identification, signals, trading, recommendations or portfolio optimization); with no
-live equity-price credentials, every equity event study in this repository runs on SYNTHETIC
-prices and is methodological validation only (Treasury-yield studies use real ALFRED data).
+(no causal identification, signals, trading, recommendations or portfolio optimization).
+
+**What v0.3.0b is, and is not.** v0.3.0b is a *methodological* research engine:
+- **Equity/ETF workflows** are validated end to end on SYNTHETIC prices. These are
+  methodological checks against independent references, not empirical findings. Live Alpaca
+  equity data is **not validated** because no credentials are available.
+- **Treasury-yield observations** (DGS2/DGS10, ALFRED) are real and verified against a live vintage.
+- **Inference** is classical, single-event (i.i.d. normal errors) with a placebo check. Results
+  are `LIMITED` when diagnostics or confounders undermine its assumptions. There are no
+  BMP/Kolari–Pynnönen/rank tests and no cross-asset clustered inference.
+- **Confounding and coverage:** the confounder audit sees only ingested sources. Its coverage is
+  inferred from stored events. News, analyst actions and consensus are not covered.
 v0.3-A provides validated market data only. v0.2 deliberately stops short of prediction: no causal estimates,
 price-impact forecasts, market reactions or consensus surprises (see
 [docs/event_intelligence_methodology.md](docs/event_intelligence_methodology.md)).

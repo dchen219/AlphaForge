@@ -6,10 +6,10 @@ command `finance-agent`, and database schema intentionally keep their original n
 do not rename them.)
 
 Guidance for AI coding agents and contributors working in this repository.
-Status: **v0.3.0a released** on `master` (v0.1 Financial Research Foundation, v0.2 Market
+Status: **v0.3.0b released** on `master` (v0.1 Financial Research Foundation, v0.2 Market
 Intelligence & Event Detection [tag `v0.2.0`], v0.3-A Historical Market Data Infrastructure & CI
-[PR #2, tag `v0.3.0a`]). **v0.3-B — Quantitative Event-Study Research Engine** implemented on
-branch `feat/v0.3b-event-study` (in review; not merged). Roadmap: v0.3-C+ further event-to-asset
+[PR #2, tag `v0.3.0a`], v0.3-B Quantitative Event-Study Research Engine [PR #4, tag `v0.3.0b`;
+a methodological engine: equity/ETF results on synthetic prices only, live Alpaca unverified]). Roadmap: v0.3-C+ further event-to-asset
 research · v0.4 Portfolio Intelligence · v0.5 Quantitative Research Agents (not started — do not
 start without an explicit request). Event-study rules: `docs/event_study_methodology.md`,
 `docs/event_study_statistical_validation.md`, `docs/event_study_data_requirements.md`. Market-data rules:
