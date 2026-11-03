@@ -185,10 +185,12 @@ def create_app(settings: Settings | None = None, ctx: AppContext | None = None) 
 
     from finance_agent.interfaces.events_api import router as events_router
     from finance_agent.interfaces.market_api import router as market_router
+    from finance_agent.interfaces.studies_api import router as studies_router
     from finance_agent.interfaces.system_api import router as system_router
 
     app.include_router(events_router)  # v0.2 event intelligence routes
     app.include_router(market_router)  # v0.3-A market data routes
+    app.include_router(studies_router)  # v0.3-B event-study routes
     app.include_router(system_router)  # read-only overview for the local testing dashboard
     return app
 

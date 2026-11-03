@@ -493,3 +493,64 @@ class MarketYieldObservation(Base):
     snapshot_sha256: Mapped[str | None] = mapped_column(String(64))
     data_origin: Mapped[str] = mapped_column(String(32))
     retrieved_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+# --------------------------------------------------------------------------- v0.3-B event studies
+class EventStudyRunRecord(Base):
+    """One finalized, immutable event-study run (single event, yield study or comparison).
+
+    ``run_id`` is derived from the specification hash, the digest of the exact data versions used
+    and the methodology version: identical inputs reproduce the same id (never recomputed or
+    overwritten); changed prices, events or assumptions produce a new run.
+    """
+
+    __tablename__ = "event_study_runs"
+    __table_args__ = (Index("ix_event_study_spec", "spec_hash"),)
+
+    run_id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    kind: Mapped[str] = mapped_column(String(16))  # single | yield | compare
+    status: Mapped[str] = mapped_column(String(24))
+    spec_hash: Mapped[str] = mapped_column(String(64))
+    data_digest: Mapped[str] = mapped_column(String(64))
+    methodology_version: Mapped[str] = mapped_column(String(32))
+    specification: Mapped[dict] = mapped_column(JSON)
+    event_ids: Mapped[list] = mapped_column(JSON, default=list)
+    data_mode: Mapped[str] = mapped_column(String(16))
+    data_origin: Mapped[str] = mapped_column(String(64))
+    synthetic: Mapped[bool] = mapped_column(Boolean)
+    software: Mapped[dict] = mapped_column(JSON, default=dict)
+    data_manifest: Mapped[dict] = mapped_column(JSON, default=dict)
+    result: Mapped[dict] = mapped_column(JSON, default=dict)
+    report_markdown: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    finalized_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class EventStudyResultRecord(Base):
+    """Queryable per-window results of a run (the full result is in ``event_study_runs.result``)."""
+
+    __tablename__ = "event_study_results"
+    __table_args__ = (
+        UniqueConstraint("run_id", "event_id", "variant", "window", "measure", name="uq_event_study_result"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("event_study_runs.run_id"), index=True)
+    event_id: Mapped[str] = mapped_column(String(32))
+    target: Mapped[str] = mapped_column(String(16))
+    variant: Mapped[str] = mapped_column(String(64))  # "primary" or a robustness label
+    model: Mapped[str] = mapped_column(String(24))
+    window: Mapped[str] = mapped_column(String(16))
+    window_start: Mapped[int] = mapped_column(Integer)
+    window_end: Mapped[int] = mapped_column(Integer)
+    status: Mapped[str] = mapped_column(String(32))
+    measure: Mapped[str] = mapped_column(String(32))  # car | raw_cumulative_return | change_bp
+    unit: Mapped[str] = mapped_column(String(24))  # decimal_return | basis_points
+    value: Mapped[float | None] = mapped_column(Float)
+    standard_error: Mapped[float | None] = mapped_column(Float)
+    test_statistic: Mapped[float | None] = mapped_column(Float)
+    p_value: Mapped[float | None] = mapped_column(Float)
+    ci_low: Mapped[float | None] = mapped_column(Float)
+    ci_high: Mapped[float | None] = mapped_column(Float)
+    inference_status: Mapped[str | None] = mapped_column(String(24))
+    estimation_observations: Mapped[int | None] = mapped_column(Integer)

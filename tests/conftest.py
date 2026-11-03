@@ -103,3 +103,29 @@ def market_ctx(tmp_path_factory):
 
 
 MARKET_START, MARKET_END = date(2024, 1, 2), date(2026, 10, 30)
+
+
+STUDY_TICKERS = ["SPY", "QQQ", "IWM", "XLK", "XLE", "MSFT", "NVDA", "IEF"]
+
+
+def build_study_ctx(tmp: Path) -> AppContext:
+    """REAL v0.2 events + SYNTHETIC Alpaca-format bars (subset) + REAL ALFRED yields, one database."""
+    from finance_agent.market.ingest import MarketDataIngestor
+    from finance_agent.market.yields import YieldIngestor
+
+    s = offline_settings(tmp)
+    db = Database(s.database_url)
+    db.create_all()
+    ctx = AppContext(s, db=db)
+    start, as_of = fixture_window()
+    ctx.ingest_report = EventIngestor(ctx).run(as_of=as_of, start=start)
+    ctx.market_run = MarketDataIngestor(ctx).run(STUDY_TICKERS, MARKET_START, MARKET_END)
+    ctx.yield_stats = YieldIngestor(ctx).run(None, MARKET_START, MARKET_END)
+    return ctx
+
+
+@pytest.fixture(scope="module")
+def study_ctx(tmp_path_factory):
+    ctx = build_study_ctx(tmp_path_factory.mktemp("study"))
+    yield ctx
+    ctx.close()
