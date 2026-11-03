@@ -33,6 +33,7 @@ from finance_agent.events.briefing import (
     verify_entries,
 )
 from finance_agent.events.importance import apply_importance
+from finance_agent.events.replay import calendar_visibility
 from finance_agent.events.schemas import FinancialEvent
 from finance_agent.events.store import BriefingStore, EventStore
 from finance_agent.events.transmission import channels_for
@@ -66,6 +67,21 @@ extracted deterministically from official sources (SEC EDGAR, Federal Reserve, B
 Rules: use only the provided events; copy any number exactly as displayed; cite event ids for every
 interpretation; the executive summary must contain NO numbers; label mechanisms as hypotheses; never
 claim an observed market reaction, price move, or consensus surprise (none are available); no advice."""
+
+
+BRIEFING_NODES = (
+    "parse",
+    "window",
+    "retrieve",
+    "resolve",
+    "compare",
+    "rank",
+    "select",
+    "evidence",
+    "explain",
+    "verify",
+    "persist",
+)
 
 
 class BriefingState(TypedDict, total=False):
@@ -113,19 +129,7 @@ class BriefingWorkflow:
 
     def _build(self):
         g = StateGraph(BriefingState)
-        order = [
-            "parse",
-            "window",
-            "retrieve",
-            "resolve",
-            "compare",
-            "rank",
-            "select",
-            "evidence",
-            "explain",
-            "verify",
-            "persist",
-        ]
+        order = list(BRIEFING_NODES)
         for name in order:
             g.add_node(name, self._wrap(name, getattr(self, name)))
         g.add_node("fail", self.fail)
@@ -141,6 +145,7 @@ class BriefingWorkflow:
     def _wrap(self, name, fn):
         def node(state: BriefingState) -> dict:
             t0 = time.perf_counter()
+            started = utcnow().isoformat()
             steps = list(state.get("steps", []))
             try:
                 update = fn(state) or {}
@@ -154,6 +159,8 @@ class BriefingWorkflow:
                 log.exception("briefing step crashed", extra={"step": name})
                 update = {"error": f"{name}: unexpected {type(exc).__name__}: {exc}"}
                 steps.append({"step": name, "status": "error", "error": f"{type(exc).__name__}: {exc}"})
+            # Observability only: wall-clock bounds of the node (does not affect the workflow).
+            steps[-1].update(started_at=started, finished_at=utcnow().isoformat())
             update["steps"] = steps
             return update
 
@@ -183,25 +190,15 @@ class BriefingWorkflow:
         if s["request"].tickers:
             t = set(s["request"].tickers)
             events = [e for e in events if e.event_type in MACRO_TYPES or set(e.affected_entities) & t]
-        upcoming = self.store.calendar(start=as_of, end=as_of + timedelta(days=7))
-        due = self.store.calendar(start=start, end=as_of)
         # A schedule is knowledge only once a calendar snapshot containing it was retrieved
-        # (calendars are not versioned historically). Withhold later-observed entries.
-        known = self.store.schedule_known_at([e.event_id for e in upcoming + due])
-        visible = {eid for eid, t in known.items() if t <= as_of}
-        withheld = sum(e.event_id not in visible for e in upcoming + due)
-        upcoming = [e for e in upcoming if e.event_id in visible]
-        due = [e for e in due if e.event_id in visible]
-        unconfirmed = []
-        for d in due:  # scheduled within window: occurred only if a linked publication is available by as_of
-            linked = [e for e in events if e.related_event_id == d.event_id]
-            if not linked:
-                unconfirmed.append(d)
+        # (calendars are not versioned historically). Withhold later-observed entries; a due entry
+        # occurred only if a linked publication is available by as_of.
+        cal = calendar_visibility(self.store, start, as_of, events)
         return {
             "events": events,
-            "upcoming": upcoming,
-            "unconfirmed": unconfirmed,
-            "schedule_withheld": withheld,
+            "upcoming": cal.upcoming,
+            "unconfirmed": cal.unconfirmed,
+            "schedule_withheld": len(cal.withheld),
         }
 
     def resolve(self, s):

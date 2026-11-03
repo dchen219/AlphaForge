@@ -98,6 +98,9 @@ uv run python -m finance_agent study report --run-id ES-… --offline     # also
 
 # API
 uv run finance-agent serve [--offline]    # http://127.0.0.1:8000/docs
+
+# Local agent-testing dashboard (Streamlit; needs the API running) — docs/agent_testing_ui.md
+uv run python -m finance_agent.ui                # http://127.0.0.1:8501
 ```
 
 CI: `.github/workflows/ci.yml` runs Ruff, migrations, the offline suite and the historical

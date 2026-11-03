@@ -379,6 +379,31 @@ class EventStore:
                 e.event_cluster_id = None
         return rows
 
+    def mask_future_links(self, rows: list[FinancialEvent], as_of: datetime) -> list[FinancialEvent]:
+        """Public alias of the point-in-time link masking applied by ``query(as_of=...)``."""
+        return self._point_in_time_links(rows, as_of)
+
+    def revision_chain(self, event_id: str) -> list[FinancialEvent]:
+        """All versions linked to ``event_id`` through ``supersedes_event_id``, oldest first."""
+        with self.db.session() as s:
+            chain: dict[str, FinancialEventRecord] = {}
+            cur = s.get(FinancialEventRecord, event_id)
+            while cur is not None and cur.event_id not in chain:  # walk back to the first release
+                chain[cur.event_id] = cur
+                cur = (
+                    s.get(FinancialEventRecord, cur.supersedes_event_id) if cur.supersedes_event_id else None
+                )
+            frontier = [event_id]
+            while frontier:  # walk forward to later revisions
+                nxt = s.scalars(
+                    select(FinancialEventRecord).where(FinancialEventRecord.supersedes_event_id.in_(frontier))
+                ).all()
+                frontier = [r.event_id for r in nxt if r.event_id not in chain]
+                chain.update({r.event_id: r for r in nxt})
+            events = [record_to_event(r) for r in chain.values()]
+        far = datetime.max.replace(tzinfo=UTC)
+        return sorted(events, key=lambda e: (e.available_at or far, e.event_id))
+
     def calendar(self, *, start: datetime, end: datetime, limit: int = 500) -> list[FinancialEvent]:
         """Scheduled entries with ``scheduled_for`` in (start, end]. Not evidence of occurrence."""
         q = (
@@ -457,6 +482,16 @@ class BriefingStore:
                         importance_score=score,
                     )
                 )
+
+    def recent(self, limit: int = 50) -> list:
+        from finance_agent.storage.models import BriefingRecord
+
+        with self.db.session() as s:
+            rows = s.scalars(
+                select(BriefingRecord).order_by(BriefingRecord.created_at.desc()).limit(limit)
+            ).all()
+            s.expunge_all()
+            return list(rows)
 
     def get(self, briefing_id: str):
         from finance_agent.storage.models import BriefingRecord

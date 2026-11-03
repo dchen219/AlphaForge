@@ -9,7 +9,8 @@ Guidance for AI coding agents and contributors working in this repository.
 Status: **v0.3.0b released** on `master` (v0.1 Financial Research Foundation, v0.2 Market
 Intelligence & Event Detection [tag `v0.2.0`], v0.3-A Historical Market Data Infrastructure & CI
 [PR #2, tag `v0.3.0a`], v0.3-B Quantitative Event-Study Research Engine [PR #4, tag `v0.3.0b`;
-a methodological engine: equity/ETF results on synthetic prices only, live Alpaca unverified]). Roadmap: v0.3-C+ further event-to-asset
+a methodological engine: equity/ETF results on synthetic prices only, live Alpaca unverified]). Local Streamlit **agent-testing dashboard** on branch `feat/agent-dashboard` (PR #3, in review;
+not merged; `docs/agent_testing_ui.md`). Roadmap: v0.3-C+ further event-to-asset
 research · v0.4 Portfolio Intelligence · v0.5 Quantitative Research Agents (not started — do not
 start without an explicit request). Event-study rules: `docs/event_study_methodology.md`,
 `docs/event_study_statistical_validation.md`, `docs/event_study_data_requirements.md`. Market-data rules:
@@ -111,8 +112,14 @@ apps/api/main.py   thin ASGI entry
                 (Var(CAR) incl. estimation error, placebo), diagnostics, engine (single event),
                 yields_study (bp, ~15:30 ET rule), confounders, aggregation, reports, store, service
   interfaces/studies_api.py /event-studies* routes (POST = admin: loopback + token)
+  events/replay.py   point-in-time visibility audit + calendar_visibility (shared with briefing workflow)
+  interfaces/system_api.py  GET /system/overview (sources, credential booleans, store/run summaries)
+  ui/           testing dashboard: client.py (typed httpx, loopback-only), validation.py, labels.py
+                (origin banners), compare.py (two-cutoff diffs/integrity), components.py, __main__.py
+                (launcher), pages/ (7 pages, each render()); no domain logic
+apps/ui/app.py     Streamlit entry (st.navigation); .streamlit/config.toml binds 127.0.0.1
 .github/workflows/ci.yml   CI: ruff, migrations, offline suite, replay (no secrets)
-tests/{unit,integration,historical_replay,fixtures}
+tests/{unit,integration,historical_replay,ui,fixtures}
 scripts/build_fixtures.py       v0.1 fixtures (SEC real, FRED synthetic)
 scripts/build_v02_fixtures.py   records REAL v0.2 fixtures by running ingestion live (~15 min)
 scripts/build_v03_fixtures.py   SYNTHETIC Alpaca-format bars (deterministic) + --record-yields REAL ALFRED (~5 min)
@@ -164,6 +171,20 @@ uv run python -m finance_agent study run --event-id EV-… --series DGS10 [--off
 uv run python -m finance_agent study compare --event-type MACRO_RELEASE [--subtype CPI …] --ticker QQQ --benchmark SPY [--start … --end …] [--max-events 40] [--offline]
 uv run python -m finance_agent study report --run-id ES-… | study list
 ```
+
+Testing dashboard (Streamlit in the `ui` dependency group; read-only, never ingests):
+
+```bash
+uv run python -m finance_agent serve --offline --port 8000   # ALPHAFORGE_API_URL
+uv run python -m finance_agent serve --port 8001             # live, optional: ALPHAFORGE_LIVE_API_URL
+uv run python -m finance_agent.ui                            # 127.0.0.1:8501 (ALPHAFORGE_UI_PORT)
+powershell -ExecutionPolicy Bypass -File scripts\start_dashboard.ps1 [-Ingest]   # both, Windows
+```
+
+On Windows hosts with Application Control, `.venv\Scripts\*.exe` shims (pytest, streamlit) may
+be blocked: use `uv run python -m pytest` / `python -m finance_agent.ui`. Workflow steps record
+`started_at`/`finished_at` (observability only). Read-only dashboard routes: `GET /system/overview`,
+`/events/replay`, `/research`, `/intelligence/briefings`, `/workflows`; `/events/{id}?as_of=`.
 
 Live SEC requires `SEC_USER_AGENT` (name + contact). Offline mode serves `tests/fixtures`
 (and, in v0.2, replays macro probing over the recorded window in `MANIFEST.json → event_window`;

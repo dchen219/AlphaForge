@@ -63,6 +63,21 @@ BASE_METRICS_FOR_GROUP = {
 SUPPORT_CALCS = {"margins": ["gross_profit_derived"], "capex_intensity": ["free_cash_flow"]}
 
 
+RESEARCH_NODES = (
+    "parse_request",
+    "resolve_company",
+    "plan_metrics",
+    "retrieve_facts",
+    "select_periods",
+    "calculate",
+    "analyze_trends",
+    "gather_evidence",
+    "synthesize",
+    "verify",
+    "persist",
+)
+
+
 class ResearchState(TypedDict, total=False):
     run_id: str
     request: ResearchRequest
@@ -93,19 +108,7 @@ class CompanyResearchWorkflow:
     # ---------------------------------------------------------------- graph
     def _build(self):
         g = StateGraph(ResearchState)
-        order = [
-            "parse_request",
-            "resolve_company",
-            "plan_metrics",
-            "retrieve_facts",
-            "select_periods",
-            "calculate",
-            "analyze_trends",
-            "gather_evidence",
-            "synthesize",
-            "verify",
-            "persist",
-        ]
+        order = list(RESEARCH_NODES)
         for name in order:
             g.add_node(name, self._wrap(name, getattr(self, name)))
         g.add_node("fail", self.fail)
@@ -121,6 +124,7 @@ class CompanyResearchWorkflow:
     def _wrap(self, name: str, fn):
         def node(state: ResearchState) -> dict[str, Any]:
             t0 = time.perf_counter()
+            started = utcnow().isoformat()
             steps = list(state.get("steps", []))
             try:
                 update = fn(state) or {}
@@ -135,6 +139,8 @@ class CompanyResearchWorkflow:
                 log.exception("workflow step crashed", extra={"step": name})
                 update = {"error": f"{name}: unexpected {type(exc).__name__}: {exc}"}
                 steps.append({"step": name, "status": "error", "error": f"{type(exc).__name__}: {exc}"})
+            # Observability only: wall-clock bounds of the node (does not affect the workflow).
+            steps[-1].update(started_at=started, finished_at=utcnow().isoformat())
             update["steps"] = steps
             if self.ctx and state.get("run_id"):
                 self.ctx.repo.update_run(state["run_id"], steps=steps)
