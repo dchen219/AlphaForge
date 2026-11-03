@@ -12,6 +12,7 @@ stored in UTC.
 | `0003_event_intelligence` | v0.2 event tables |
 | `0004_market_data` | v0.3-A market-data tables |
 | `0005_market_version_identity` | v0.3-A: market bar / corporate-action / yield versions unique by (key, `version`) instead of (key, `content_hash`), so a source reverting to an earlier value is recorded |
+| `0006_event_studies` | v0.3-B event-study runs (immutable, content-addressed) and per-window results |
 
 ## v0.1 tables
 
@@ -77,3 +78,10 @@ versioned: a new row per distinct observation, never an overwrite.
 Adjusted prices (split-adjusted, total-return) are **derived at query time** from raw bars and the
 corporate actions visible at the cutoff. They are not stored, so a point-in-time query can never
 pick up a future action.
+
+## v0.3-B tables (migration `0006_event_studies`)
+
+| Table | Purpose / key columns |
+|---|---|
+| `event_study_runs` | `run_id` PK = `ES-` + sha256(kind, spec_hash, data_digest, methodology)[:16]; kind (single/yield/compare), status, `spec_hash` (indexed), `data_digest`, methodology_version, specification JSON, event_ids, data_mode, data_origin, `synthetic`, software versions, data_manifest (bar versions, snapshot SHA-256s, corrected sessions, factors), result JSON, report_markdown, created_at, finalized_at. Rows are never updated: identical inputs reuse the run, changed inputs create a new one. |
+| `event_study_results` | id, `run_id` FK (indexed), event_id (or `AGGREGATE`), target, variant (`primary` or robustness label), model, window, window_start/end, status, measure (`car` / `raw_cumulative_return` / `change_bp` / `mean_cluster_car`), unit (`decimal_return` / `basis_points`), value, standard_error, test_statistic, p_value, ci_low, ci_high, inference_status, estimation_observations. UNIQUE(run_id, event_id, variant, window, measure) |

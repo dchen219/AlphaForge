@@ -6,11 +6,13 @@ command `finance-agent`, and database schema intentionally keep their original n
 do not rename them.)
 
 Guidance for AI coding agents and contributors working in this repository.
-Status: **v0.2.0 released** on `master` (v0.1 Financial Research Foundation + v0.2 Market
-Intelligence & Event Detection; tag `v0.2.0`). **v0.3-A — Historical Market Data Infrastructure
-& CI** implemented on branch `feat/v0.3-market-data` (in review; not merged). Roadmap: v0.3-B+
-Event-to-Asset Impact Engine (event studies) · v0.4 Portfolio Intelligence · v0.5 Quantitative
-Research Agents (not started — do not start without an explicit request). Market-data rules:
+Status: **v0.3.0b released** on `master` (v0.1 Financial Research Foundation, v0.2 Market
+Intelligence & Event Detection [tag `v0.2.0`], v0.3-A Historical Market Data Infrastructure & CI
+[PR #2, tag `v0.3.0a`], v0.3-B Quantitative Event-Study Research Engine [PR #4, tag `v0.3.0b`;
+a methodological engine: equity/ETF results on synthetic prices only, live Alpaca unverified]). Roadmap: v0.3-C+ further event-to-asset
+research · v0.4 Portfolio Intelligence · v0.5 Quantitative Research Agents (not started — do not
+start without an explicit request). Event-study rules: `docs/event_study_methodology.md`,
+`docs/event_study_statistical_validation.md`, `docs/event_study_data_requirements.md`. Market-data rules:
 `docs/market_data_methodology.md`, `docs/trading_calendar_methodology.md`. Event semantics: `docs/event_intelligence_methodology.md`. Detailed history: `IMPLEMENTATION_LOG.md`. Accounting rules:
 `docs/accounting_methodology.md` (source of truth for data semantics).
 
@@ -55,14 +57,30 @@ Redis/Celery/microservices, frontend.
 12. **(v0.3-A) Gaps are never filled.** Missing sessions are classified (closure / missing
     data / provider failure / not finalized / quarantined) and reported. Extreme moves are
     flagged, never deleted. Treasury yields are rates (percent; changes in bp), not prices.
+13. **(v0.3-B) An event study never claims causality.** Results separate descriptive movement,
+    benchmark-adjusted association, statistical significance and (never established) causal
+    identification. Daily close-to-close returns are not intraday reactions; regular-session
+    releases are flagged as contaminated.
+14. **(v0.3-B) Timing and data contracts are explicit.** No publication time is invented
+    (date-only events make `[0,0]` ineligible); `point_in_time` studies never fall back to
+    retrospective data and are `UNVERIFIED` when bars were retrieved after the cutoff; any
+    synthetic input makes the whole run `synthetic: true` with a banner.
+15. **(v0.3-B) Windows are never shortened or filled; dependence is handled conservatively.**
+    Events released together count once, overlapping windows are clustered, cross-sectional
+    tests are `LIMITED` and need >= 10 independent clusters. Runs are immutable and
+    content-addressed (spec hash + data digest); changed inputs make a new run.
 
 ## Stack
 
 Python 3.12 (uv) · FastAPI · Pydantic v2 / pydantic-settings · SQLAlchemy 2.x + Alembic ·
 SQLite (PostgreSQL-compatible schema) · httpx · LangGraph (bounded linear workflow) ·
 Anthropic SDK (`claude-opus-5-5`) · Typer/Rich · pytest · Ruff. `tzdata` is required on
-Windows. pandas/NumPy are not used for calculations (scalar, auditable arithmetic); since v0.3-A
-they arrive only as dependencies of `exchange_calendars`, confined to `market/calendar.py`.
+Windows. pandas/NumPy are not used for v0.1–v0.3-A calculations (scalar, auditable arithmetic);
+since v0.3-A they arrive as dependencies of `exchange_calendars` (`market/calendar.py`). v0.3-B
+`event_studies/` uses NumPy, SciPy (`scipy.stats`) and statsmodels (OLS, Ljung–Box, Jarque–Bera).
+Import statsmodels **submodules only** (`statsmodels.regression.linear_model`,
+`statsmodels.stats.diagnostic`, …): `statsmodels.api` pulls in `scipy.spatial`, whose DLL is
+blocked by Windows Application Control on the development machine.
 
 ## Layout
 
@@ -88,6 +106,11 @@ apps/api/main.py   thin ASGI entry
                 (versioned bars/actions, point-in-time reads), calendar (exchange_calendars XNYS),
                 adjust, quality, calculations, yields (ALFRED DGS2/DGS10), service (query modes)
   interfaces/market_api.py  /market/* routes
+  event_studies/ v0.3-B: schemas (spec + hashes), alignment (daily-close-v1), windows, returns (via
+                MarketDataService only), benchmarks, market_model (statsmodels OLS), inference
+                (Var(CAR) incl. estimation error, placebo), diagnostics, engine (single event),
+                yields_study (bp, ~15:30 ET rule), confounders, aggregation, reports, store, service
+  interfaces/studies_api.py /event-studies* routes (POST = admin: loopback + token)
 .github/workflows/ci.yml   CI: ruff, migrations, offline suite, replay (no secrets)
 tests/{unit,integration,historical_replay,fixtures}
 scripts/build_fixtures.py       v0.1 fixtures (SEC real, FRED synthetic)
@@ -132,6 +155,15 @@ uv run python -m finance_agent market quality | market calendar --date 2026-11-2
 
 Live market data needs `ALPACA_API_KEY_ID` + `ALPACA_API_SECRET_KEY` (unverified — no keys at
 build time). Offline prices are SYNTHETIC; offline yields are REAL (MANIFEST `yield_window`).
+
+v0.3-B (offline events need `--start 2025-07-01`, the recorded window):
+
+```bash
+uv run python -m finance_agent study run --event-id EV-… --ticker QQQ --benchmark SPY --model market-model [--basis total_return] [--mode research|point_in_time --as-of …] [--window 0:1 …] [--no-robustness] [--offline] [--format markdown|json]
+uv run python -m finance_agent study run --event-id EV-… --series DGS10 [--offline]
+uv run python -m finance_agent study compare --event-type MACRO_RELEASE [--subtype CPI …] --ticker QQQ --benchmark SPY [--start … --end …] [--max-events 40] [--offline]
+uv run python -m finance_agent study report --run-id ES-… | study list
+```
 
 Live SEC requires `SEC_USER_AGENT` (name + contact). Offline mode serves `tests/fixtures`
 (and, in v0.2, replays macro probing over the recorded window in `MANIFEST.json → event_window`;
@@ -203,7 +235,7 @@ INSUFFICIENT_DATA with no ranking score. Weights are judgmental, not trained.
 
 ## Persistence notes
 
-- Alembic head: `0005_market_version_identity` (v0.3-A market tables in 0004; 0005 makes market versions unique by sequence; v0.2 tables: financial_events,
+- Alembic head: `0006_event_studies` (v0.3-B event_study_runs/event_study_results; v0.3-A market tables in 0004; 0005 makes market versions unique by sequence; v0.2 tables: financial_events,
   event_sources, briefings, briefing_events — `docs/database_schema.md`). Always add a migration for model changes;
   `tests/integration/test_storage.py` fails if models and migrations diverge.
 - Writes are idempotent and wrapped in `retry_on_conflict` (concurrent first loads);
@@ -224,6 +256,12 @@ INSUFFICIENT_DATA with no ranking score. Weights are judgmental, not trained.
   real provider responses (licensed). `tests/fixtures/alfred/DGS*` are **real**. The yield
   availability rule must stay "never earlier" on the recorded calibration vintages.
 - CI (`.github/workflows/ci.yml`) must stay credential-free; live tests are opt-in only.
+- (v0.3-B) Statistical tests need INDEPENDENT references (closed forms, explicit matrices,
+  numpy `lstsq` on fixture files, scipy) — never a value produced by the same code path. Monte
+  Carlo tests use fixed seeds. `study_ctx` (conftest) = REAL events + SYNTHETIC bars + REAL yields;
+  synthetic test events must use `data_origin="fixture:synthetic"` and dates that do not collide
+  with other tests in the module. A DB built with `create_all()` must be `alembic stamp head`-ed
+  before the CLI uses it.
 
 ## Known limitations
 
@@ -242,3 +280,8 @@ v0.3-A: live Alpaca unverified (no credentials; offline prices synthetic); delis
 provider correction behaviour unverified; corporate actions carry no announcement date (known
 from ex-date); halts indistinguishable from missing data; backfill assumes first-retrieved =
 originally published; single-process SQLite (no demonstrated bottleneck at 12k bars).
+v0.3-B: equity event studies are methodological validation only (synthetic prices; live Alpaca
+unverified); classical single-event inference (normal i.i.d.) + placebo — no BMP/Kolari–Pynnönen/
+rank tests or cross-asset clustered inference; daily data only; confounder coverage inferred from
+stored events (no ingestion-window record); point-in-time studies over backfilled bars are
+UNVERIFIED; stored report Markdown is immutable (rendering changes apply to new runs only).

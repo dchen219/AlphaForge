@@ -282,7 +282,7 @@ Unchanged from the build log, plus: the numeric checker does not validate direct
 # v0.2 — Market Intelligence & Event Detection (2026-11-01/02)
 
 Branch `feat/v0.2-market-intelligence` from `master` @ `4450f41` (local = origin, clean).
-Not merged to `master`.
+Not merged to `master` at the time of writing (later merged via PR #1 as `07cbb0f`, tag `v0.2.0`).
 
 ## Phase 0 — inspection and source investigation
 
@@ -534,3 +534,124 @@ live data. Live equity data remains **unverified**.
 | Live yields | passed |
 | Live Alpaca | skipped (no keys) |
 | Alembic | 0005 upgrade, check, and downgrade to 0003 and back to head: OK |
+
+# v0.3-B — Quantitative Event-Study Research Engine (2026-11-02)
+
+Branch `feat/v0.3b-event-study` from `master` @ `51373dc` (tag `v0.3.0a`). Methodology:
+`docs/event_study_methodology.md`. Validation: `docs/event_study_statistical_validation.md`.
+Data requirements: `docs/event_study_data_requirements.md`.
+
+## What was built
+- **`event_studies/`** module:
+  - immutable specification with spec hash;
+  - `daily-close-v1` event-session alignment;
+  - trading-session windows;
+  - returns only via the v0.3-A `MarketDataService`;
+  - raw, market-adjusted and OLS market-model expected returns (statsmodels);
+  - CAR inference including parameter-estimation error and a placebo check;
+  - diagnostics;
+  - Treasury yield-change studies (bp, ~15:30 ET quote rule);
+  - confounder audit with inferred coverage;
+  - multi-event aggregation with announcement de-duplication and overlap clusters;
+  - predefined robustness specifications;
+  - template reports (JSON and 14-section Markdown);
+  - immutable, content-addressed persistence.
+- **Migration `0006_event_studies`:** `event_study_runs`, `event_study_results`.
+- **API and CLI:**
+  - `/event-studies*` routes; POST requires the admin token plus a loopback client and is bounded;
+  - CLI `study run | report | compare | list`;
+  - setting `EVENT_STUDY_TIME_BUDGET_SECONDS`.
+- **Dependencies:** `scipy` 1.18.1 and `statsmodels` 0.15.0, verified with numpy 2.5.4 and
+  pandas 3.1.0. Only submodules are imported: Windows Application Control blocks
+  `scipy.spatial`'s DLL, which `statsmodels.api` loads.
+
+## Defects found and fixed during development (each has a regression test)
+1. **Exact fit gave a t-statistic.** A numerically exact market model left σ² at
+   floating-point noise (~1e-35) and produced a t-statistic. Inference is now `NOT_AVAILABLE`
+   when 1 - R² < 1e-12.
+2. **Run identity ignored robustness.** A run requested *with* robustness checks returned an
+   earlier stored run without them, because the request was not part of the run identity. The
+   robustness request is now in the data digest.
+3. **Yield study failed past the data.** It failed as a whole when any window extended beyond
+   the last published yield. Windows are now individually `OUT_OF_RANGE`, never shortened.
+4. **Yield report mislabelled.** It reused the equity "Abnormal returns and CAR" heading, and a
+   `|` in a column header broke the Markdown table.
+5. **Confounder search window too narrow.** Candidates were selected by availability within ±7
+   days, which could miss events published in the window but available later. Widened to ±14
+   days and documented.
+6. **Documentation error.** `events ingest --offline` needs `--start 2025-07-01` (the recorded
+   window); the default 120-day window misses earlier events. Found by running the documented
+   CLI sequence end to end.
+
+## Results (local, Windows 11, 2026-11-02)
+| Check | Result |
+|---|---|
+| Offline suite (non-replay) | 338 passed (296 existing + 42 new) |
+| Historical replay | 55 passed (48 existing + 7 new) |
+| `v0.3.0a` test files run unchanged against the branch | 344 passed / 11 skipped |
+| Live: ALFRED yields (v0.3-A) and live yield event study (v0.3-B) | passed |
+| Live: Alpaca | skipped (no credentials) |
+| Ruff, Alembic (upgrade, check, downgrade to 0005 and back) | clean |
+
+Monte Carlo at n = 130 (1,500 replications): size 0.046–0.051 and 95 % CI coverage 0.949–0.954
+for L = 1/3/6. With doubled event-window SD, size is 0.32 for both the classical and the placebo
+test, which motivates the event-induced-volatility diagnostic.
+
+| Performance (offline; SQLite) | Median |
+|---|---|
+| Single study | 63 ms (first call ~0.9 s: imports) |
+| Single study + 6 robustness specs | 340 ms |
+| Yield study | 43 ms |
+| 30-event CPI comparison (two models) | 3.8 s |
+| 12-event FOMC comparison | 1.7 s |
+| Read a run / its results | < 0.5 ms |
+| Peak traced memory | 3.5 MB (single), 7.0 MB (comparison) |
+
+Recomputation is bit-identical across repeated runs, and the run id is stable.
+
+## v0.3-B final release audit (2026-11-02, PR #4)
+
+Master was still `51373dc`; PR #3 (dashboard) and PR #4 were both open and based on it.
+The audit ran the real entry points (CLI on fresh Alembic databases, `serve --offline` with
+HTTP requests) as well as the test suites.
+
+Defects found and fixed, each with a regression test:
+- **Misleading "event not found" error.** After the README's default
+  `events ingest --offline`, which covers the 120 days before the cutoff, a study of the
+  2025-09-17 FOMC event failed with "not found (run `events ingest` first)", although ingest had
+  just run. The CLI and API 404 now explain the ingest window and, offline, name the exact
+  command (`events ingest --offline --start 2025-07-01`).
+- **Literal `None` in the Markdown report.** Windows without inference (missing observations,
+  not available at the cutoff) showed `None` as their inference status and degrees of freedom;
+  key/value tables showed `None` for unset fields. Such windows now read
+  `not computed (window <status>)`, and empty cells read `n/a`. The JSON was already explicit.
+  The examples in `docs/examples` were regenerated; numbers and run IDs are unchanged.
+
+Statistical spot checks on CLI-produced runs:
+- An independent numpy/scipy recomputation of the stored QQQ/SPY FOMC run reproduces α, β,
+  σ², CAR, SE (explicit L×L covariance), t, p and the CI to ~1e-16. The estimation sessions end
+  before day −20.
+- On the planted XLE move the diagnostic reports ELEVATED event-induced volatility (ratio 76),
+  and all windows are LIMITED in JSON and Markdown.
+- A second database built from scratch reproduces the same run with an identical spec hash,
+  data digest, result JSON and Markdown.
+- Two point-in-time cutoffs (2025-10-31 and 2026-11-01): the earlier is UNVERIFIED (backfill)
+  and withholds [0,+5]; the later is COMPLETED. CARs agree where both exist.
+
+Integration check: a trial merge of PR #3 into PR #4 conflicts in `CLAUDE.md`,
+`IMPLEMENTATION_LOG.md`, `interfaces/api.py` and `uv.lock`. All four resolve as a union (keep both
+routers; run `uv lock`). The combined tree passes Ruff and 504 offline tests. Neither PR adds a
+migration that competes with the other.
+
+## v0.3-B release (2026-11-02)
+
+- PR #4 was merged into `master` with a normal merge commit, preserving every feature commit.
+- The annotated tag `v0.3.0b` marks the verified merge commit.
+- The release-status docs (README, CLAUDE.md, acceptance reports) were updated in the last
+  commit before the merge.
+- **Scope of the release:** v0.3.0b is a methodological engine:
+  - synthetic-price equity/ETF workflows;
+  - real, live-verified Treasury yields;
+  - classical inference only;
+  - inferred confounder coverage;
+  - no live Alpaca equity validation.

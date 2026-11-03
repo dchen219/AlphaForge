@@ -2,9 +2,9 @@
 
 *An agentic financial intelligence and quantitative research platform.*
 
-**Released: v0.2.0 — Market Intelligence & Event Detection** (on v0.1's Financial Research
-Foundation). **In review: v0.3-A — Historical Market Data Infrastructure & CI** (branch
-`feat/v0.3-market-data`). AlphaForge is a modular,
+**Released: v0.3.0b — Quantitative Event-Study Research Engine** (on v0.3.0a Historical Market
+Data Infrastructure & CI, v0.2.0 Market Intelligence & Event Detection and v0.1's Financial
+Research Foundation). AlphaForge is a modular,
 local-first financial research platform. It retrieves official SEC EDGAR filings,
 Federal Reserve communications, BLS/BEA release calendars and ALFRED vintage data,
 normalizes them with full provenance, runs deterministic calculations, detects and ranks
@@ -28,13 +28,26 @@ No trading, brokerage execution, or price prediction is implemented.
 |---|---|---|
 | v0.1 | Financial Research Foundation — SEC/FRED data layer, provenance, deterministic fundamentals, evidence-linked company research | **Released** |
 | v0.2 | Market Intelligence & Event Detection — macro/FOMC/SEC event ingestion, dedup, explainable importance, daily briefings | **Released (v0.2.0)** |
-| v0.3-A | Historical market-data infrastructure — provider interface, versioned daily bars, corporate actions, adjustments, NYSE calendar, data quality, Treasury yields, CI | **Implemented — in review** |
-| v0.3 (B+) | Event-to-Asset Impact Engine (event studies) | Planned |
+| v0.3-A | Historical market-data infrastructure — provider interface, versioned daily bars, corporate actions, adjustments, NYSE calendar, data quality, Treasury yields, CI | **Released (v0.3.0a)** |
+| v0.3-B | Quantitative event-study engine — event-session alignment, market-adjusted/market-model abnormal returns, CAR inference, Treasury yield-change studies, confounder audit, multi-event aggregation, reproducible runs | **Released (v0.3.0b)** — methodological engine (synthetic equity prices; real yields) |
+| v0.3 (C+) | Further event-to-asset impact research | Planned |
 | v0.4 | Portfolio Intelligence | Planned |
 | v0.5 | Quantitative Research Agents | Planned |
 
-v0.3-B–v0.5 are not yet built. v0.3-A provides validated market data only: no signals,
-regressions, portfolio optimization or trading. v0.2 deliberately stops short of prediction: no causal estimates,
+v0.3-C–v0.5 are not yet built. v0.3-B estimates *descriptive and statistical* event responses
+(no causal identification, signals, trading, recommendations or portfolio optimization).
+
+**What v0.3.0b is, and is not.** v0.3.0b is a *methodological* research engine:
+- **Equity/ETF workflows** are validated end to end on SYNTHETIC prices. These are
+  methodological checks against independent references, not empirical findings. Live Alpaca
+  equity data is **not validated** because no credentials are available.
+- **Treasury-yield observations** (DGS2/DGS10, ALFRED) are real and verified against a live vintage.
+- **Inference** is classical, single-event (i.i.d. normal errors) with a placebo check. Results
+  are `LIMITED` when diagnostics or confounders undermine its assumptions. There are no
+  BMP/Kolari–Pynnönen/rank tests and no cross-asset clustered inference.
+- **Confounding and coverage:** the confounder audit sees only ingested sources. Its coverage is
+  inferred from stored events. News, analyst actions and consensus are not covered.
+v0.3-A provides validated market data only. v0.2 deliberately stops short of prediction: no causal estimates,
 price-impact forecasts, market reactions or consensus surprises (see
 [docs/event_intelligence_methodology.md](docs/event_intelligence_methodology.md)).
 
@@ -76,6 +89,13 @@ uv run python -m finance_agent market calendar --date 2026-11-26
 uv run python -m finance_agent market calendar --event-time 2026-10-28T16:05:00-04:00
 uv run python -m finance_agent market yields DGS10 --start 2026-10-01 --end 2026-10-30 --offline   # REAL ALFRED data
 
+# v0.3-B event studies (equity prices offline = SYNTHETIC -> methodological validation only)
+uv run python -m finance_agent events ingest --offline --start 2025-07-01        # recorded REAL events (the default window is only the last 120 days)
+uv run python -m finance_agent study run --event-id EV-e6a9f7badcb72f25 --ticker QQQ --benchmark SPY --model market-model --offline
+uv run python -m finance_agent study run --event-id EV-e6a9f7badcb72f25 --series DGS10 --offline   # REAL yields, bp
+uv run python -m finance_agent study compare --event-type MACRO_RELEASE --subtype CPI --ticker QQQ --benchmark SPY --offline
+uv run python -m finance_agent study report --run-id ES-… --offline     # also: study list
+
 # API
 uv run finance-agent serve [--offline]    # http://127.0.0.1:8000/docs
 ```
@@ -109,6 +129,7 @@ uv run ruff check . && uv run ruff format --check .
 | `INGEST_ADMIN_TOKEN` | Enables `POST /intelligence/ingest` (loopback clients + matching `X-Admin-Token` only). Unset = disabled. |
 | `ALPACA_API_KEY_ID`, `ALPACA_API_SECRET_KEY`, `ALPACA_FEED` | v0.3-A live market data (Alpaca). Without keys, live market ingestion is refused; `--offline` uses SYNTHETIC fixtures. `ALPACA_FEED` = `sip` (default) or `iex`. |
 | `MARKET_EXTREME_RETURN_THRESHOLD` | Daily move flagged for review (default 0.25); never deleted. |
+| `EVENT_STUDY_TIME_BUDGET_SECONDS` | v0.3-B: wall-clock budget for one multi-event comparison (default 120; checked between events). |
 | `MACRO_USE_CONFIRMED_SCHEDULED_TIME` | `true` (default): macro release available at the official scheduled time once ALFRED confirms the date; `false`: strict next-day policy. |
 
 ## API
@@ -136,6 +157,10 @@ uv run ruff check . && uv run ruff format --check .
 | GET | `/market/yields/{series_id}?start=&end=&as_of=` | DGS2/DGS10 yields (percent) and basis-point changes |
 | GET | `/market/quality?ticker=&check=&severity=` | Data-quality issues and recent ingestion runs |
 | POST | `/market/ingest` | Administrative market ingestion; disabled unless `INGEST_ADMIN_TOKEN` is set (loopback + token) |
+| GET | `/event-studies/specifications` | Models, bases, modes, default windows and request limits |
+| POST | `/event-studies` | Run one event study `{"event_id", "ticker"\|"series_id", "benchmark", "model", "price_basis", "data_mode", "as_of"?, "windows"?, …}` — administrative (loopback + `X-Admin-Token`), bounded |
+| POST | `/event-studies/compare` | Bounded multi-event comparison (≤ 100 events, time budget) — administrative |
+| GET | `/event-studies` · `/event-studies/{run_id}` · `/{run_id}/results` · `/{run_id}/report?format=json\|markdown` | Stored immutable runs, per-window results, 14-section report |
 
 A bare date in `from` means 00:00 New York; in `to`/`as_of`/`date` it means 23:59:59 New York.
 
@@ -173,7 +198,21 @@ Ingestion      market/ingest.py (bounded, incremental, idempotent) · market/yie
 Storage        market/store.py (versioned bars/actions, point-in-time reads, issues, runs)
 Rules          market/calendar.py (exchange_calendars XNYS) · market/adjust.py · market/quality.py
 Queries        market/calculations.py · market/service.py · interfaces/market_api.py · CLI `market`
+
+v0.3-B event studies (event_studies/)
+Alignment      alignment.py (daily-close-v1) · windows.py (trading-session offsets)
+Returns        returns.py (only via the v0.3-A MarketDataService) · benchmarks.py
+Estimation     market_model.py (statsmodels OLS) · inference.py (Var(CAR) with estimation error,
+               placebo) · diagnostics.py
+Studies        engine.py (single event) · yields_study.py (bp) · confounders.py · aggregation.py
+Runs           service.py · store.py (immutable, content-addressed) · reports.py (JSON + Markdown)
+               · interfaces/studies_api.py · CLI `study`
 ```
+
+Database tables added in v0.3-B (migration `0006_event_studies`): `event_study_runs`,
+`event_study_results`. Methodology: [docs/event_study_methodology.md](docs/event_study_methodology.md),
+validation: [docs/event_study_statistical_validation.md](docs/event_study_statistical_validation.md),
+data requirements: [docs/event_study_data_requirements.md](docs/event_study_data_requirements.md).
 
 Database tables added in v0.3-A (migrations `0004_market_data`, `0005_market_version_identity`): `market_instruments`,
 `market_provider_mappings`, `market_price_bars`, `market_corporate_actions`,
@@ -228,7 +267,8 @@ period, EDGAR URL). Fresh snapshots are reused (TTL) to minimise SEC requests.
 | `fixture:real_snapshot` (v0.3-A) | `tests/fixtures/alfred/DGS2`, `DGS10`: **real** ALFRED Treasury-yield vintages incl. consecutive-day holiday calibration windows |
 | `fixture:real_snapshot` (v0.2) | `tests/fixtures/{fed,bls,bea,alfred}` and refreshed `sec/submissions`: **real** official responses recorded by `scripts/build_v02_fixtures.py` running the actual ingestion code (window 2025-07-01 → 2026-11-01) |
 
-Reports and briefings print the origin in a banner. Example outputs: [docs/examples](docs/examples)
+Reports, briefings and event studies print the origin in a banner (any synthetic input makes an
+event study `synthetic: true`). Example outputs: [docs/examples](docs/examples)
 (`MSFT_live_report.md` and `briefing_2026-10-28_live.md` from live official sources;
 `briefing_2026-10-*_offline_real_snapshot.md` from replayed real snapshots).
 
@@ -249,3 +289,8 @@ delisted-security coverage and provider correction behaviour are unverified; no
 corporate-action announcement dates (actions known from their ex-date); a full-day trading halt
 is indistinguishable from missing data without a halt source; the historical backfill assumes
 first-retrieved values equal the originally published ones.
+v0.3-B: no empirical equity event study is possible without live price credentials (all equity
+results here use SYNTHETIC prices); single-event inference is classical (normal, i.i.d.) with a
+placebo check — no BMP / Kolari–Pynnönen / rank tests, no cross-asset clustered inference;
+daily data only (no intraday reactions); confounder coverage is inferred from stored events;
+point-in-time studies over backfilled bars are reported UNVERIFIED; no causal identification.

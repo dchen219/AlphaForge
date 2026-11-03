@@ -137,3 +137,29 @@ def test_live_v03a_alpaca_market_data(live_ctx):
     run = MarketDataIngestor(live_ctx).run(["SPY", "NVDA"], end - timedelta(days=60), end)
     assert run.status != "failed", run.errors
     assert run.rows_received > 50 and run.data_origin == "live"
+
+
+def test_live_v03b_yield_event_study_on_live_alfred(live_ctx, tmp_path):
+    """Live ALFRED DGS2/DGS10 + REAL recorded FOMC event: a yield event study on live data.
+
+    Events come from the recorded v0.2 fixtures (the live SEC/Fed feeds are not needed); yields are
+    fetched live. Values are cross-checked against the recorded fixture vintage for the same day."""
+    from datetime import date
+
+    from finance_agent.event_studies.schemas import EventStudyRequest
+    from finance_agent.event_studies.service import EventStudyService
+    from finance_agent.events.service import EventIngestor
+    from finance_agent.market.yields import YieldIngestor
+    from tests.conftest import fixture_window
+
+    off = offline_settings(tmp_path / "events")
+    EventIngestor(AppContext(off, db=live_ctx.db)).run(as_of=fixture_window()[1], start=fixture_window()[0])
+    YieldIngestor(live_ctx).run(None, date(2025, 1, 2), date.today())
+    r = EventStudyService(live_ctx).run(
+        EventStudyRequest(event_id="EV-e6a9f7badcb72f25", series_id="DGS10", price_basis="total_return")
+    )
+    assert r.status == "COMPLETED" and not r.synthetic and "live" in r.data_origin
+    assert r.result["unit"] == "basis_points" and r.result["day0"] == "2025-09-17"
+    w = {x["window"]: x for x in r.result["windows"]}
+    # recorded fixture vintage gives +2 bp on day 0 and +7 bp over [0,+1]; H.15 values are rarely revised
+    assert w["[0,0]"]["change_bp"] == 2.0 and w["[0,+1]"]["change_bp"] == 7.0
